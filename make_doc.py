@@ -117,12 +117,6 @@ def viet_trang_bia(b):
     )
     _dat_font(r, co=13, dam=True)
 
-    p = doc.add_paragraph()
-    p.paragraph_format.space_before = Pt(8)
-    p.paragraph_format.space_after = Pt(4)
-    r = p.add_run("Danh sách thành viên nhóm thực hiện đề tài")
-    _dat_font(r, co=12.5, dam=True, nghieng=True)
-
     tieu_de = ["STT", "Sinh viên thực hiện", "Khóa", "Lớp", "Mã sinh viên", "Công việc đảm nhiệm trong nhóm"]
     du_lieu = [
         ["1", "[Đặng Việt Hoàn]", "[Khóa]", "[Lớp]", "[Mã SV]",
