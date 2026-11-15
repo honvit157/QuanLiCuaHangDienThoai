@@ -41,6 +41,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = false;
             label1.BackColor = UiTheme.The;
             label1.Font = UiTheme.TieuDe;
@@ -54,6 +55,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.None;
             groupBox1.Font = UiTheme.TieuDeMuc;
             groupBox1.BackColor = UiTheme.The;
             groupBox1.Controls.Add(txtMatKhau);
@@ -114,6 +116,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.None;
             button1.BackColor = UiTheme.Chinh;
             button1.Cursor = Cursors.Hand;
             button1.FlatAppearance.BorderSize = 0;
@@ -131,11 +134,13 @@ namespace QuanLyCuaHangDienThoai
             // 
             // button2
             // 
-            button2.BackColor = UiTheme.NutNhat;
+            button2.Anchor = AnchorStyles.None;
+            button2.BackColor = UiTheme.The;
+            button2.FlatAppearance.BorderColor = UiTheme.Vien;
             button2.Cursor = Cursors.Hand;
-            button2.FlatAppearance.BorderSize = 0;
-            button2.FlatAppearance.MouseDownBackColor = UiTheme.Vien;
-            button2.FlatAppearance.MouseOverBackColor = UiTheme.NutNhatHover;
+            button2.FlatAppearance.BorderSize = 1;
+            button2.FlatAppearance.MouseDownBackColor = UiTheme.NutNhatHover;
+            button2.FlatAppearance.MouseOverBackColor = UiTheme.NutNhat;
             button2.FlatStyle = FlatStyle.Flat;
             button2.Font = UiTheme.Nut;
             button2.ForeColor = UiTheme.Chinh;
@@ -148,7 +153,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // Form9
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = UiTheme.Nen;
             ClientSize = new Size(640, 400);

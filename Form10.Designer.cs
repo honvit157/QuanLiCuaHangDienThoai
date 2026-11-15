@@ -156,7 +156,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // tslNhanVien
             // 
-            tslNhanVien.Font = UiTheme.Nhan;
+            tslNhanVien.Font = UiTheme.NhanDam;
             tslNhanVien.ForeColor = UiTheme.Chinh;
             tslNhanVien.Name = "tslNhanVien";
             tslNhanVien.Size = new Size(998, 20);
@@ -172,7 +172,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // Form10
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = UiTheme.Nen;
             Font = UiTheme.Than;

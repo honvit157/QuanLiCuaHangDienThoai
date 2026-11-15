@@ -48,7 +48,7 @@ namespace QuanLyCuaHangDienThoai
 
             lblTongDoanhThu.Dock      = System.Windows.Forms.DockStyle.Bottom;
             lblTongDoanhThu.Height    = 34;
-            lblTongDoanhThu.Font      = UiTheme.Nhan;
+            lblTongDoanhThu.Font      = UiTheme.NhanDam;
             lblTongDoanhThu.ForeColor = UiTheme.ThanhCong;
             lblTongDoanhThu.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTongDoanhThu.Padding   = new System.Windows.Forms.Padding(6, 0, 0, 0);
@@ -66,7 +66,7 @@ namespace QuanLyCuaHangDienThoai
 
             lblTongTonKho.Dock      = System.Windows.Forms.DockStyle.Bottom;
             lblTongTonKho.Height    = 34;
-            lblTongTonKho.Font      = UiTheme.Nhan;
+            lblTongTonKho.Font      = UiTheme.NhanDam;
             lblTongTonKho.ForeColor = UiTheme.Chinh;
             lblTongTonKho.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTongTonKho.Padding   = new System.Windows.Forms.Padding(6, 0, 0, 0);
@@ -90,17 +90,17 @@ namespace QuanLyCuaHangDienThoai
             btnXuatExcel.Text      = "📄 Xuất Excel";
             btnXuatExcel.Size      = new System.Drawing.Size(140, 36);
             btnXuatExcel.Location  = new System.Drawing.Point(12, 10);
-            UiTheme.TrangTriNut(btnXuatExcel, UiTheme.KieuNut.ThanhCong);
+            UiTheme.TrangTriNut(btnXuatExcel, UiTheme.KieuNut.Chinh);
 
             btnLamMoi.Text      = "🔄 Làm mới";
             btnLamMoi.Size      = new System.Drawing.Size(120, 36);
             btnLamMoi.Location  = new System.Drawing.Point(162, 10);
-            UiTheme.TrangTriNut(btnLamMoi, UiTheme.KieuNut.Nhan);
+            UiTheme.TrangTriNut(btnLamMoi, UiTheme.KieuNut.Nhat);
 
             btnDong.Text      = "✖ Đóng";
             btnDong.Size      = new System.Drawing.Size(110, 36);
             btnDong.Location  = new System.Drawing.Point(292, 10);
-            UiTheme.TrangTriNut(btnDong, UiTheme.KieuNut.NguyHiem);
+            UiTheme.TrangTriNut(btnDong, UiTheme.KieuNut.Nhat);
 
             // lblTitle
             lblTitle.Text      = "BÁO CÁO THỐNG KÊ CỬA HÀNG ĐIỆN THOẠI";
@@ -118,6 +118,8 @@ namespace QuanLyCuaHangDienThoai
             this.BackColor = UiTheme.Nen;
             this.Font = UiTheme.Than;
             this.ForeColor = UiTheme.Chu;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(980, 620);
             this.Padding = new System.Windows.Forms.Padding(0);
         }

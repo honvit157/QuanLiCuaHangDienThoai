@@ -14,11 +14,14 @@ namespace QuanLyCuaHangDienThoai
         {
             InitializeComponent();
 
-            // Kích thước cửa sổ Form10
+            // Kích thước cửa sổ Form10:
+            // - MinimumSize đủ nhỏ để vừa màn hình 1366x768 (vùng làm việc ~1366x728),
+            //   nhưng vẫn đủ rộng để các form con bên trong không bị bóp méo.
+            // - Mở ra là phóng to hết màn hình; khi thu nhỏ lại thì trở về cỡ Size ở dưới.
             this.StartPosition = FormStartPosition.CenterScreen;
-            this.WindowState = FormWindowState.Normal;
-            this.Size = new Size(3000, 1500);
-            this.MinimumSize = new Size(2000, 1100);
+            this.MinimumSize = new Size(1170, 700);
+            this.Size = new Size(1280, 780);
+            this.WindowState = FormWindowState.Maximized;
 
             // Tạo vùng hiển thị các Form con
             TaoPanelNoiDung();
@@ -92,10 +95,9 @@ namespace QuanLyCuaHangDienThoai
         {
             this.Text = "HỆ THỐNG QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI";
 
-            // Không mở toàn màn hình
-            this.WindowState = FormWindowState.Normal;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.Size = new Size(1200, 750);
+            // Mở hết màn hình cho dễ dùng; người dùng vẫn thu nhỏ/phóng to tự do
+            // (giới hạn nhỏ nhất là MinimumSize ở trên).
+            this.WindowState = FormWindowState.Maximized;
 
             string tenNV = string.IsNullOrWhiteSpace(Form9.TenNVDangNhap)
                 ? "Chưa xác định"

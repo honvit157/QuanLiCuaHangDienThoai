@@ -77,6 +77,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = false;
             label1.Location = new Point(0, 4);
             label1.Size = new Size(983, 28);
@@ -91,6 +92,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.Font = UiTheme.TieuDeMuc;
             groupBox1.BackColor = UiTheme.The;
             groupBox1.ForeColor = UiTheme.Chinh;
@@ -122,6 +124,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtDiaChi
             // 
+            txtDiaChi.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             txtDiaChi.Font = UiTheme.Than;
             txtDiaChi.BackColor = UiTheme.The;
             txtDiaChi.ForeColor = UiTheme.Chu;
@@ -134,6 +137,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // cboNCC
             // 
+            cboNCC.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             cboNCC.Font = UiTheme.Than;
             cboNCC.BackColor = UiTheme.The;
             cboNCC.ForeColor = UiTheme.Chu;
@@ -146,6 +150,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtTenNV
             // 
+            txtTenNV.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             txtTenNV.Font = UiTheme.Than;
             txtTenNV.BackColor = UiTheme.The;
             txtTenNV.ForeColor = UiTheme.Chu;
@@ -158,6 +163,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // dtpNgayNhap
             // 
+            dtpNgayNhap.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             dtpNgayNhap.Font = UiTheme.Than;
             dtpNgayNhap.ForeColor = UiTheme.Chu;
             dtpNgayNhap.Location = new Point(731, 24);
@@ -168,6 +174,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtSDT
             // 
+            txtSDT.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             txtSDT.Font = UiTheme.Than;
             txtSDT.BackColor = UiTheme.The;
             txtSDT.ForeColor = UiTheme.Chu;
@@ -180,6 +187,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtMaNCC
             // 
+            txtMaNCC.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             txtMaNCC.Font = UiTheme.Than;
             txtMaNCC.BackColor = UiTheme.The;
             txtMaNCC.ForeColor = UiTheme.Chu;
@@ -192,6 +200,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtMaNV
             // 
+            txtMaNV.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             txtMaNV.Font = UiTheme.Than;
             txtMaNV.BackColor = UiTheme.The;
             txtMaNV.ForeColor = UiTheme.Chu;
@@ -204,6 +213,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // cboMaHDN
             // 
+            cboMaHDN.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             cboMaHDN.Font = UiTheme.Than;
             cboMaHDN.BackColor = UiTheme.The;
             cboMaHDN.ForeColor = UiTheme.Chu;
@@ -216,6 +226,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label9
             // 
+            label9.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label9.Font = UiTheme.Than;
             label9.ForeColor = UiTheme.Chu;
             label9.AutoSize = true;
@@ -228,6 +239,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label8
             // 
+            label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label8.Font = UiTheme.Than;
             label8.ForeColor = UiTheme.Chu;
             label8.AutoSize = true;
@@ -240,6 +252,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label7
             // 
+            label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.Font = UiTheme.Than;
             label7.ForeColor = UiTheme.Chu;
             label7.AutoSize = true;
@@ -252,6 +265,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label6
             // 
+            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label6.Font = UiTheme.Than;
             label6.ForeColor = UiTheme.Chu;
             label6.AutoSize = true;
@@ -264,17 +278,18 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnTim
             // 
+            btnTim.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             btnTim.Location = new Point(396, 21);
             btnTim.Size = new Size(96, 28);
-            btnTim.BackColor = UiTheme.NutNhat;
-            btnTim.ForeColor = UiTheme.Chinh;
+            btnTim.BackColor = UiTheme.Chinh;
+            btnTim.ForeColor = Color.White;
             btnTim.Font = UiTheme.Nut;
             btnTim.Cursor = Cursors.Hand;
             btnTim.FlatStyle = FlatStyle.Flat;
             btnTim.UseVisualStyleBackColor = false;
             btnTim.FlatAppearance.BorderSize = 0;
-            btnTim.FlatAppearance.MouseOverBackColor = UiTheme.NutNhatHover;
-            btnTim.FlatAppearance.MouseDownBackColor = UiTheme.Vien;
+            btnTim.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
+            btnTim.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
             btnTim.Margin = new Padding(2, 2, 2, 2);
             btnTim.Name = "btnTim";
             btnTim.TabIndex = 4;
@@ -282,6 +297,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label5
             // 
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label5.Font = UiTheme.Than;
             label5.ForeColor = UiTheme.Chu;
             label5.AutoSize = true;
@@ -294,6 +310,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label4
             // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label4.Font = UiTheme.Than;
             label4.ForeColor = UiTheme.Chu;
             label4.AutoSize = true;
@@ -306,6 +323,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label3
             // 
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label3.Font = UiTheme.Than;
             label3.ForeColor = UiTheme.Chu;
             label3.AutoSize = true;
@@ -318,6 +336,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label2.Font = UiTheme.Than;
             label2.ForeColor = UiTheme.Chu;
             label2.AutoSize = true;
@@ -330,6 +349,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox2
             // 
+            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox2.Font = UiTheme.TieuDeMuc;
             groupBox2.BackColor = UiTheme.The;
             groupBox2.ForeColor = UiTheme.Chinh;
@@ -355,6 +375,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtDonGiaNhap
             // 
+            txtDonGiaNhap.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             txtDonGiaNhap.Font = UiTheme.Than;
             txtDonGiaNhap.BackColor = UiTheme.The;
             txtDonGiaNhap.ForeColor = UiTheme.Chu;
@@ -367,6 +388,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtThanhTien
             // 
+            txtThanhTien.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             txtThanhTien.Font = UiTheme.Than;
             txtThanhTien.BackColor = UiTheme.The;
             txtThanhTien.ForeColor = UiTheme.Chu;
@@ -379,6 +401,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtTenHang
             // 
+            txtTenHang.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             txtTenHang.Font = UiTheme.Than;
             txtTenHang.BackColor = UiTheme.The;
             txtTenHang.ForeColor = UiTheme.Chu;
@@ -391,6 +414,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtSoLuong
             // 
+            txtSoLuong.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             txtSoLuong.Font = UiTheme.Than;
             txtSoLuong.BackColor = UiTheme.The;
             txtSoLuong.ForeColor = UiTheme.Chu;
@@ -403,6 +427,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // cboMaHang
             // 
+            cboMaHang.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             cboMaHang.Font = UiTheme.Than;
             cboMaHang.BackColor = UiTheme.The;
             cboMaHang.ForeColor = UiTheme.Chu;
@@ -415,17 +440,18 @@ namespace QuanLyCuaHangDienThoai
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button1.Location = new Point(620, 54);
             button1.Size = new Size(240, 30);
-            button1.BackColor = UiTheme.Nhan;
+            button1.BackColor = UiTheme.Chinh;
             button1.ForeColor = Color.White;
             button1.Font = UiTheme.Nut;
             button1.Cursor = Cursors.Hand;
             button1.FlatStyle = FlatStyle.Flat;
             button1.UseVisualStyleBackColor = false;
             button1.FlatAppearance.BorderSize = 0;
-            button1.FlatAppearance.MouseOverBackColor = UiTheme.NhanHover;
-            button1.FlatAppearance.MouseDownBackColor = UiTheme.NhanDown;
+            button1.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
+            button1.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
             button1.Margin = new Padding(2, 2, 2, 2);
             button1.Name = "button1";
             button1.TabIndex = 5;
@@ -433,6 +459,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label14
             // 
+            label14.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label14.Font = UiTheme.Than;
             label14.ForeColor = UiTheme.Chu;
             label14.AutoSize = true;
@@ -445,6 +472,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label13
             // 
+            label13.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label13.Font = UiTheme.Than;
             label13.ForeColor = UiTheme.Chu;
             label13.AutoSize = true;
@@ -457,6 +485,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label12
             // 
+            label12.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label12.Font = UiTheme.Than;
             label12.ForeColor = UiTheme.Chu;
             label12.AutoSize = true;
@@ -469,6 +498,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label11
             // 
+            label11.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label11.Font = UiTheme.Than;
             label11.ForeColor = UiTheme.Chu;
             label11.AutoSize = true;
@@ -481,6 +511,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label10
             // 
+            label10.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             label10.Font = UiTheme.Than;
             label10.ForeColor = UiTheme.Chu;
             label10.AutoSize = true;
@@ -493,6 +524,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox3
             // 
+            groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBox3.Font = UiTheme.TieuDeMuc;
             groupBox3.BackColor = UiTheme.The;
             groupBox3.ForeColor = UiTheme.Chinh;
@@ -509,6 +541,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // lblTongTien
             // 
+            lblTongTien.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lblTongTien.ForeColor = UiTheme.NguyHiem;
             lblTongTien.Font = UiTheme.TieuDeNho;
             lblTongTien.AutoSize = false;
@@ -522,6 +555,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // dgvChiTiet
             // 
+            dgvChiTiet.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvChiTiet.Font = UiTheme.Luoi;
             dgvChiTiet.BorderStyle = BorderStyle.None;
             dgvChiTiet.AlternatingRowsDefaultCellStyle.BackColor = UiTheme.DongXen;
@@ -554,6 +588,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox4
             // 
+            groupBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             groupBox4.Font = UiTheme.TieuDeMuc;
             groupBox4.BackColor = UiTheme.The;
             groupBox4.ForeColor = UiTheme.Chinh;
@@ -573,17 +608,19 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnThoat
             // 
+            btnThoat.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnThoat.Location = new Point(728, 38);
             btnThoat.Size = new Size(100, 32);
-            btnThoat.BackColor = UiTheme.NutNhat;
+            btnThoat.BackColor = UiTheme.The;
+            btnThoat.FlatAppearance.BorderColor = UiTheme.Vien;
             btnThoat.ForeColor = UiTheme.Chinh;
             btnThoat.Font = UiTheme.Nut;
             btnThoat.Cursor = Cursors.Hand;
             btnThoat.FlatStyle = FlatStyle.Flat;
             btnThoat.UseVisualStyleBackColor = false;
-            btnThoat.FlatAppearance.BorderSize = 0;
-            btnThoat.FlatAppearance.MouseOverBackColor = UiTheme.NutNhatHover;
-            btnThoat.FlatAppearance.MouseDownBackColor = UiTheme.Vien;
+            btnThoat.FlatAppearance.BorderSize = 1;
+            btnThoat.FlatAppearance.MouseOverBackColor = UiTheme.NutNhat;
+            btnThoat.FlatAppearance.MouseDownBackColor = UiTheme.NutNhatHover;
             btnThoat.Margin = new Padding(2, 2, 2, 2);
             btnThoat.Name = "btnThoat";
             btnThoat.TabIndex = 4;
@@ -591,17 +628,18 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnIn
             // 
+            btnIn.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnIn.Location = new Point(550, 38);
             btnIn.Size = new Size(160, 32);
-            btnIn.BackColor = UiTheme.NutNhat;
-            btnIn.ForeColor = UiTheme.Chinh;
+            btnIn.BackColor = UiTheme.Chinh;
+            btnIn.ForeColor = Color.White;
             btnIn.Font = UiTheme.Nut;
             btnIn.Cursor = Cursors.Hand;
             btnIn.FlatStyle = FlatStyle.Flat;
             btnIn.UseVisualStyleBackColor = false;
             btnIn.FlatAppearance.BorderSize = 0;
-            btnIn.FlatAppearance.MouseOverBackColor = UiTheme.NutNhatHover;
-            btnIn.FlatAppearance.MouseDownBackColor = UiTheme.Vien;
+            btnIn.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
+            btnIn.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
             btnIn.Margin = new Padding(2, 2, 2, 2);
             btnIn.Name = "btnIn";
             btnIn.TabIndex = 3;
@@ -609,17 +647,19 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnHuy
             // 
+            btnHuy.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnHuy.Location = new Point(414, 38);
             btnHuy.Size = new Size(118, 32);
-            btnHuy.BackColor = UiTheme.NguyHiem;
-            btnHuy.ForeColor = Color.White;
+            btnHuy.BackColor = UiTheme.The;
+            btnHuy.FlatAppearance.BorderColor = UiTheme.Vien;
+            btnHuy.ForeColor = UiTheme.Chinh;
             btnHuy.Font = UiTheme.Nut;
             btnHuy.Cursor = Cursors.Hand;
             btnHuy.FlatStyle = FlatStyle.Flat;
             btnHuy.UseVisualStyleBackColor = false;
-            btnHuy.FlatAppearance.BorderSize = 0;
-            btnHuy.FlatAppearance.MouseOverBackColor = UiTheme.NguyHiemHover;
-            btnHuy.FlatAppearance.MouseDownBackColor = UiTheme.NguyHiemDown;
+            btnHuy.FlatAppearance.BorderSize = 1;
+            btnHuy.FlatAppearance.MouseOverBackColor = UiTheme.NutNhat;
+            btnHuy.FlatAppearance.MouseDownBackColor = UiTheme.NutNhatHover;
             btnHuy.Margin = new Padding(2, 2, 2, 2);
             btnHuy.Name = "btnHuy";
             btnHuy.TabIndex = 2;
@@ -627,17 +667,18 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnLuu
             // 
+            btnLuu.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnLuu.Location = new Point(278, 38);
             btnLuu.Size = new Size(118, 32);
-            btnLuu.BackColor = UiTheme.ThanhCong;
+            btnLuu.BackColor = UiTheme.Chinh;
             btnLuu.ForeColor = Color.White;
             btnLuu.Font = UiTheme.Nut;
             btnLuu.Cursor = Cursors.Hand;
             btnLuu.FlatStyle = FlatStyle.Flat;
             btnLuu.UseVisualStyleBackColor = false;
             btnLuu.FlatAppearance.BorderSize = 0;
-            btnLuu.FlatAppearance.MouseOverBackColor = UiTheme.ThanhCongHover;
-            btnLuu.FlatAppearance.MouseDownBackColor = UiTheme.ThanhCongDown;
+            btnLuu.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
+            btnLuu.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
             btnLuu.Margin = new Padding(2, 2, 2, 2);
             btnLuu.Name = "btnLuu";
             btnLuu.TabIndex = 1;
@@ -645,6 +686,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnThemHD
             // 
+            btnThemHD.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnThemHD.Location = new Point(142, 38);
             btnThemHD.Size = new Size(118, 32);
             btnThemHD.BackColor = UiTheme.Chinh;
@@ -663,7 +705,7 @@ namespace QuanLyCuaHangDienThoai
             // 
             // Form8
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(983, 600);
             Controls.Add(groupBox4);

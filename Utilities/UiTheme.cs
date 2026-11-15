@@ -74,7 +74,9 @@ namespace QuanLyCuaHangDienThoai
         // Kiểu chữ (Segoe UI - font hệ thống của Windows 10/11)
         // ------------------------------------------------------------------
 
-        /// <summary>Chữ nội dung 9pt - font nền của biểu mẫu.</summary>
+        /// <summary>Chữ nội dung 9pt - font nền của biểu mẫu.
+        /// Xem thêm ghi chú DPI ở cuối tệp: AutoScaleDimensions của mọi form phải là
+        /// (7, 15) vì đó là số đo của Segoe UI 9pt ở 96 DPI.</summary>
         public static readonly Font Than = new Font("Segoe UI", 9F);
 
         /// <summary>Chữ tiêu đề biểu mẫu 15pt đậm.</summary>
@@ -95,27 +97,27 @@ namespace QuanLyCuaHangDienThoai
         /// <summary>Chữ tiêu đề cột của lưới 9pt đậm.</summary>
         public static readonly Font LuoiTieuDe = new Font("Segoe UI", 9F, FontStyle.Bold);
 
-        /// <summary>Chữ nhấn 9pt đậm (dòng trạng thái, tổng tiền).</summary>
-        public static readonly Font Nhan = new Font("Segoe UI", 9F, FontStyle.Bold);
+        /// <summary>Chữ nhấn 9pt đậm (dòng trạng thái, tổng tiền).
+        /// Đặt tên NhanDam để không trùng với màu Nhan ở phía trên (lỗi CS0102).</summary>
+        public static readonly Font NhanDam = new Font("Segoe UI", 9F, FontStyle.Bold);
 
         // ------------------------------------------------------------------
         // Kiểu nút dùng cho TrangTriNut
+        // Chỉ có 3 vai trò để giao diện không bị "loạn màu":
+        //   Chinh    - hành động chính (Thêm, Sửa, Tìm, Lưu, In, Xuất, Đăng nhập)
+        //   NguyHiem - hành động nguy hiểm (Xóa)
+        //   Nhat     - nút phụ (Làm lại, Thoát, Hủy, Chọn ảnh, Đóng)
+        // Màu nhấn UiTheme.Nhan KHÔNG dùng làm màu nền nút nữa.
         // ------------------------------------------------------------------
         public enum KieuNut
         {
-            /// <summary>Nút chính (Thêm, Lưu, Đăng nhập) - nền navy.</summary>
+            /// <summary>Nút chính (Thêm, Sửa, Tìm, Lưu, In) - nền navy.</summary>
             Chinh,
 
-            /// <summary>Nút phụ (Sửa, Tìm, Làm mới) - nền xanh sáng.</summary>
-            Nhan,
-
-            /// <summary>Nút thành công (Lưu, Xuất Excel) - nền xanh lá.</summary>
-            ThanhCong,
-
-            /// <summary>Nút nguy hiểm (Xóa, Hủy) - nền đỏ.</summary>
+            /// <summary>Nút nguy hiểm (Xóa) - nền đỏ.</summary>
             NguyHiem,
 
-            /// <summary>Nút trung tính (Thoát, Làm lại) - nền xám nhạt.</summary>
+            /// <summary>Nút phụ (Làm lại, Thoát, Hủy) - nền trắng, chữ navy, viền xám nhạt.</summary>
             Nhat
         }
 
@@ -127,23 +129,22 @@ namespace QuanLyCuaHangDienThoai
         public static void TrangTriNut(Button nut, KieuNut kieu)
         {
             Color nen, chu, hover, down;
+            int vienDay;
 
             switch (kieu)
             {
-                case KieuNut.Nhan:
-                    nen = Nhan; chu = Color.White; hover = NhanHover; down = NhanDown;
-                    break;
-                case KieuNut.ThanhCong:
-                    nen = ThanhCong; chu = Color.White; hover = ThanhCongHover; down = ThanhCongDown;
-                    break;
                 case KieuNut.NguyHiem:
                     nen = NguyHiem; chu = Color.White; hover = NguyHiemHover; down = NguyHiemDown;
+                    vienDay = 0;
                     break;
                 case KieuNut.Nhat:
-                    nen = NutNhat; chu = Chinh; hover = NutNhatHover; down = Vien;
+                    // nút phụ: nền trắng, chữ navy, viền mảnh để không bị chìm vào nền
+                    nen = The; chu = Chinh; hover = NutNhat; down = NutNhatHover;
+                    vienDay = 1;
                     break;
                 default:
                     nen = Chinh; chu = Color.White; hover = ChinhHover; down = ChinhDown;
+                    vienDay = 0;
                     break;
             }
 
@@ -153,7 +154,8 @@ namespace QuanLyCuaHangDienThoai
             nut.Cursor = Cursors.Hand;
             nut.FlatStyle = FlatStyle.Flat;
             nut.UseVisualStyleBackColor = false;
-            nut.FlatAppearance.BorderSize = 0;
+            nut.FlatAppearance.BorderSize = vienDay;
+            nut.FlatAppearance.BorderColor = Vien;
             nut.FlatAppearance.MouseOverBackColor = hover;
             nut.FlatAppearance.MouseDownBackColor = down;
         }
@@ -188,5 +190,18 @@ namespace QuanLyCuaHangDienThoai
 
             luoi.AlternatingRowsDefaultCellStyle.BackColor = DongXen;
         }
+
+        // ------------------------------------------------------------------
+        // GHI CHÚ QUAN TRỌNG VỀ DPI / TỰ CO GIÃN
+        // ------------------------------------------------------------------
+        // Mọi Form*.Designer.cs dùng:
+        //     AutoScaleMode = AutoScaleMode.Font;
+        //     AutoScaleDimensions = new SizeF(7F, 15F);
+        // (7, 15) là số đo thực của Segoe UI 9pt ở 96 DPI (đúng giá trị Visual Studio
+        // sinh ra cho font mặc định này). Nếu để sai, ví dụ (8, 20), WinForms coi như
+        // form được thiết kế với font to hơn nên thu nhỏ toàn bộ control còn khoảng
+        // 0,75 - 0,875 lần khi chạy: giao diện dồn về góc trái trên, chừa khoảng trống
+        // bên phải và phía dưới. Đổi font nền (Than) thì phải đổi lại số này cho khớp.
+        // ------------------------------------------------------------------
     }
 }
