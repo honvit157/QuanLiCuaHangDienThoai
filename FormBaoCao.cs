@@ -123,11 +123,11 @@ namespace QuanLyCuaHangDienThoai
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv.RowHeadersVisible = false;
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue;
-            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.SteelBlue;
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = UiTheme.DongXen;
+            dgv.ColumnHeadersDefaultCellStyle.Font = UiTheme.LuoiTieuDe;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = UiTheme.Chinh;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dgv.EnableHeadersVisualStyles = false;
         }
 

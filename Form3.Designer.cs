@@ -70,6 +70,9 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox1
             // 
+            groupBox1.Font = UiTheme.TieuDeMuc;
+            groupBox1.BackColor = UiTheme.The;
+            groupBox1.ForeColor = UiTheme.Chinh;
             groupBox1.Controls.Add(txtEmail);
             groupBox1.Controls.Add(txtTenKH);
             groupBox1.Controls.Add(txtDiaChi);
@@ -82,13 +85,17 @@ namespace QuanLyCuaHangDienThoai
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(765, 258);
+            groupBox1.Size = new Size(765, 250);
             groupBox1.TabIndex = 0;
             groupBox1.TabStop = false;
             groupBox1.Text = "Thông tin khách hàng ";
             // 
             // txtEmail
             // 
+            txtEmail.Font = UiTheme.Than;
+            txtEmail.BackColor = UiTheme.The;
+            txtEmail.ForeColor = UiTheme.Chu;
+            txtEmail.BorderStyle = BorderStyle.FixedSingle;
             txtEmail.Location = new Point(487, 96);
             txtEmail.Name = "txtEmail";
             txtEmail.Size = new Size(255, 27);
@@ -96,6 +103,10 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtTenKH
             // 
+            txtTenKH.Font = UiTheme.Than;
+            txtTenKH.BackColor = UiTheme.The;
+            txtTenKH.ForeColor = UiTheme.Chu;
+            txtTenKH.BorderStyle = BorderStyle.FixedSingle;
             txtTenKH.Location = new Point(487, 51);
             txtTenKH.Name = "txtTenKH";
             txtTenKH.Size = new Size(255, 27);
@@ -103,6 +114,10 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtDiaChi
             // 
+            txtDiaChi.Font = UiTheme.Than;
+            txtDiaChi.BackColor = UiTheme.The;
+            txtDiaChi.ForeColor = UiTheme.Chu;
+            txtDiaChi.BorderStyle = BorderStyle.FixedSingle;
             txtDiaChi.Location = new Point(126, 157);
             txtDiaChi.Name = "txtDiaChi";
             txtDiaChi.Size = new Size(616, 27);
@@ -110,6 +125,10 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtSDT
             // 
+            txtSDT.Font = UiTheme.Than;
+            txtSDT.BackColor = UiTheme.The;
+            txtSDT.ForeColor = UiTheme.Chu;
+            txtSDT.BorderStyle = BorderStyle.FixedSingle;
             txtSDT.Location = new Point(126, 100);
             txtSDT.Name = "txtSDT";
             txtSDT.Size = new Size(216, 27);
@@ -117,6 +136,10 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtMaKH
             // 
+            txtMaKH.Font = UiTheme.Than;
+            txtMaKH.BackColor = UiTheme.The;
+            txtMaKH.ForeColor = UiTheme.Chu;
+            txtMaKH.BorderStyle = BorderStyle.FixedSingle;
             txtMaKH.Location = new Point(126, 45);
             txtMaKH.Name = "txtMaKH";
             txtMaKH.Size = new Size(216, 27);
@@ -124,6 +147,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label3
             // 
+            label3.Font = UiTheme.Than;
+            label3.ForeColor = UiTheme.Chu;
             label3.AutoSize = true;
             label3.Location = new Point(30, 164);
             label3.Name = "label3";
@@ -133,6 +158,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label5
             // 
+            label5.Font = UiTheme.Than;
+            label5.ForeColor = UiTheme.Chu;
             label5.AutoSize = true;
             label5.Location = new Point(383, 51);
             label5.Name = "label5";
@@ -142,6 +169,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label4
             // 
+            label4.Font = UiTheme.Than;
+            label4.ForeColor = UiTheme.Chu;
             label4.AutoSize = true;
             label4.Location = new Point(383, 103);
             label4.Name = "label4";
@@ -151,6 +180,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label2
             // 
+            label2.Font = UiTheme.Than;
+            label2.ForeColor = UiTheme.Chu;
             label2.AutoSize = true;
             label2.Location = new Point(30, 107);
             label2.Name = "label2";
@@ -160,6 +191,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label1
             // 
+            label1.Font = UiTheme.Than;
+            label1.ForeColor = UiTheme.Chu;
             label1.AutoSize = true;
             label1.Location = new Point(30, 51);
             label1.Name = "label1";
@@ -169,19 +202,24 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox2
             // 
+            groupBox2.Font = UiTheme.TieuDeMuc;
+            groupBox2.BackColor = UiTheme.The;
+            groupBox2.ForeColor = UiTheme.Chinh;
             groupBox2.Controls.Add(label9);
             groupBox2.Controls.Add(label10);
             groupBox2.Controls.Add(label8);
             groupBox2.Controls.Add(label7);
             groupBox2.Location = new Point(792, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(339, 258);
+            groupBox2.Size = new Size(339, 250);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "Lưu ý";
             // 
             // label9
             // 
+            label9.Font = UiTheme.Than;
+            label9.ForeColor = UiTheme.ChuPhu;
             label9.AutoSize = true;
             label9.Location = new Point(23, 65);
             label9.Name = "label9";
@@ -191,6 +229,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label10
             // 
+            label10.Font = UiTheme.Than;
+            label10.ForeColor = UiTheme.ChuPhu;
             label10.AutoSize = true;
             label10.Location = new Point(23, 215);
             label10.Name = "label10";
@@ -200,6 +240,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label8
             // 
+            label8.Font = UiTheme.Than;
+            label8.ForeColor = UiTheme.ChuPhu;
             label8.AutoSize = true;
             label8.Location = new Point(23, 145);
             label8.Name = "label8";
@@ -209,6 +251,8 @@ namespace QuanLyCuaHangDienThoai
             // 
             // label7
             // 
+            label7.Font = UiTheme.Than;
+            label7.ForeColor = UiTheme.ChuPhu;
             label7.AutoSize = true;
             label7.Location = new Point(23, 45);
             label7.Name = "label7";
@@ -218,12 +262,15 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox3
             // 
+            groupBox3.Font = UiTheme.TieuDeMuc;
+            groupBox3.BackColor = UiTheme.The;
+            groupBox3.ForeColor = UiTheme.Chinh;
             groupBox3.Controls.Add(btnThoat);
             groupBox3.Controls.Add(btnLamLai);
             groupBox3.Controls.Add(btnXoa);
             groupBox3.Controls.Add(btnSua);
             groupBox3.Controls.Add(btnThem);
-            groupBox3.Location = new Point(12, 276);
+            groupBox3.Location = new Point(12, 272);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(765, 101);
             groupBox3.TabIndex = 2;
@@ -232,58 +279,96 @@ namespace QuanLyCuaHangDienThoai
             // 
             // btnThoat
             // 
-            btnThoat.BackColor = SystemColors.ControlLight;
-            btnThoat.Location = new Point(614, 43);
+            btnThoat.Location = new Point(597, 34);
+            btnThoat.Size = new Size(110, 38);
+            btnThoat.BackColor = UiTheme.NutNhat;
+            btnThoat.ForeColor = UiTheme.Chinh;
+            btnThoat.Font = UiTheme.Nut;
+            btnThoat.Cursor = Cursors.Hand;
+            btnThoat.FlatStyle = FlatStyle.Flat;
+            btnThoat.UseVisualStyleBackColor = false;
+            btnThoat.FlatAppearance.BorderSize = 0;
+            btnThoat.FlatAppearance.MouseOverBackColor = UiTheme.NutNhatHover;
+            btnThoat.FlatAppearance.MouseDownBackColor = UiTheme.Vien;
             btnThoat.Name = "btnThoat";
-            btnThoat.Size = new Size(112, 41);
             btnThoat.TabIndex = 0;
             btnThoat.Text = "Th&oát";
-            btnThoat.UseVisualStyleBackColor = false;
             // 
             // btnLamLai
             // 
-            btnLamLai.BackColor = SystemColors.ControlLight;
-            btnLamLai.Location = new Point(453, 44);
+            btnLamLai.Location = new Point(462, 34);
+            btnLamLai.Size = new Size(110, 38);
+            btnLamLai.BackColor = UiTheme.NutNhat;
+            btnLamLai.ForeColor = UiTheme.Chinh;
+            btnLamLai.Font = UiTheme.Nut;
+            btnLamLai.Cursor = Cursors.Hand;
+            btnLamLai.FlatStyle = FlatStyle.Flat;
+            btnLamLai.UseVisualStyleBackColor = false;
+            btnLamLai.FlatAppearance.BorderSize = 0;
+            btnLamLai.FlatAppearance.MouseOverBackColor = UiTheme.NutNhatHover;
+            btnLamLai.FlatAppearance.MouseDownBackColor = UiTheme.Vien;
             btnLamLai.Name = "btnLamLai";
-            btnLamLai.Size = new Size(109, 38);
             btnLamLai.TabIndex = 0;
             btnLamLai.Text = "&Làm lại";
-            btnLamLai.UseVisualStyleBackColor = false;
             // 
             // btnXoa
             // 
-            btnXoa.BackColor = SystemColors.ControlLight;
-            btnXoa.Location = new Point(298, 43);
+            btnXoa.Location = new Point(327, 34);
+            btnXoa.Size = new Size(110, 38);
+            btnXoa.BackColor = UiTheme.NguyHiem;
+            btnXoa.ForeColor = Color.White;
+            btnXoa.Font = UiTheme.Nut;
+            btnXoa.Cursor = Cursors.Hand;
+            btnXoa.FlatStyle = FlatStyle.Flat;
+            btnXoa.UseVisualStyleBackColor = false;
+            btnXoa.FlatAppearance.BorderSize = 0;
+            btnXoa.FlatAppearance.MouseOverBackColor = UiTheme.NguyHiemHover;
+            btnXoa.FlatAppearance.MouseDownBackColor = UiTheme.NguyHiemDown;
             btnXoa.Name = "btnXoa";
-            btnXoa.Size = new Size(110, 41);
             btnXoa.TabIndex = 0;
             btnXoa.Text = "&Xóa";
-            btnXoa.UseVisualStyleBackColor = false;
             // 
             // btnSua
             // 
-            btnSua.BackColor = SystemColors.ControlLight;
-            btnSua.Location = new Point(160, 43);
+            btnSua.Location = new Point(192, 34);
+            btnSua.Size = new Size(110, 38);
+            btnSua.BackColor = UiTheme.Nhan;
+            btnSua.ForeColor = Color.White;
+            btnSua.Font = UiTheme.Nut;
+            btnSua.Cursor = Cursors.Hand;
+            btnSua.FlatStyle = FlatStyle.Flat;
+            btnSua.UseVisualStyleBackColor = false;
+            btnSua.FlatAppearance.BorderSize = 0;
+            btnSua.FlatAppearance.MouseOverBackColor = UiTheme.NhanHover;
+            btnSua.FlatAppearance.MouseDownBackColor = UiTheme.NhanDown;
             btnSua.Name = "btnSua";
-            btnSua.Size = new Size(102, 41);
             btnSua.TabIndex = 0;
             btnSua.Text = "&Sửa";
-            btnSua.UseVisualStyleBackColor = false;
             // 
             // btnThem
             // 
-            btnThem.BackColor = SystemColors.ControlLight;
-            btnThem.Location = new Point(30, 41);
+            btnThem.Location = new Point(57, 34);
+            btnThem.Size = new Size(110, 38);
+            btnThem.BackColor = UiTheme.Chinh;
+            btnThem.ForeColor = Color.White;
+            btnThem.Font = UiTheme.Nut;
+            btnThem.Cursor = Cursors.Hand;
+            btnThem.FlatStyle = FlatStyle.Flat;
+            btnThem.UseVisualStyleBackColor = false;
+            btnThem.FlatAppearance.BorderSize = 0;
+            btnThem.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
+            btnThem.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
             btnThem.Name = "btnThem";
-            btnThem.Size = new Size(104, 41);
             btnThem.TabIndex = 0;
             btnThem.Text = "&Thêm";
-            btnThem.UseVisualStyleBackColor = false;
             // 
             // groupBox4
             // 
+            groupBox4.Font = UiTheme.TieuDeMuc;
+            groupBox4.BackColor = UiTheme.The;
+            groupBox4.ForeColor = UiTheme.Chinh;
             groupBox4.Controls.Add(dgvKhachHang);
-            groupBox4.Location = new Point(12, 398);
+            groupBox4.Location = new Point(12, 384);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(1119, 240);
             groupBox4.TabIndex = 3;
@@ -292,9 +377,29 @@ namespace QuanLyCuaHangDienThoai
             // 
             // dgvKhachHang
             // 
-            dgvKhachHang.AllowUserToAddRows = false;
+            dgvKhachHang.Font = UiTheme.Luoi;
+            dgvKhachHang.BorderStyle = BorderStyle.None;
+            dgvKhachHang.AlternatingRowsDefaultCellStyle.BackColor = UiTheme.DongXen;
             dgvKhachHang.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvKhachHang.BackgroundColor = Color.White;
+            dgvKhachHang.BackgroundColor = UiTheme.The;
+            dgvKhachHang.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvKhachHang.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.BackColor = UiTheme.Chinh;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.Font = UiTheme.LuoiTieuDe;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.Padding = new Padding(6, 0, 6, 0);
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.SelectionBackColor = UiTheme.Chinh;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+            dgvKhachHang.DefaultCellStyle.BackColor = UiTheme.The;
+            dgvKhachHang.DefaultCellStyle.ForeColor = UiTheme.Chu;
+            dgvKhachHang.DefaultCellStyle.Padding = new Padding(4, 0, 4, 0);
+            dgvKhachHang.DefaultCellStyle.SelectionBackColor = UiTheme.ChonDong;
+            dgvKhachHang.DefaultCellStyle.SelectionForeColor = UiTheme.Chinh;
+            dgvKhachHang.GridColor = UiTheme.Vien;
+            dgvKhachHang.RowHeadersVisible = false;
+            dgvKhachHang.RowTemplate.Height = 30;
+            dgvKhachHang.AllowUserToAddRows = false;
             dgvKhachHang.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvKhachHang.Columns.AddRange(new DataGridViewColumn[] { colMaKH, colTenKH, colSDT, colEmail, colDiaChi });
             dgvKhachHang.Location = new Point(6, 26);
@@ -341,9 +446,12 @@ namespace QuanLyCuaHangDienThoai
             // 
             // groupBox5
             // 
+            groupBox5.Font = UiTheme.TieuDeMuc;
+            groupBox5.BackColor = UiTheme.The;
+            groupBox5.ForeColor = UiTheme.Chinh;
             groupBox5.Controls.Add(txtTim);
             groupBox5.Controls.Add(label6);
-            groupBox5.Location = new Point(792, 276);
+            groupBox5.Location = new Point(792, 272);
             groupBox5.Name = "groupBox5";
             groupBox5.Size = new Size(339, 101);
             groupBox5.TabIndex = 4;
@@ -352,15 +460,21 @@ namespace QuanLyCuaHangDienThoai
             // 
             // txtTim
             // 
-            txtTim.Location = new Point(62, 50);
+            txtTim.Font = UiTheme.Than;
+            txtTim.Location = new Point(76, 40);
+            txtTim.BackColor = UiTheme.The;
+            txtTim.ForeColor = UiTheme.Chu;
+            txtTim.BorderStyle = BorderStyle.FixedSingle;
             txtTim.Name = "txtTim";
             txtTim.Size = new Size(153, 27);
             txtTim.TabIndex = 1;
             // 
             // label6
             // 
+            label6.Font = UiTheme.Than;
+            label6.Location = new Point(6, 43);
+            label6.ForeColor = UiTheme.Chu;
             label6.AutoSize = true;
-            label6.Location = new Point(6, 53);
             label6.Name = "label6";
             label6.Size = new Size(39, 20);
             label6.TabIndex = 0;
@@ -376,6 +490,9 @@ namespace QuanLyCuaHangDienThoai
             Controls.Add(groupBox3);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
+            ForeColor = UiTheme.Chu;
+            Font = UiTheme.Than;
+            BackColor = UiTheme.Nen;
             Name = "Form3";
             Text = "Quản lí khách hàng ";
             groupBox1.ResumeLayout(false);
