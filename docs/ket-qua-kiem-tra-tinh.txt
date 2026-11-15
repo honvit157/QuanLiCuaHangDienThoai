@@ -1,0 +1,23 @@
+======================================================================
+KIỂM TRA TĨNH BÀI TẬP LỚN - QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI
+======================================================================
+[csproj] QuanLyCuaHangDienThoai.csproj: tự động gom 56 tệp .cs (SDK-style).
+[csproj] Nền tảng: net10.0-windows
+[interface] Tìm thấy 5 tệp: IHangHoa, IHoaDon, IKhachHang, INhaCungCap, INhanVien
+[kế thừa] 16 lớp kế thừa lớp khác: Form8 : Form, Form4 : Form, Form2 : Form, Form6 : Form, Form9 : Form, Form1 : Form, Form10 : Form, Form5 : Form, FormBaoCao : Form, Form3 : Form, Form7 : Form, HangHoa : SanPhamBase, KhachHang : Nguoi, HoaDonBan : ChungTuBase, HoaDonNhap : ChungTuBase, NhanVien : Nguoi
+[triển khai] 5 lớp triển khai giao diện: NhaCungCap, HangHoa, KhachHang, HoaDonBan, NhanVien
+[tiện ích] 14 class method: KiemTraSoDienThoai, KiemTraEmail, KiemTraSoNguyenKhongAm, DinhDangTien, DinhDangTienVnd, DinhDangNgay, DocSoTien, ChuanHoaChuoi, TaoTuKhoaTimKiem, GhiLog, HienThongBao, HienCanhBao, XacNhan, SaoChepAnh
+[SQL] Không có câu lệnh SQL viết trực tiếp trong tầng GUI, BUS, DTO, DAL.
+[SQL] StoredProcedures.sql định nghĩa 70 thủ tục lưu trữ.
+[SQL] Đối chiếu tham số: mọi lời gọi khớp tên tham số với thủ tục.
+[SQL] 70/70 thủ tục được sử dụng từ tầng DAL.
+[CSDL] InitDb.sql tạo 12 bảng: tblHangSX, tblLoai, tblMau, tblDungLuong, tblNhaCungCap, tblNhanVien, tblKhachHang, tblHang, tblHoaDonBan, tblChiTietHDB, tblHoaDonNhap, tblChiTietHDN
+[CSDL] Mọi bảng mà thủ tục tham chiếu đều có trong InitDb.sql.
+[CSDL] Tệp gộp QLCuaHangBanDienThoai.sql đồng bộ: 70 thủ tục.
+[Word] CHƯƠNG 1: 3369 từ ≈ 7.2 trang
+[Word] CHƯƠNG 2: 4021 từ ≈ 8.6 trang
+[Word] CHƯƠNG 3: 5269 từ ≈ 11.2 trang
+[Word] Số bảng: 31, số hình: 4
+[PowerPoint] 14 slide.
+----------------------------------------------------------------------
+KẾT QUẢ: ĐẠT TẤT CẢ ĐIỀU KIỆN KIỂM TRA TĨNH
