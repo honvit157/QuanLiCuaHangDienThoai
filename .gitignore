@@ -19,3 +19,4 @@ Images/
 # Ẩn tệp tạm của Python
 __pycache__/
 *.pyc
+build/
