@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  BaoCaoDataSet.xsd
+  Tập dữ liệu có kiểu dùng cho chức năng báo cáo của ứng dụng Quản lý cửa hàng điện thoại.
+  Ba bảng dưới đây khớp chính xác với cột trả về của ba thủ tục trong StoredProcedures.sql:
+    - DoanhThu   <- sp_BaoCaoDoanhThuTheoThang
+    - TonKho     <- sp_BaoCaoTonKho
+    - TopBanChay <- sp_BaoCaoTopBanChay
+  Tệp này được dùng làm nguồn dữ liệu khi tạo báo cáo Crystal Report (xem docs/HUONG_DAN_CRYSTAL_REPORT.md).
+-->
+<xs:schema id="BaoCaoDataSet"
+           targetNamespace="http://tempuri.org/BaoCaoDataSet.xsd"
+           elementFormDefault="qualified"
+           xmlns="http://tempuri.org/BaoCaoDataSet.xsd"
+           xmlns:mstns="http://tempuri.org/BaoCaoDataSet.xsd"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+
+  <xs:element name="BaoCaoDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+
+        <!-- Báo cáo 1: doanh thu theo tháng -->
+        <xs:element name="DoanhThu">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Nam" type="xs:int" minOccurs="0" />
+              <xs:element name="Thang" type="xs:int" minOccurs="0" />
+              <xs:element name="SoHoaDon" type="xs:int" minOccurs="0" />
+              <xs:element name="DoanhThu" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- Báo cáo 2: tồn kho hiện tại -->
+        <xs:element name="TonKho">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MaHang" type="xs:string" minOccurs="0" />
+              <xs:element name="TenHang" type="xs:string" minOccurs="0" />
+              <xs:element name="Hang" type="xs:string" minOccurs="0" />
+              <xs:element name="Loai" type="xs:string" minOccurs="0" />
+              <xs:element name="DonGiaBan" type="xs:decimal" minOccurs="0" />
+              <xs:element name="SoLuongTon" type="xs:int" minOccurs="0" />
+              <xs:element name="GiaTriTon" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+        <!-- Báo cáo 3: sản phẩm bán chạy -->
+        <xs:element name="TopBanChay">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MaHang" type="xs:string" minOccurs="0" />
+              <xs:element name="TenHang" type="xs:string" minOccurs="0" />
+              <xs:element name="Hang" type="xs:string" minOccurs="0" />
+              <xs:element name="SoLuongBan" type="xs:int" minOccurs="0" />
+              <xs:element name="DoanhThu" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,21 @@
+# Ẩn các tệp sinh ra khi biên dịch
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# Ẩn tệp rác của hệ điều hành
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Ẩn tệp nhật ký do ứng dụng sinh ra khi chạy
+Logs/
+
+# Ẩn thư mục ảnh do người dùng thêm vào khi chạy thử
+Images/
+
+# Ẩn tệp tạm của Python
+__pycache__/
+*.pyc
