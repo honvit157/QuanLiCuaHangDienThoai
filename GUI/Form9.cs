@@ -87,7 +87,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             }
         }
 
-        // Mở biểu mẫu đăng ký tài khoản nhân viên (FormDangKy)
+        // Mở biểu mẫu đăng ký tài khoản Khách hàng / Nhân viên (FormDangKy)
         private void lnkDangKy_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
         {
             using (FormDangKy frmDangKy = new FormDangKy())

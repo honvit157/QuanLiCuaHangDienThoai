@@ -92,14 +92,46 @@ Có thể đổi server mà không sửa code bằng biến môi trường `QLCH
 | `binh` | `123456` | Nhân viên |
 | `hoa` | `123456` | Quản lý |
 
-Chỉ tài khoản **Quản lý** mới thấy mục *Nhân viên* trên menu Dashboard.
-
 Ngay trên `Form9` có liên kết **“Chưa có tài khoản? Đăng ký ngay”** để mở `FormDangKy`
-(Họ tên, Số điện thoại, Tên đăng nhập, Mật khẩu, Nhập lại mật khẩu). Tài khoản tự đăng ký được
-ghi thẳng vào `tblNhanVien` bằng Stored Procedure `sp_DangKyNhanVien`: mã nhân viên do SQL tự sinh
-tiếp theo (`NV009`, `NV010`, ...), tên đăng nhập được kiểm tra trùng qua
-`sp_KiemTraTenDangNhapTonTai`, và luôn có chức vụ **Nhân viên**, trạng thái **Đang làm việc**
-(không thể tự đăng ký thành Quản lý). Đăng ký xong, tên đăng nhập được điền sẵn lại `Form9`.
+(Họ tên, Số điện thoại, Tên đăng nhập, Mật khẩu, Nhập lại mật khẩu, **Vai trò**). Ô **Vai trò** là
+`ComboBox` chỉ cho chọn hai giá trị **Khách hàng** (mặc định) hoặc **Nhân viên**.
+
+Tài khoản tự đăng ký được ghi thẳng vào `tblNhanVien` bằng Stored Procedure `sp_DangKyNhanVien`:
+mã tài khoản do SQL tự sinh tiếp theo (`NV009`, `NV010`, ...), tên đăng nhập được kiểm tra trùng qua
+`sp_KiemTraTenDangNhapTonTai`, và trạng thái luôn là **Đang làm việc**.
+
+- Tham số `@VaiTro` của `sp_DangKyNhanVien` chỉ nhận `N'Nhân viên'` hoặc `N'Khách hàng'`; mọi giá trị
+  khác (kể cả `N'Quản lý'`) đều bị **ép về `N'Nhân viên'`**, nên không ai tự nâng quyền khi đăng ký.
+  `NhanVienBUS.ChuanHoaVaiTro` kiểm tra lại lần nữa ở tầng nghiệp vụ.
+- Đăng ký với vai trò **Khách hàng**: ngoài bản ghi tài khoản trong `tblNhanVien` (cột `ChucVu` =
+  `N'Khách hàng'`), thủ tục còn thêm hồ sơ vào `tblKhachHang` (mã `KH011`, `KH012`, ...) nếu số điện
+  thoại chưa có, để khách vừa đăng ký hiện ngay trong danh sách khách hàng khi bán hàng.
+- `sp_KiemTraDangNhap` trả về cột `VaiTro` đúng một trong ba giá trị `Quản lý` / `Nhân viên` /
+  `Khách hàng`, và `Form10` dùng giá trị đó để phân quyền menu.
+
+Đăng ký xong, tên đăng nhập được điền sẵn lại `Form9`.
+
+### Ba mức phân quyền khi đăng nhập
+
+| Mục trên Dashboard (`Form10`) | Quản lý | Nhân viên | Khách hàng |
+|---|:--:|:--:|:--:|
+| Tổng quan | ✓ (4 thẻ + biểu đồ doanh thu) | ✓ (4 thẻ + biểu đồ doanh thu) | ✓ (2 thẻ, không có doanh thu) |
+| Điện thoại | ✓ thêm/sửa/xóa | ✓ thêm/sửa/xóa | ✓ **chỉ xem** (khóa Thêm/Sửa/Xóa, ô nhập chỉ đọc) |
+| Tìm kiếm | ✓ | ✓ | ✓ |
+| Danh mục | ✓ | ✓ | — |
+| Nhân viên | ✓ | — | — |
+| Khách hàng | ✓ | ✓ | — |
+| Nhà cung cấp | ✓ | ✓ | — |
+| Hóa đơn bán / Hóa đơn nhập | ✓ | ✓ | — |
+| Báo cáo | ✓ | ✓ | — |
+
+Menu của tài khoản **Khách hàng** chỉ còn nhóm *TỔNG QUAN* và *CỬA HÀNG* (Điện thoại, Tìm kiếm) cùng
+nút *Đăng xuất*; các nhóm quản trị nội bộ không được dựng nên không để lại khoảng trống trên sidebar.
+Dashboard của Khách hàng chỉ có 2 thẻ *Tổng sản phẩm* / *Khách hàng* thay cho 4 thẻ và biểu đồ doanh
+thu, và `Form1` bị khóa toàn bộ nút Thêm/Sửa/Xóa cùng các ô nhập.
+
+Dữ liệu mẫu chưa có tài khoản Khách hàng nào: mở `FormDangKy` từ `Form9`, chọn vai trò **Khách hàng**
+rồi đăng ký là có ngay một tài khoản để thử mức phân quyền thứ ba này.
 
 Mật khẩu dùng chung ở mức đủ cho bài tập lớn (lưu thẳng trong `tblNhanVien` như dữ liệu mẫu),
 chưa băm mật khẩu.
@@ -130,8 +162,8 @@ chưa băm mật khẩu.
 
 | Nhóm | Chức năng |
 |---|---|
-| Đăng nhập | Đăng nhập bằng tài khoản nhân viên (`Form9`), đăng ký tài khoản mới (`FormDangKy`) |
-| Tổng quan | Dashboard 3 cột: menu phân quyền, 4 thẻ thống kê, biểu đồ doanh thu 7 ngày, sidebar ảnh |
+| Đăng nhập | Đăng nhập bằng tài khoản (`Form9`), đăng ký tài khoản mới với vai trò **Khách hàng** hoặc **Nhân viên** (`FormDangKy`) |
+| Tổng quan | Dashboard 3 cột: menu phân quyền theo 3 vai trò, thẻ thống kê, biểu đồ doanh thu 7 ngày, sidebar ảnh |
 | Quản lý cửa hàng | Điện thoại (CRUD + ảnh + tìm nhanh), Danh mục (hãng/loại/màu/dung lượng), Nhân viên, Khách hàng, Nhà cung cấp |
 | Giao dịch | Hóa đơn bán (trừ tồn kho, giảm giá, xuất Excel), Hóa đơn nhập (cộng tồn kho, cập nhật giá nhập, xuất Excel) |
 | Thống kê | Báo cáo doanh thu theo tháng, tồn kho, top bán chạy; xuất Excel 3 sheet |

@@ -9,6 +9,11 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
     /// </summary>
     public class NhanVienBUS
     {
+        /// <summary>Ba mức phân quyền dùng chung cho đăng nhập, đăng ký và Dashboard.</summary>
+        public const string VaiTroQuanLy = "Quản lý";
+        public const string VaiTroNhanVien = "Nhân viên";
+        public const string VaiTroKhachHang = "Khách hàng";
+
         private readonly NhanVienDAL dal = new NhanVienDAL();
 
         /// <summary>Xác thực đăng nhập, trả về đối tượng nhân viên nếu thành công.</summary>
@@ -53,12 +58,14 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         }
 
         /// <summary>
-        /// Đăng ký tài khoản nhân viên mới từ biểu mẫu FormDangKy.
-        /// Kiểm tra họ tên, số điện thoại (10 số), tên đăng nhập chưa trùng, mật khẩu khớp nhau;
-        /// tài khoản tự đăng ký luôn là "Nhân viên" đang làm việc (không thể tự nhận "Quản lý").
+        /// Đăng ký tài khoản mới từ biểu mẫu FormDangKy theo vai trò người đăng ký chọn:
+        /// "Khách hàng" hoặc "Nhân viên". Kiểm tra họ tên, số điện thoại (10 số), tên đăng nhập
+        /// chưa trùng, mật khẩu khớp nhau; vai trò lạ luôn bị đưa về "Nhân viên" và không thể
+        /// tự đăng ký thành "Quản lý" (BUS và Stored Procedure đều chặn).
         /// </summary>
         public bool DangKy(string hoTen, string sdt, string tenDangNhap,
-                           string matKhau, string nhapLaiMatKhau, out string maNV, out string error)
+                           string matKhau, string nhapLaiMatKhau, string vaiTro,
+                           out string maNV, out string error)
         {
             maNV = "";
             error = "";
@@ -66,6 +73,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             string ten = tenDangNhap.Trim();
             string mk = matKhau.Trim();
             string mkNhapLai = nhapLaiMatKhau.Trim();
+            string vaiTroChuan = ChuanHoaVaiTro(vaiTro);
 
             if (string.IsNullOrWhiteSpace(hoTen))
             {
@@ -111,7 +119,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                     return false;
                 }
 
-                maNV = dal.DangKy(hoTen.Trim(), sdt.Trim(), ten, mk);
+                maNV = dal.DangKy(hoTen.Trim(), sdt.Trim(), ten, mk, vaiTroChuan);
 
                 if (string.IsNullOrEmpty(maNV))
                 {
@@ -119,7 +127,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                     return false;
                 }
 
-                AppHelpers.GhiLog($"Đăng ký tài khoản mới: {maNV} - {hoTen.Trim()} ({ten})");
+                AppHelpers.GhiLog($"Đăng ký tài khoản mới: {maNV} - {hoTen.Trim()} ({ten}) - vai trò {vaiTroChuan}");
                 return true;
             }
             catch (Exception ex)
@@ -132,6 +140,20 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         public DataTable LayDanhSach()
         {
             return dal.LayTatCa();
+        }
+
+        /// <summary>
+        /// Chuẩn hóa vai trò tự đăng ký: chỉ nhận "Khách hàng", mọi giá trị khác
+        /// (kể cả để trống) trở thành "Nhân viên"; "Quản lý" không bao giờ được trả về.
+        /// </summary>
+        public static string ChuanHoaVaiTro(string vaiTro)
+        {
+            string giaTri = (vaiTro ?? "").Trim();
+
+            return string.Equals(giaTri, VaiTroKhachHang, StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(giaTri, "Khach hang", StringComparison.OrdinalIgnoreCase)
+                ? VaiTroKhachHang
+                : VaiTroNhanVien;
         }
 
         public List<string> LayDanhSachMa()

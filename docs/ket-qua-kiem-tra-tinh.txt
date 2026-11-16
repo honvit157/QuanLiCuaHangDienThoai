@@ -1,6 +1,3 @@
-KẾT QUẢ KIỂM TRA TĨNH — 16/11/2026 10:41 (giờ máy đóng gói)
-Chạy: python tools/kiem_tra_tinh.py
-
 ======================================================================
 KIỂM TRA TĨNH BÀI TẬP LỚN - QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI
 ======================================================================
@@ -8,11 +5,11 @@ KIỂM TRA TĨNH BÀI TẬP LỚN - QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI
 [csproj] Nền tảng: net10.0-windows
 [csproj] RootNamespace khớp tài nguyên nhúng: Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.Properties.Resources
 [csproj] Mọi tệp biểu mẫu đều đủ bộ .cs/.Designer.cs/.resx.
-[Images] Có ảnh Dashboard dùng: Images/iphone18.jpg
 [Images] Có ảnh Dashboard dùng: Images/banner_khuyenmai.jpg
+[Images] Có ảnh Dashboard dùng: Images/iphone18.jpg
 [GUI] 12 biểu mẫu trong GUI/ dùng namespace 'Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI': 12 đúng, 0 sai.
 [cú pháp] tree-sitter C#: 0 lỗi cú pháp trong 61 tệp .cs.
-[trùng tên] 33 kiểu dữ liệu, 996 thành viên trong các lớp: 0 chỗ trùng tên (CS0101/CS0102).
+[trùng tên] 33 kiểu dữ liệu, 1007 thành viên trong các lớp: 0 chỗ trùng tên (CS0101/CS0102).
 [lời gọi] Đối chiếu 123 lời gọi BUS/DAL với khai báo lớp: 0 lời gọi không khớp.
 [interface] Tìm thấy 6 tệp: IHangHoa, IHoaDon, IHoaDonNhap, IKhachHang, INhaCungCap, INhanVien
 [trừu tượng] 3 lớp trừu tượng: ChungTuBase, Nguoi, SanPhamBase

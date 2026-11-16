@@ -65,6 +65,13 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 || vaiTro.Equals("Admin", StringComparison.OrdinalIgnoreCase);
         }
 
+        /// <summary>Tài khoản Khách hàng: chỉ xem sản phẩm và tìm kiếm, không vào phần quản trị.</summary>
+        private bool LaKhachHang()
+        {
+            return vaiTro.Equals("Khách hàng", StringComparison.OrdinalIgnoreCase)
+                || vaiTro.Equals("Khach hang", StringComparison.OrdinalIgnoreCase);
+        }
+
         private void TaoGiaoDien()
         {
 
@@ -462,63 +469,81 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 HienThiDashboard();
             }));
 
-            Label lblNhomQuanLy = TaoNhomMenu("QUẢN LÝ CỬA HÀNG");
-            flpMenu.Controls.Add(lblNhomQuanLy);
-
-            flpMenu.Controls.Add(TaoNutMenu("▣", "Điện thoại", () =>
+            if (LaKhachHang())
             {
-                MoForm(new Form1(), "Điện thoại");
-            }));
+                // Khách hàng: chỉ xem sản phẩm và tìm kiếm, không có menu quản trị nội bộ
+                flpMenu.Controls.Add(TaoNhomMenu("CỬA HÀNG"));
 
-            flpMenu.Controls.Add(TaoNutMenu("▤", "Danh mục", () =>
-            {
-                MoForm(new Form5(), "Danh mục");
-            }));
-
-            // Chỉ quản lý mới được vào Form2
-            if (LaQuanLy())
-            {
-                flpMenu.Controls.Add(TaoNutMenu("♙", "Nhân viên", () =>
+                flpMenu.Controls.Add(TaoNutMenu("▣", "Điện thoại", () =>
                 {
-                    MoForm(new Form2(), "Quản lý nhân viên");
+                    MoForm(new Form1(), "Điện thoại (chỉ xem)");
+                }));
+
+                flpMenu.Controls.Add(TaoNutMenu("⌕", "Tìm kiếm", () =>
+                {
+                    MoForm(new Form6(), "Tìm kiếm điện thoại");
                 }));
             }
-
-            flpMenu.Controls.Add(TaoNutMenu("♧", "Khách hàng", () =>
+            else
             {
-                MoForm(new Form3(), "Quản lý khách hàng");
-            }));
+                Label lblNhomQuanLy = TaoNhomMenu("QUẢN LÝ CỬA HÀNG");
+                flpMenu.Controls.Add(lblNhomQuanLy);
 
-            flpMenu.Controls.Add(TaoNutMenu("▱", "Nhà cung cấp", () =>
-            {
-                MoForm(new Form4(), "Nhà cung cấp");
-            }));
+                flpMenu.Controls.Add(TaoNutMenu("▣", "Điện thoại", () =>
+                {
+                    MoForm(new Form1(), "Điện thoại");
+                }));
 
-            flpMenu.Controls.Add(TaoNutMenu("⌕", "Tìm kiếm", () =>
-            {
-                MoForm(new Form6(), "Tìm kiếm điện thoại");
-            }));
+                flpMenu.Controls.Add(TaoNutMenu("▤", "Danh mục", () =>
+                {
+                    MoForm(new Form5(), "Danh mục");
+                }));
 
-            Label lblNhomHoaDon = TaoNhomMenu("GIAO DỊCH");
-            flpMenu.Controls.Add(lblNhomHoaDon);
+                // Chỉ quản lý mới được vào Form2
+                if (LaQuanLy())
+                {
+                    flpMenu.Controls.Add(TaoNutMenu("♙", "Nhân viên", () =>
+                    {
+                        MoForm(new Form2(), "Quản lý nhân viên");
+                    }));
+                }
 
-            flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán", () =>
-            {
-                MoForm(new Form7(), "Hóa đơn bán hàng");
-            }));
+                flpMenu.Controls.Add(TaoNutMenu("♧", "Khách hàng", () =>
+                {
+                    MoForm(new Form3(), "Quản lý khách hàng");
+                }));
 
-            flpMenu.Controls.Add(TaoNutMenu("▧", "Hóa đơn nhập", () =>
-            {
-                MoForm(new Form8(), "Hóa đơn nhập hàng");
-            }));
+                flpMenu.Controls.Add(TaoNutMenu("▱", "Nhà cung cấp", () =>
+                {
+                    MoForm(new Form4(), "Nhà cung cấp");
+                }));
 
-            Label lblNhomBaoCao = TaoNhomMenu("THỐNG KÊ");
-            flpMenu.Controls.Add(lblNhomBaoCao);
+                flpMenu.Controls.Add(TaoNutMenu("⌕", "Tìm kiếm", () =>
+                {
+                    MoForm(new Form6(), "Tìm kiếm điện thoại");
+                }));
 
-            flpMenu.Controls.Add(TaoNutMenu("▥", "Báo cáo", () =>
-            {
-                MoForm(new FormBaoCao(), "Báo cáo thống kê");
-            }));
+                Label lblNhomHoaDon = TaoNhomMenu("GIAO DỊCH");
+                flpMenu.Controls.Add(lblNhomHoaDon);
+
+                flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán", () =>
+                {
+                    MoForm(new Form7(), "Hóa đơn bán hàng");
+                }));
+
+                flpMenu.Controls.Add(TaoNutMenu("▧", "Hóa đơn nhập", () =>
+                {
+                    MoForm(new Form8(), "Hóa đơn nhập hàng");
+                }));
+
+                Label lblNhomBaoCao = TaoNhomMenu("THỐNG KÊ");
+                flpMenu.Controls.Add(lblNhomBaoCao);
+
+                flpMenu.Controls.Add(TaoNutMenu("▥", "Báo cáo", () =>
+                {
+                    MoForm(new FormBaoCao(), "Báo cáo thống kê");
+                }));
+            }
 
             Panel pnlDangXuat = new Panel
             {
@@ -679,7 +704,9 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
             Label lblMoTa = new Label
             {
-                Text = "Tổng quan hoạt động cửa hàng điện thoại",
+                Text = LaKhachHang()
+                    ? "Bạn đang dùng tài khoản Khách hàng: xem và tìm kiếm sản phẩm ở menu bên trái"
+                    : "Tổng quan hoạt động cửa hàng điện thoại",
                 Font = new Font("Segoe UI", 9.5F),
                 ForeColor = mauPhu,
                 AutoSize = true,
@@ -693,20 +720,24 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             // 2. KHU VỰC THỐNG KÊ
             // =========================
 
+            // Khách hàng chỉ thấy 2 thẻ không liên quan doanh thu; nhân viên/quản lý thấy đủ 4 thẻ
+            bool xemNhuKhachHang = LaKhachHang();
+            int soThe = xemNhuKhachHang ? 2 : 4;
+
             TableLayoutPanel tblThe = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                ColumnCount = 4,
+                ColumnCount = soThe,
                 RowCount = 1,
                 BackColor = mauNen,
                 Margin = new Padding(0, 0, 0, 12),
                 Padding = Padding.Empty
             };
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < soThe; i++)
             {
                 tblThe.ColumnStyles.Add(
-                    new ColumnStyle(SizeType.Percent, 25F));
+                    new ColumnStyle(SizeType.Percent, 100F / soThe));
             }
 
             tblThe.RowStyles.Add(
@@ -723,8 +754,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             {
                 tongSanPham = thongKeBUS.TongSanPham();
                 tongKhachHang = thongKeBUS.TongKhachHang();
-                hoaDonHomNay = thongKeBUS.HoaDonHomNay();
-                doanhThuHomNay = thongKeBUS.DoanhThuHomNay();
+
+                if (!xemNhuKhachHang)
+                {
+                    hoaDonHomNay = thongKeBUS.HoaDonHomNay();
+                    doanhThuHomNay = thongKeBUS.DoanhThuHomNay();
+                }
             }
             catch (Exception ex)
             {
@@ -735,7 +770,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                     MessageBoxIcon.Warning);
             }
 
-            // 4 ô thống kê nằm trên cùng một hàng ngang
+            // Các ô thống kê nằm trên cùng một hàng ngang
             tblThe.Controls.Add(
                 TaoTheThongKe("▣", "Tổng sản phẩm",
                 tongSanPham.ToString("N0")), 0, 0);
@@ -744,13 +779,16 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 TaoTheThongKe("♙", "Khách hàng",
                 tongKhachHang.ToString("N0")), 1, 0);
 
-            tblThe.Controls.Add(
-                TaoTheThongKe("▤", "Hóa đơn hôm nay",
-                hoaDonHomNay.ToString("N0")), 2, 0);
+            if (!xemNhuKhachHang)
+            {
+                tblThe.Controls.Add(
+                    TaoTheThongKe("▤", "Hóa đơn hôm nay",
+                    hoaDonHomNay.ToString("N0")), 2, 0);
 
-            tblThe.Controls.Add(
-                TaoTheThongKe("₫", "Doanh thu hôm nay",
-                doanhThuHomNay.ToString("N0") + " đ"), 3, 0);
+                tblThe.Controls.Add(
+                    TaoTheThongKe("₫", "Doanh thu hôm nay",
+                    doanhThuHomNay.ToString("N0") + " đ"), 3, 0);
+            }
 
 
             // =========================
@@ -765,89 +803,108 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 Margin = Padding.Empty
             };
 
-            // Chia biểu đồ thành 3 hàng riêng biệt
-            TableLayoutPanel tblBieuDo = new TableLayoutPanel
+            if (xemNhuKhachHang)
             {
-                Dock = DockStyle.Fill,
-                ColumnCount = 1,
-                RowCount = 3,
-                BackColor = Color.White,
-                Margin = Padding.Empty,
-                Padding = Padding.Empty
-            };
+                // Khách hàng không xem doanh thu: thay biểu đồ bằng hướng dẫn sử dụng
+                Label lblHuongDan = new Label
+                {
+                    Text = "Bạn đang đăng nhập với vai trò Khách hàng.\n" +
+                           "Dùng menu Điện thoại để xem danh sách sản phẩm (chỉ xem) " +
+                           "và mục Tìm kiếm để tra cứu theo tên hoặc mã máy.",
+                    Dock = DockStyle.Fill,
+                    Font = new Font("Segoe UI", 11F),
+                    ForeColor = mauPhu,
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
 
-            tblBieuDo.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-
-            tblBieuDo.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-
-            tblBieuDo.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-
-            // Tiêu đề biểu đồ
-            Label lblTieuDeBieuDo = new Label
-            {
-                Text = "DOANH THU 7 NGÀY GẦN NHẤT",
-                Font = new Font("Segoe UI", 13F, FontStyle.Bold),
-                ForeColor = mauNavy,
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleLeft,
-                AutoEllipsis = false
-            };
-
-            // Mô tả
-            Label lblMoTaBieuDo = new Label
-            {
-                Text = "Thống kê doanh thu bán hàng theo ngày",
-                Font = new Font("Segoe UI", 9F),
-                ForeColor = mauPhu,
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleLeft
-            };
-
-            // Lấy dữ liệu
-            DataTable dtDoanhThu = new DataTable();
-
-            try
-            {
-                dtDoanhThu = thongKeBUS.DoanhThu7Ngay();
+                pnlBieuDo.Controls.Add(lblHuongDan);
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(
-                    "Không thể tải biểu đồ doanh thu:\n" + ex.Message,
-                    "Lỗi dữ liệu",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
+                // Chia biểu đồ thành 3 hàng riêng biệt
+                TableLayoutPanel tblBieuDo = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    ColumnCount = 1,
+                    RowCount = 3,
+                    BackColor = Color.White,
+                    Margin = Padding.Empty,
+                    Padding = Padding.Empty
+                };
+
+                tblBieuDo.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+
+                tblBieuDo.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
+
+                tblBieuDo.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+                // Tiêu đề biểu đồ
+                Label lblTieuDeBieuDo = new Label
+                {
+                    Text = "DOANH THU 7 NGÀY GẦN NHẤT",
+                    Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                    ForeColor = mauNavy,
+                    Dock = DockStyle.Fill,
+                    TextAlign = ContentAlignment.MiddleLeft,
+                    AutoEllipsis = false
+                };
+
+                // Mô tả
+                Label lblMoTaBieuDo = new Label
+                {
+                    Text = "Thống kê doanh thu bán hàng theo ngày",
+                    Font = new Font("Segoe UI", 9F),
+                    ForeColor = mauPhu,
+                    Dock = DockStyle.Fill,
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+
+                // Lấy dữ liệu
+                DataTable dtDoanhThu = new DataTable();
+
+                try
+                {
+                    dtDoanhThu = thongKeBUS.DoanhThu7Ngay();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        "Không thể tải biểu đồ doanh thu:\n" + ex.Message,
+                        "Lỗi dữ liệu",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                }
+
+                // Khu vực vẽ biểu đồ
+                Panel pnlVungBieuDo = new Panel
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = Color.White,
+                    Margin = Padding.Empty,
+                    Padding = new Padding(0, 5, 0, 5),
+                    MinimumSize = new Size(0, 180)
+                };
+
+                // Vẽ lại khi Panel thay đổi kích thước
+                pnlVungBieuDo.Paint += (s, e) =>
+                {
+                    VeBieuDoDoanhThu(
+                        e.Graphics,
+                        pnlVungBieuDo.ClientSize,
+                        dtDoanhThu);
+                };
+
+                pnlVungBieuDo.Resize += (s, e) =>
+                {
+                    pnlVungBieuDo.Invalidate();
+                };
+
+                tblBieuDo.Controls.Add(lblTieuDeBieuDo, 0, 0);
+                tblBieuDo.Controls.Add(lblMoTaBieuDo, 0, 1);
+                tblBieuDo.Controls.Add(pnlVungBieuDo, 0, 2);
+
+                pnlBieuDo.Controls.Add(tblBieuDo);
             }
-
-            // Khu vực vẽ biểu đồ
-            Panel pnlVungBieuDo = new Panel
-            {
-                Dock = DockStyle.Fill,
-                BackColor = Color.White,
-                Margin = Padding.Empty,
-                Padding = new Padding(0, 5, 0, 5),
-                MinimumSize = new Size(0, 180)
-            };
-
-            // Vẽ lại khi Panel thay đổi kích thước
-            pnlVungBieuDo.Paint += (s, e) =>
-            {
-                VeBieuDoDoanhThu(
-                    e.Graphics,
-                    pnlVungBieuDo.ClientSize,
-                    dtDoanhThu);
-            };
-
-            pnlVungBieuDo.Resize += (s, e) =>
-            {
-                pnlVungBieuDo.Invalidate();
-            };
-
-            tblBieuDo.Controls.Add(lblTieuDeBieuDo, 0, 0);
-            tblBieuDo.Controls.Add(lblMoTaBieuDo, 0, 1);
-            tblBieuDo.Controls.Add(pnlVungBieuDo, 0, 2);
-
-            pnlBieuDo.Controls.Add(tblBieuDo);
 
             // Ghép các khu vực
             tblDashboard.Controls.Add(pnlChao, 0, 0);

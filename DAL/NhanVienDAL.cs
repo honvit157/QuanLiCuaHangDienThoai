@@ -110,18 +110,19 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         }
 
         /// <summary>
-        /// Đăng ký tài khoản nhân viên mới hoàn toàn trong Stored Procedure
-        /// (tự sinh MaNV, chức vụ "Nhân viên", trạng thái "Đang làm việc"),
-        /// trả về mã nhân viên do SQL sinh ra.
+        /// Đăng ký tài khoản mới hoàn toàn trong Stored Procedure
+        /// (tự sinh MaNV, chức vụ theo @VaiTro là "Nhân viên" hoặc "Khách hàng",
+        /// trạng thái "Đang làm việc"), trả về mã nhân viên do SQL sinh ra.
         /// </summary>
-        public string DangKy(string hoTen, string sdt, string tenDangNhap, string matKhau)
+        public string DangKy(string hoTen, string sdt, string tenDangNhap, string matKhau, string vaiTro)
         {
             SqlParameter[] pars =
             {
                 DatabaseAccess.ThamSo("@TenNV", hoTen),
                 DatabaseAccess.ThamSo("@SDT", sdt),
                 DatabaseAccess.ThamSo("@TenDangNhap", tenDangNhap),
-                DatabaseAccess.ThamSo("@MatKhau", matKhau)
+                DatabaseAccess.ThamSo("@MatKhau", matKhau),
+                DatabaseAccess.ThamSo("@VaiTro", vaiTro)
             };
 
             DataTable dt = DatabaseAccess.DocBangProc("sp_DangKyNhanVien", pars);

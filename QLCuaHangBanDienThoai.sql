@@ -1036,7 +1036,9 @@ BEGIN
 END;
 GO
 
--- 8.5 Kiểm tra đăng nhập: trả về thông tin nhân viên nếu tài khoản và mật khẩu đúng
+-- 8.5 Kiểm tra đăng nhập: trả về thông tin nhân viên nếu tài khoản và mật khẩu đúng.
+--     Cột VaiTro chỉ trả về một trong ba giá trị N'Quản lý', N'Nhân viên', N'Khách hàng'
+--     (dữ liệu cũ bị trống hoặc ghi giá trị lạ được coi là N'Nhân viên').
 CREATE OR ALTER PROCEDURE sp_KiemTraDangNhap
     @TaiKhoan NVARCHAR(50),
     @MatKhau  NVARCHAR(100)
@@ -1045,7 +1047,11 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT MaNV, TenNV,
-           ISNULL(ChucVu, N'Nhân viên') AS VaiTro,
+           CASE
+               WHEN ChucVu = N'Khách hàng' THEN N'Khách hàng'
+               WHEN ChucVu = N'Quản lý'    THEN N'Quản lý'
+               ELSE N'Nhân viên'
+           END AS VaiTro,
            ChucVu,
            TaiKhoan
     FROM dbo.tblNhanVien
@@ -1145,19 +1151,32 @@ BEGIN
 END;
 GO
 
--- 8.7 Đăng ký tài khoản nhân viên: tự sinh MaNV kế tiếp (NV001, NV002, ...),
---     luôn gán chức vụ N'Nhân viên' và trạng thái N'Đang làm việc'.
+-- 8.7 Đăng ký tài khoản: tự sinh MaNV kế tiếp (NV001, NV002, ...), nhận vai trò
+--     N'Nhân viên' hoặc N'Khách hàng' qua tham số @VaiTro. Mọi giá trị khác (kể cả
+--     N'Quản lý') đều bị ép về N'Nhân viên' để không ai tự nâng quyền khi đăng ký.
+--     Đăng ký vai trò Khách hàng thì đồng thời thêm hồ sơ vào tblKhachHang nếu số
+--     điện thoại chưa có, để khách mới hiện ngay trong danh sách khách hàng khi bán hàng.
 CREATE OR ALTER PROCEDURE sp_DangKyNhanVien
     @TenNV       NVARCHAR(100),
     @SDT         NVARCHAR(20),
     @TenDangNhap NVARCHAR(50),
-    @MatKhau     NVARCHAR(100)
+    @MatKhau     NVARCHAR(100),
+    @VaiTro      NVARCHAR(50) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     DECLARE @MaNVMoi NVARCHAR(20);
     DECLARE @SoTiepTheo INT;
+    DECLARE @VaiTroChuan NVARCHAR(50);
+    DECLARE @MaKHMoi NVARCHAR(20);
+    DECLARE @SoKHTiepTheo INT;
+
+    -- Chỉ có hai vai trò hợp lệ khi tự đăng ký
+    SET @VaiTroChuan = CASE
+        WHEN @VaiTro = N'Khách hàng' THEN N'Khách hàng'
+        ELSE N'Nhân viên'
+    END;
 
     -- Lấy số lớn nhất trong các mã dạng NVxxx rồi cộng thêm 1
     SELECT @SoTiepTheo = ISNULL(MAX(TRY_CAST(SUBSTRING(MaNV, 3, 18) AS INT)), 0) + 1
@@ -1173,9 +1192,27 @@ BEGIN
     INSERT INTO dbo.tblNhanVien
         (MaNV, TenNV, SDT, TaiKhoan, MatKhau, ChucVu, TrangThai)
     VALUES
-        (@MaNVMoi, @TenNV, @SDT, @TenDangNhap, @MatKhau, N'Nhân viên', N'Đang làm việc');
+        (@MaNVMoi, @TenNV, @SDT, @TenDangNhap, @MatKhau, @VaiTroChuan, N'Đang làm việc');
 
-    SELECT @MaNVMoi AS MaNV;
+    -- Khách hàng tự đăng ký: bổ sung hồ sơ khách hàng theo số điện thoại (nếu chưa có)
+    IF @VaiTroChuan = N'Khách hàng'
+       AND NOT EXISTS (SELECT 1 FROM dbo.tblKhachHang WHERE SDT = @SDT)
+    BEGIN
+        SELECT @SoKHTiepTheo = ISNULL(MAX(TRY_CAST(SUBSTRING(MaKH, 3, 18) AS INT)), 0) + 1
+        FROM dbo.tblKhachHang
+        WHERE MaKH LIKE N'KH%'
+          AND TRY_CAST(SUBSTRING(MaKH, 3, 18) AS INT) IS NOT NULL;
+
+        IF @SoKHTiepTheo > 999
+            SET @MaKHMoi = N'KH' + CAST(@SoKHTiepTheo AS NVARCHAR(10));
+        ELSE
+            SET @MaKHMoi = N'KH' + RIGHT(N'000' + CAST(@SoKHTiepTheo AS NVARCHAR(10)), 3);
+
+        INSERT INTO dbo.tblKhachHang (MaKH, TenKH, SDT, DiaChi, Email)
+        VALUES (@MaKHMoi, @TenNV, @SDT, NULL, NULL);
+    END
+
+    SELECT @MaNVMoi AS MaNV, @VaiTroChuan AS VaiTro;
 END;
 GO
 

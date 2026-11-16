@@ -16,6 +16,10 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
         private DataTable dtHang = new DataTable();
         private DataView dvHang = new DataView();
         private string tenAnh = "";
+
+        /// <summary>Tài khoản Khách hàng chỉ được xem danh sách, không được thêm/sửa/xóa.</summary>
+        private readonly bool chiXem = DangLaKhachHang();
+
         private string ThuMucAnh => Path.Combine(Application.StartupPath, "Images");
 
         public Form1()
@@ -31,6 +35,35 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             btnChonAnh.Click += btnChonAnh_Click;
             btnTim.Click += btnTim_Click;
             dgvHang.CellClick += dgvHang_CellClick;
+        }
+
+        /// <summary>Vai trò của phiên đăng nhập hiện tại có phải Khách hàng hay không.</summary>
+        private static bool DangLaKhachHang()
+        {
+            string vaiTro = (Form9.VaiTroDangNhap ?? "").Trim();
+
+            return string.Equals(vaiTro, "Khách hàng", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(vaiTro, "Khach hang", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>Khóa toàn bộ ô nhập và ba nút Thêm/Sửa/Xóa để biểu mẫu chỉ còn chức năng xem.</summary>
+        private void KhoaNhapLieu()
+        {
+            btnThem.Enabled = false;
+            btnSua.Enabled = false;
+            btnXoa.Enabled = false;
+            btnChonAnh.Enabled = false;
+
+            txtMaHang.ReadOnly = true;
+            txtTenHang.ReadOnly = true;
+            txtGiaNhap.ReadOnly = true;
+            txtGiaBan.ReadOnly = true;
+            txtSoLuong.ReadOnly = true;
+
+            cboHang.Enabled = false;
+            cboLoai.Enabled = false;
+            cboMau.Enabled = false;
+            cboDungLuong.Enabled = false;
         }
 
         private void Form1_Load(object? sender, EventArgs e)
@@ -314,6 +347,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             HienAnh("");
             dgvHang.ClearSelection();
             txtMaHang.Focus();
+
+            if (chiXem) KhoaNhapLieu();
         }
 
         private void btnTim_Click(object? sender, EventArgs e)

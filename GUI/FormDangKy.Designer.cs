@@ -37,6 +37,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             txtMatKhau = new TextBox();
             labelNhapLaiMK = new Label();
             txtNhapLaiMK = new TextBox();
+            labelVaiTro = new Label();
+            cboVaiTro = new ComboBox();
             btnDangKy = new Button();
             btnHuy = new Button();
 
@@ -50,7 +52,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(241, 246, 252);
-            ClientSize = new Size(720, 660);
+            ClientSize = new Size(720, 710);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -78,16 +80,16 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             groupBox1.BackColor = Color.White;
             groupBox1.ForeColor = Color.FromArgb(11, 46, 77);
             groupBox1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            groupBox1.Text = "ĐĂNG KÝ TÀI KHOẢN NHÂN VIÊN";
+            groupBox1.Text = "ĐĂNG KÝ TÀI KHOẢN";
             groupBox1.Location = new Point(70, 20);
-            groupBox1.Size = new Size(580, 500);
+            groupBox1.Size = new Size(580, 575);
             groupBox1.TabStop = false;
             groupBox1.Padding = new Padding(20);
 
             labelThongTin.AutoSize = false;
             labelThongTin.Location = new Point(35, 45);
             labelThongTin.Size = new Size(500, 30);
-            labelThongTin.Text = "Điền thông tin bên dưới để tạo tài khoản nhân viên";
+            labelThongTin.Text = "Điền thông tin bên dưới và chọn vai trò: Khách hàng hoặc Nhân viên";
             labelThongTin.Font = new Font("Segoe UI", 10F);
             labelThongTin.ForeColor = Color.FromArgb(110, 125, 145);
 
@@ -158,7 +160,21 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             txtNhapLaiMK.UseSystemPasswordChar = true;
             txtNhapLaiMK.Name = "txtNhapLaiMK";
 
-            btnDangKy.Location = new Point(40, 432);
+            labelVaiTro.AutoSize = true;
+            labelVaiTro.Location = new Point(38, 424);
+            labelVaiTro.Text = "VAI TRÒ";
+            labelVaiTro.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            labelVaiTro.ForeColor = Color.FromArgb(45, 65, 85);
+
+            cboVaiTro.Location = new Point(40, 449);
+            cboVaiTro.Size = new Size(490, 34);
+            cboVaiTro.Font = new Font("Segoe UI", 12F);
+            cboVaiTro.BackColor = Color.FromArgb(248, 250, 253);
+            cboVaiTro.DropDownStyle = ComboBoxStyle.DropDownList;
+            cboVaiTro.Items.AddRange(new object[] { "Khách hàng", "Nhân viên" });
+            cboVaiTro.Name = "cboVaiTro";
+
+            btnDangKy.Location = new Point(40, 505);
             btnDangKy.Size = new Size(240, 46);
             btnDangKy.Text = "ĐĂNG KÝ";
             btnDangKy.Name = "btnDangKy";
@@ -170,7 +186,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             btnDangKy.Cursor = Cursors.Hand;
             btnDangKy.UseVisualStyleBackColor = false;
 
-            btnHuy.Location = new Point(300, 432);
+            btnHuy.Location = new Point(300, 505);
             btnHuy.Size = new Size(230, 46);
             btnHuy.Text = "HỦY / QUAY LẠI";
             btnHuy.Name = "btnHuy";
@@ -193,6 +209,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             groupBox1.Controls.Add(txtMatKhau);
             groupBox1.Controls.Add(labelNhapLaiMK);
             groupBox1.Controls.Add(txtNhapLaiMK);
+            groupBox1.Controls.Add(labelVaiTro);
+            groupBox1.Controls.Add(cboVaiTro);
             groupBox1.Controls.Add(btnDangKy);
             groupBox1.Controls.Add(btnHuy);
 
@@ -228,6 +246,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
         private TextBox txtMatKhau;
         private Label labelNhapLaiMK;
         private TextBox txtNhapLaiMK;
+        private Label labelVaiTro;
+        private ComboBox cboVaiTro;
         private Button btnDangKy;
         private Button btnHuy;
     }
