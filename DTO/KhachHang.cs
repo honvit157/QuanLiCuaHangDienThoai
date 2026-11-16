@@ -10,6 +10,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         public string MaKH { get; set; } = "";
         public string Email { get; set; } = "";
 
+        /// <summary>Tên đăng nhập của tài khoản Khách hàng (cột TaiKhoan trong tblKhachHang).</summary>
+        public string TaiKhoan { get; set; } = "";
+
+        /// <summary>Mật khẩu đăng nhập của tài khoản Khách hàng (cột MatKhau trong tblKhachHang).</summary>
+        public string MatKhau { get; set; } = "";
+
         public KhachHang() { }
 
         public KhachHang(string maKH, string tenKH, string sdt, string diaChi)

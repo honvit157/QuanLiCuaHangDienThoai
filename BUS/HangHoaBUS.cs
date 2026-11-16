@@ -39,7 +39,10 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 TenHang = r["TenHang"].ToString() ?? "",
                 GiaNhap = r["DonGiaNhap"] == DBNull.Value ? 0 : Convert.ToDecimal(r["DonGiaNhap"]),
                 GiaBan = r["DonGiaBan"] == DBNull.Value ? 0 : Convert.ToDecimal(r["DonGiaBan"]),
-                SoLuongTon = r["SoLuongTon"] == DBNull.Value ? 0 : Convert.ToInt32(r["SoLuongTon"])
+                SoLuongTon = r["SoLuongTon"] == DBNull.Value ? 0 : Convert.ToInt32(r["SoLuongTon"]),
+                TenAnh = dt.Columns.Contains("TenAnh") && r["TenAnh"] != DBNull.Value
+                    ? r["TenAnh"].ToString()
+                    : ""
             };
         }
 

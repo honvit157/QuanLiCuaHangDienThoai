@@ -42,7 +42,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 DatabaseAccess.ThamSo("@DonGiaNhap", h.GiaNhap),
                 DatabaseAccess.ThamSo("@DonGiaBan", h.GiaBan),
                 DatabaseAccess.ThamSo("@SoLuongTon", h.SoLuongTon),
-                DatabaseAccess.ThamSo("@MoTa", h.MoTa)
+                DatabaseAccess.ThamSo("@MoTa", h.MoTa),
+                DatabaseAccess.ThamSo("@TenAnh", string.IsNullOrWhiteSpace(h.TenAnh) ? null : h.TenAnh)
             };
             return DatabaseAccess.ThucThiProc("sp_ThemHang", pars);
         }
@@ -60,7 +61,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 DatabaseAccess.ThamSo("@DonGiaNhap", h.GiaNhap),
                 DatabaseAccess.ThamSo("@DonGiaBan", h.GiaBan),
                 DatabaseAccess.ThamSo("@SoLuongTon", h.SoLuongTon),
-                DatabaseAccess.ThamSo("@MoTa", h.MoTa)
+                DatabaseAccess.ThamSo("@MoTa", h.MoTa),
+                DatabaseAccess.ThamSo("@TenAnh", string.IsNullOrWhiteSpace(h.TenAnh) ? null : h.TenAnh)
             };
             return DatabaseAccess.ThucThiProc("sp_CapNhatHang", pars);
         }

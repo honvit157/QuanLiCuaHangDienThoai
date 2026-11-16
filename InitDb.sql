@@ -92,12 +92,16 @@ CREATE TABLE dbo.tblNhanVien (
 GO
 
 -- A.7 Khách hàng
+--     TaiKhoan/MatKhau phục vụ Đăng ký - Đăng nhập của Khách hàng (FormDangKy, Form9).
+--     Khách hàng tự đăng ký được ghi thẳng vào bảng này, không cần hồ sơ nhân viên.
 CREATE TABLE dbo.tblKhachHang (
-    MaKH   NVARCHAR(20)  NOT NULL,
-    TenKH  NVARCHAR(100) NOT NULL,
-    SDT    NVARCHAR(20)  NULL,
-    DiaChi NVARCHAR(200) NULL,
-    Email  NVARCHAR(150) NULL,
+    MaKH     NVARCHAR(20)  NOT NULL,
+    TenKH    NVARCHAR(100) NOT NULL,
+    SDT      NVARCHAR(20)  NULL,
+    DiaChi   NVARCHAR(200) NULL,
+    Email    NVARCHAR(150) NULL,
+    TaiKhoan NVARCHAR(50)  NULL,
+    MatKhau  NVARCHAR(100) NULL,
     CONSTRAINT PK_tblKhachHang PRIMARY KEY (MaKH)
 );
 GO
@@ -114,6 +118,7 @@ CREATE TABLE dbo.tblHang (
     DonGiaBan   DECIMAL(18,2)  NOT NULL CONSTRAINT DF_tblHang_DonGiaBan  DEFAULT (0),
     SoLuongTon  INT            NOT NULL CONSTRAINT DF_tblHang_SoLuongTon  DEFAULT (0),
     MoTa        NVARCHAR(500)  NULL,
+    TenAnh      NVARCHAR(255)  NULL,   -- tên tệp ảnh trong thư mục Images/, ví dụ SP001.jpg
     CONSTRAINT PK_tblHang PRIMARY KEY (MaHang),
     CONSTRAINT FK_tblHang_HangSX    FOREIGN KEY (MaHangSX)    REFERENCES dbo.tblHangSX (MaHangSX),
     CONSTRAINT FK_tblHang_Loai      FOREIGN KEY (MaLoai)      REFERENCES dbo.tblLoai (MaLoai),
@@ -129,6 +134,9 @@ CREATE TABLE dbo.tblHoaDonBan (
     MaKH     NVARCHAR(20)  NULL,
     NgayLap  DATETIME      NOT NULL CONSTRAINT DF_tblHoaDonBan_NgayLap DEFAULT (GETDATE()),
     TongTien DECIMAL(18,2) NOT NULL CONSTRAINT DF_tblHoaDonBan_TongTien DEFAULT (0),
+    TrangThaiThanhToan NVARCHAR(30) NOT NULL
+        CONSTRAINT DF_tblHoaDonBan_TrangThaiThanhToan DEFAULT (N'Chưa thanh toán'),
+    PhuongThucThanhToan NVARCHAR(50) NULL,   -- N'Tiền mặt' hoặc N'Chuyển khoản'
     CONSTRAINT PK_tblHoaDonBan PRIMARY KEY (MaHDB),
     CONSTRAINT FK_tblHoaDonBan_NhanVien  FOREIGN KEY (MaNV) REFERENCES dbo.tblNhanVien (MaNV),
     CONSTRAINT FK_tblHoaDonBan_KhachHang FOREIGN KEY (MaKH) REFERENCES dbo.tblKhachHang (MaKH)
@@ -185,6 +193,11 @@ CREATE INDEX IX_tblHoaDonBan_NgayLap ON dbo.tblHoaDonBan (NgayLap);
 CREATE INDEX IX_tblHoaDonBan_MaKH    ON dbo.tblHoaDonBan (MaKH);
 CREATE INDEX IX_tblChiTietHDB_MaHang ON dbo.tblChiTietHDB (MaHang);
 CREATE INDEX IX_tblHoaDonNhap_NgayNhap ON dbo.tblHoaDonNhap (NgayNhap);
+GO
+
+-- Mỗi tài khoản Khách hàng chỉ thuộc về một hồ sơ khách hàng
+CREATE UNIQUE INDEX UX_tblKhachHang_TaiKhoan ON dbo.tblKhachHang (TaiKhoan)
+    WHERE TaiKhoan IS NOT NULL;
 GO
 
 -- ============================================================================
@@ -244,17 +257,17 @@ INSERT INTO dbo.tblNhanVien (MaNV, TenNV, GioiTinh, NgaySinh, SDT, DiaChi, ChucV
 ('NV008', N'Ngô Thị Hoa',      N'Nữ',  '2002-03-30', '0908888888', N'80 Trần Phú, Quận 5, TP.HCM',       N'Quản lý',   'hoa',    '123456', N'Đang làm việc');
 GO
 
-INSERT INTO dbo.tblKhachHang (MaKH, TenKH, SDT, DiaChi, Email) VALUES
-('KH001', N'Nguyễn Thị Mai',  '0911111111', N'5 Hoàng Diệu, Quận 4, TP.HCM',        N'mainguyen@gmail.com'),
-('KH002', N'Trần Văn Nam',    '0922222222', N'15 Bến Vân Đồn, Quận 4, TP.HCM',      N'namtran@gmail.com'),
-('KH003', N'Lê Thị Oanh',     '0933333333', N'25 Khánh Hội, Quận 4, TP.HCM',        N'oanhle@gmail.com'),
-('KH004', N'Phạm Văn Phúc',   '0944444444', N'35 Tôn Đức Thắng, Quận 1, TP.HCM',    N'phucpham@gmail.com'),
-('KH005', N'Hoàng Thị Quỳnh', '0955555555', N'45 Hai Bà Trưng, Quận 1, TP.HCM',     N'quynhhoang@gmail.com'),
-('KH006', N'Đặng Văn Long',   '0966666666', N'55 Đinh Tiên Hoàng, Quận 1, TP.HCM',  N'longdang@gmail.com'),
-('KH007', N'Bùi Thị Sen',     '0977777777', N'65 Trần Quang Khải, Quận 1, TP.HCM',  N'senbui@gmail.com'),
-('KH008', N'Ngô Văn Tùng',    '0988888888', N'75 Lê Thánh Tôn, Quận 1, TP.HCM',     N'tungngo@gmail.com'),
-('KH009', N'Vũ Thị Uyên',     '0999999999', N'85 Ngô Đức Kế, Quận 1, TP.HCM',       N'uyenvu@gmail.com'),
-('KH010', N'Dương Văn Việt',  '0910000000', N'95 Mạc Thị Bưởi, Quận 1, TP.HCM',     N'vietduong@gmail.com');
+INSERT INTO dbo.tblKhachHang (MaKH, TenKH, SDT, DiaChi, Email, TaiKhoan, MatKhau) VALUES
+('KH001', N'Nguyễn Thị Mai',  '0911111111', N'5 Hoàng Diệu, Quận 4, TP.HCM',        N'mainguyen@gmail.com',  'mai.nguyen',  '123456'),
+('KH002', N'Trần Văn Nam',    '0922222222', N'15 Bến Vân Đồn, Quận 4, TP.HCM',      N'namtran@gmail.com',    'nam.tran',    '123456'),
+('KH003', N'Lê Thị Oanh',     '0933333333', N'25 Khánh Hội, Quận 4, TP.HCM',        N'oanhle@gmail.com',     'oanh.le',     '123456'),
+('KH004', N'Phạm Văn Phúc',   '0944444444', N'35 Tôn Đức Thắng, Quận 1, TP.HCM',    N'phucpham@gmail.com',   'phuc.pham',   '123456'),
+('KH005', N'Hoàng Thị Quỳnh', '0955555555', N'45 Hai Bà Trưng, Quận 1, TP.HCM',     N'quynhhoang@gmail.com', 'quynh.hoang', '123456'),
+('KH006', N'Đặng Văn Long',   '0966666666', N'55 Đinh Tiên Hoàng, Quận 1, TP.HCM',  N'longdang@gmail.com',   'long.dang',   '123456'),
+('KH007', N'Bùi Thị Sen',     '0977777777', N'65 Trần Quang Khải, Quận 1, TP.HCM',  N'senbui@gmail.com',     'sen.bui',     '123456'),
+('KH008', N'Ngô Văn Tùng',    '0988888888', N'75 Lê Thánh Tôn, Quận 1, TP.HCM',     N'tungngo@gmail.com',    'tung.ngo',    '123456'),
+('KH009', N'Vũ Thị Uyên',     '0999999999', N'85 Ngô Đức Kế, Quận 1, TP.HCM',       N'uyenvu@gmail.com',     'uyen.vu',     '123456'),
+('KH010', N'Dương Văn Việt',  '0910000000', N'95 Mạc Thị Bưởi, Quận 1, TP.HCM',     N'vietduong@gmail.com',  'viet.duong',  '123456');
 GO
 
 INSERT INTO dbo.tblHang (MaHang, TenHang, MaHangSX, MaLoai, MaMau, MaDungLuong, DonGiaNhap, DonGiaBan, SoLuongTon, MoTa) VALUES
@@ -293,14 +306,21 @@ INSERT INTO dbo.tblHang (MaHang, TenHang, MaHangSX, MaLoai, MaMau, MaDungLuong, 
 ('SP033', N'Xiaomi Poco M6 Pro',     'HSX003', 'L002', 'M004', 'DL002',  4500000,  6500000, 30, N'Helio G99 Ultra, camera 64MP');
 GO
 
-INSERT INTO dbo.tblHoaDonBan (MaHDB, MaNV, MaKH, NgayLap, TongTien) VALUES
-('HDB001', 'NV001', 'KH001', '2026-10-01',  32000000),
-('HDB002', 'NV002', 'KH002', '2026-10-05',   9500000),
-('HDB003', 'NV001', 'KH003', '2026-10-10',  24000000),
-('HDB004', 'NV003', 'KH004', '2026-10-15',   5000000),
-('HDB005', 'NV002', 'KH005', '2026-10-20',  28000000),
-('HDB006', 'NV001', 'KH006', '2026-10-25',  19420000),
-('HDB007', 'NV003', 'KH007', '2026-10-30',  10990000);
+-- Tên ảnh sản phẩm: mỗi mặt hàng có một ảnh riêng trong thư mục Images/
+-- (SP001.jpg ... SP033.jpg lấy từ bộ 61 ảnh sản phẩm của nhóm).
+UPDATE dbo.tblHang
+SET TenAnh = MaHang + N'.jpg'
+WHERE TenAnh IS NULL;
+GO
+
+INSERT INTO dbo.tblHoaDonBan (MaHDB, MaNV, MaKH, NgayLap, TongTien, TrangThaiThanhToan, PhuongThucThanhToan) VALUES
+('HDB001', 'NV001', 'KH001', '2026-10-01',  32000000, N'Đã thanh toán', N'Tiền mặt'),
+('HDB002', 'NV002', 'KH002', '2026-10-05',   9500000, N'Đã thanh toán', N'Tiền mặt'),
+('HDB003', 'NV001', 'KH003', '2026-10-10',  24000000, N'Đã thanh toán', N'Chuyển khoản'),
+('HDB004', 'NV003', 'KH004', '2026-10-15',   5000000, N'Đã thanh toán', N'Tiền mặt'),
+('HDB005', 'NV002', 'KH005', '2026-10-20',  28000000, N'Đã thanh toán', N'Tiền mặt'),
+('HDB006', 'NV001', 'KH006', '2026-10-25',  19420000, N'Đã thanh toán', N'Chuyển khoản'),
+('HDB007', 'NV003', 'KH007', '2026-10-30',  10990000, N'Đã thanh toán', N'Tiền mặt');
 GO
 
 INSERT INTO dbo.tblChiTietHDB (MaHDB, MaHang, SoLuong, DonGia, GiamGia, ThanhTien) VALUES
@@ -370,14 +390,25 @@ INSERT INTO @DoanhThu (Ngay, TongTien) VALUES
 
 WHILE @i <= 6
 BEGIN
-    INSERT INTO dbo.tblHoaDonBan (MaHDB, MaNV, MaKH, NgayLap, TongTien)
+    INSERT INTO dbo.tblHoaDonBan
+    (
+        MaHDB,
+        MaNV,
+        MaKH,
+        NgayLap,
+        TongTien,
+        TrangThaiThanhToan,
+        PhuongThucThanhToan
+    )
     VALUES
     (
         'TEST' + RIGHT('000' + CAST(@i + 1 AS VARCHAR(3)), 3),
         @MaNVTest,
         @MaKHTest,
         DATEADD(DAY, -@i, GETDATE()),
-        (SELECT TongTien FROM @DoanhThu WHERE Ngay = @i)
+        (SELECT TongTien FROM @DoanhThu WHERE Ngay = @i),
+        N'Đã thanh toán',
+        N'Tiền mặt'
     );
 
     SET @i = @i + 1;

@@ -13,6 +13,11 @@ Kho này là bản nộp của **Nhóm 4**, gộp hai phần việc:
 - **Bản chuẩn hóa 3 tầng** (commit `545d1af` trên nhánh `hoan`): chuyển toàn bộ câu SQL viết trực
   tiếp trong C# sang Stored Procedure, bổ sung đầy đủ DAL/BUS cho mọi danh mục, thêm `ThongKeBUS`
   cho Dashboard, thêm lớp trừu tượng, giao diện và lớp tiện ích dùng chung.
+- **Phần mới của Đạt & An** (gộp từ commit `ef7b95b`): bộ **61 ảnh sản phẩm** (`DT*.jpg`, `PK*.jpg`,
+  `SP*.jpg`, `TB*.jpg`) trong `Images/`, cột `TenAnh` để lưu và hiển thị ảnh theo từng mặt hàng, và
+  **trang Khách hàng `Form12`** (xem điện thoại, giỏ hàng, đặt mua, hóa đơn của tôi, thanh toán) cùng
+  tài khoản đăng ký/đăng nhập của Khách hàng trong bảng `tblKhachHang`. Phần mã đó đã được chuyển
+  sang đúng 3 tầng và Stored Procedure, giữ nguyên các quy ước của bản chuẩn hóa.
 
 ---
 
@@ -30,7 +35,7 @@ Kho này là bản nộp của **Nhóm 4**, gộp hai phần việc:
 
 ```
 ├── GUI/                          # Tầng giao diện (WinForms, namespace ..._Nhóm_4.GUI)
-│   ├── Form1..Form10, FormBaoCao, FormDangKy   # mỗi biểu mẫu: .cs + .Designer.cs (+ .resx)
+│   ├── Form1..Form10, FormBaoCao, FormDangKy, Form12   # mỗi biểu mẫu: .cs + .Designer.cs (+ .resx)
 ├── Program.cs                    # Điểm vào của ứng dụng, mở Form9 đăng nhập
 ├── BUS/                          # Tầng nghiệp vụ (Business Logic)
 │   ├── HangHoaBUS.cs  KhachHangBUS.cs  NhaCungCapBUS.cs  NhanVienBUS.cs
@@ -49,7 +54,7 @@ Kho này là bản nộp của **Nhóm 4**, gộp hai phần việc:
 │   ├── IHangHoa.cs  IHoaDon.cs  IHoaDonNhap.cs
 │   ├── IKhachHang.cs  INhaCungCap.cs  INhanVien.cs
 ├── Utilities/AppHelpers.cs       # 16 class method / thành viên tiện ích dùng chung
-├── Images/                       # Ảnh minh họa (banner khuyến mãi, ảnh sản phẩm)
+├── Images/                       # Banner khuyến mãi, ảnh nổi bật và 61 ảnh sản phẩm (DT/PK/SP/TB)
 ├── InitDb.sql                    # Bước 1: tạo CSDL, bảng, dữ liệu mẫu
 ├── StoredProcedures.sql          # Bước 2: tạo toàn bộ thủ tục lưu trữ
 ├── QLCuaHangBanDienThoai.sql     # Tệp gộp sẵn cả 2 bước (chạy 1 lần là đủ)
@@ -91,23 +96,28 @@ Có thể đổi server mà không sửa code bằng biến môi trường `QLCH
 | `an` | `123456` | Quản lý |
 | `binh` | `123456` | Nhân viên |
 | `hoa` | `123456` | Quản lý |
+| `mai.nguyen` | `123456` | Khách hàng (KH001) |
+| `nam.tran` | `123456` | Khách hàng (KH002) |
+
+Hai loại tài khoản được kiểm tra lần lượt trên `Form9`: tài khoản trong `tblNhanVien` mở `Form10`
+(Dashboard quản trị), tài khoản trong `tblKhachHang` mở `Form12` (trang Khách hàng).
 
 Ngay trên `Form9` có liên kết **“Chưa có tài khoản? Đăng ký ngay”** để mở `FormDangKy`
-(Họ tên, Số điện thoại, Tên đăng nhập, Mật khẩu, Nhập lại mật khẩu, **Vai trò**). Ô **Vai trò** là
-`ComboBox` chỉ cho chọn hai giá trị **Khách hàng** (mặc định) hoặc **Nhân viên**.
+(Họ tên, Số điện thoại, Tên đăng nhập, Mật khẩu, Nhập lại mật khẩu, Email (không bắt buộc),
+**Vai trò**). Ô **Vai trò** là `ComboBox` chỉ cho chọn hai giá trị **Khách hàng** (mặc định) hoặc
+**Nhân viên**.
 
-Tài khoản tự đăng ký được ghi thẳng vào `tblNhanVien` bằng Stored Procedure `sp_DangKyNhanVien`:
-mã tài khoản do SQL tự sinh tiếp theo (`NV009`, `NV010`, ...), tên đăng nhập được kiểm tra trùng qua
-`sp_KiemTraTenDangNhapTonTai`, và trạng thái luôn là **Đang làm việc**.
+- **Vai trò Khách hàng:** ghi thẳng hồ sơ + tài khoản vào `tblKhachHang` bằng `KhachHangBUS.DangKy`
+  → `sp_DangKyKhachHang` (tự sinh mã `KH011`, `KH012`, ...), không tạo hồ sơ nhân viên. Tên đăng nhập
+  kiểm tra trùng qua `sp_KiemTraTaiKhoanKhachHang`, email (nếu nhập) kiểm tra qua
+  `sp_KiemTraEmailKhachHang`. Đăng nhập bằng tài khoản này sẽ mở **`Form12`**.
+- **Vai trò Nhân viên:** ghi vào `tblNhanVien` bằng `sp_DangKyNhanVien` như trước; mã tài khoản do SQL
+  tự sinh (`NV009`, `NV010`, ...), tên đăng nhập kiểm tra trùng qua `sp_KiemTraTenDangNhapTonTai`,
+  trạng thái luôn là **Đang làm việc**.
 
-- Tham số `@VaiTro` của `sp_DangKyNhanVien` chỉ nhận `N'Nhân viên'` hoặc `N'Khách hàng'`; mọi giá trị
-  khác (kể cả `N'Quản lý'`) đều bị **ép về `N'Nhân viên'`**, nên không ai tự nâng quyền khi đăng ký.
-  `NhanVienBUS.ChuanHoaVaiTro` kiểm tra lại lần nữa ở tầng nghiệp vụ.
-- Đăng ký với vai trò **Khách hàng**: ngoài bản ghi tài khoản trong `tblNhanVien` (cột `ChucVu` =
-  `N'Khách hàng'`), thủ tục còn thêm hồ sơ vào `tblKhachHang` (mã `KH011`, `KH012`, ...) nếu số điện
-  thoại chưa có, để khách vừa đăng ký hiện ngay trong danh sách khách hàng khi bán hàng.
-- `sp_KiemTraDangNhap` trả về cột `VaiTro` đúng một trong ba giá trị `Quản lý` / `Nhân viên` /
-  `Khách hàng`, và `Form10` dùng giá trị đó để phân quyền menu.
+Tham số `@VaiTro` của `sp_DangKyNhanVien` chỉ nhận `N'Nhân viên'` hoặc `N'Khách hàng'`; mọi giá trị
+khác (kể cả `N'Quản lý'`) đều bị **ép về `N'Nhân viên'`**, nên không ai tự nâng quyền khi đăng ký.
+`NhanVienBUS.ChuanHoaVaiTro` kiểm tra lại lần nữa ở tầng nghiệp vụ.
 
 Đăng ký xong, tên đăng nhập được điền sẵn lại `Form9`.
 
@@ -131,8 +141,31 @@ nút *Đăng xuất*; các nhóm quản trị nội bộ không được dựng 
 Dashboard của Khách hàng chỉ có 2 thẻ *Tổng sản phẩm* / *Khách hàng* thay cho 4 thẻ và biểu đồ doanh
 thu, và `Form1` bị khóa toàn bộ nút Thêm/Sửa/Xóa cùng các ô nhập.
 
-Dữ liệu mẫu chưa có tài khoản Khách hàng nào: mở `FormDangKy` từ `Form9`, chọn vai trò **Khách hàng**
-rồi đăng ký là có ngay một tài khoản để thử mức phân quyền thứ ba này.
+Dữ liệu mẫu đã có sẵn 10 tài khoản Khách hàng (`mai.nguyen`, `nam.tran`, ... — mật khẩu `123456`)
+gắn với hồ sơ `KH001`–`KH010`. Tài khoản Khách hàng đăng nhập sẽ mở **`Form12`** (trang Khách hàng)
+chứ không mở `Form10`; cột *Khách hàng* trong bảng trên chỉ còn áp dụng cho tài khoản cũ có
+`ChucVu = N'Khách hàng'` trong `tblNhanVien`.
+
+### Trang Khách hàng (`Form12`)
+
+Mở khi đăng nhập bằng tài khoản trong `tblKhachHang`. Bốn mục ở sidebar trái:
+
+- **Xem điện thoại:** thẻ sản phẩm ảnh + tên + hãng/màu/dung lượng + giá bán + tồn kho, tìm nhanh theo
+  mã/tên/hãng, nút **THÊM VÀO GIỎ** (tự tắt khi hết hàng). Ảnh lấy theo cột `TenAnh` của `tblHang`
+  trong thư mục `Images/`.
+- **Giỏ hàng / Mua hàng:** sửa số lượng, xóa dòng, xem tổng tiền, **CHUYỂN SANG THANH TOÁN**.
+- **Hóa đơn của tôi:** toàn bộ hóa đơn của khách kèm ngày lập, tổng tiền, phương thức và trạng thái
+  thanh toán.
+- **Thanh toán:** danh sách hóa đơn chưa thanh toán / chờ xác nhận chuyển khoản, chọn **Tiền mặt khi
+  nhận hàng** hoặc **Chuyển khoản ngân hàng**, kèm khung thông tin chuyển khoản.
+
+Đặt mua đi qua `HoaDonBanBUS.LuuHoaDon`: kiểm tra giá bán và tồn kho hiện tại của từng mặt hàng, rồi
+lưu đầu hóa đơn + chi tiết + trừ tồn kho trong **một transaction** (`sp_ThemHoaDonBan`,
+`sp_ThemChiTietHoaDonBan`, `sp_TruTonKho`). Hóa đơn mới có `TrangThaiThanhToan = N'Chưa thanh toán'`;
+khi khách chọn phương thức, `sp_CapNhatPhuongThucThanhToan` cập nhật `PhuongThucThanhToan` và đưa trạng
+thái thành `N'Chờ xác nhận chuyển khoản'` (chuyển khoản) hoặc giữ `N'Chưa thanh toán'` (tiền mặt).
+Hóa đơn ghi nhận nhân viên lập là người đang đăng nhập, nếu không có thì `NV001` hoặc nhân viên đầu
+tiên trong bảng.
 
 ### Luồng hóa đơn bán (`Form7`)
 
@@ -172,7 +205,7 @@ chưa băm mật khẩu.
 - **DAL** chỉ gọi Stored Procedure qua `DatabaseAccess` với `CommandType.StoredProcedure`.
   Việc lưu hóa đơn (nhiều bước) được thực hiện trong một transaction tại `HoaDonBanDAL` /
   `HoaDonNhapDAL`.
-- **SQL** chứa toàn bộ truy vấn: **81 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
+- **SQL** chứa toàn bộ truy vấn: **88 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
   khách hàng, nhà cung cấp, nhân viên, hóa đơn bán, hóa đơn nhập, báo cáo và thống kê Dashboard.
 
 ## 6. Yêu cầu hướng đối tượng của học phần
@@ -188,7 +221,8 @@ chưa băm mật khẩu.
 
 | Nhóm | Chức năng |
 |---|---|
-| Đăng nhập | Đăng nhập bằng tài khoản (`Form9`), đăng ký tài khoản mới với vai trò **Khách hàng** hoặc **Nhân viên** (`FormDangKy`) |
+| Đăng nhập | Đăng nhập bằng tài khoản (`Form9`): nhân viên/quản lý mở `Form10`, khách hàng mở `Form12`; đăng ký tài khoản mới với vai trò **Khách hàng** hoặc **Nhân viên** (`FormDangKy`) |
+| Khách hàng | Trang Khách hàng `Form12`: xem điện thoại kèm ảnh theo `TenAnh`, giỏ hàng, đặt mua, hóa đơn của tôi, chọn phương thức thanh toán |
 | Tổng quan | Dashboard 3 cột: menu phân quyền theo 3 vai trò, thẻ thống kê, biểu đồ doanh thu 7 ngày, sidebar ảnh |
 | Quản lý cửa hàng | Điện thoại (CRUD + ảnh + tìm nhanh), Danh mục (hãng/loại/màu/dung lượng), Nhân viên, Khách hàng, Nhà cung cấp |
 | Giao dịch | Hóa đơn bán (tự điền nhân viên, chọn khách có sẵn hoặc thêm khách mới tại chỗ, trừ tồn kho, giảm giá, xuất Excel; Quản lý chỉ xem + in), Hóa đơn nhập (cộng tồn kho, cập nhật giá nhập, xuất Excel) |
@@ -236,8 +270,10 @@ tham số thủ tục giữa C# với hai tệp SQL, kiểm tra tính đồng b�
 
 - Cần cài **.NET 10 SDK** và **SQL Server** (bản Express là đủ).
 - Nếu tên instance khác `.\\SQLEXPRESS`, sửa `ChuoiKetNoi` hoặc đặt biến môi trường.
-- Thư mục `Images/` phải nằm cạnh tệp chạy để Dashboard hiển thị banner khuyến mãi và ảnh sản
-  phẩm; ảnh người dùng thêm khi chạy sẽ được chép vào cùng thư mục này.
+- Thư mục `Images/` được `.csproj` chép sang thư mục chạy khi build
+  (`Images\**\*` → `CopyToOutputDirectory=PreserveNewest`), nên Dashboard, `Form1` và `Form12` hiển thị
+  được banner khuyến mãi và 61 ảnh sản phẩm; ảnh người dùng thêm khi chạy sẽ được chép vào cùng
+  thư mục này.
 - Bản trong kho được đóng gói và kiểm tra trên Linux (không cài Visual Studio, SQL Server),
   nên **chưa build và chưa chạy thử giao diện** trên Windows; phần kiểm chứng chỉ là kiểm tra
   tĩnh như mục 10.

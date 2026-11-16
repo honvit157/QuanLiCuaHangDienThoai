@@ -82,6 +82,9 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             txtSoLuong.TextChanged -= txtSoLuong_TextChanged;
             txtSoLuong.TextChanged += txtSoLuong_TextChanged;
 
+            txtMaNV.TextChanged -= txtMaNV_TextChanged;
+            txtMaNV.TextChanged += txtMaNV_TextChanged;
+
             button1.Click -= button1_Click;
             button1.Click += button1_Click;
 
@@ -140,6 +143,25 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             {
                 dangNapDuLieu = false;
             }
+        }
+
+        /// <summary>
+        /// Tự tra tên nhân viên khi người dùng gõ/đổi mã nhân viên trên hóa đơn nhập.
+        /// Tra qua NhanVienBUS → Stored Procedure sp_LayTenNhanVien, không viết SQL trực tiếp.
+        /// </summary>
+        private void txtMaNV_TextChanged(object? sender, EventArgs e)
+        {
+            if (dangNapDuLieu) return;
+
+            string maNV = txtMaNV.Text.Trim();
+
+            if (maNV == "")
+            {
+                txtTenNV.Clear();
+                return;
+            }
+
+            txtTenNV.Text = nhanVienBus.LayTen(maNV);
         }
 
         private void cboMaHang_SelectedIndexChanged(object sender, EventArgs e)

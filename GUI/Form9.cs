@@ -5,13 +5,27 @@ using System.Windows.Forms;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
+    /// <summary>
+    /// Biểu mẫu đăng nhập dùng chung cho Nhân viên / Quản lý và Khách hàng:
+    /// - Tài khoản trong tblNhanVien → mở Form10 (Quản lý hoặc Nhân viên theo phân quyền).
+    /// - Tài khoản trong tblKhachHang → mở Form12 (trang Khách hàng: xem điện thoại, giỏ hàng,
+    ///   đặt mua, hóa đơn của tôi, thanh toán).
+    /// </summary>
     public partial class Form9 : Form
     {
+        // Phiên đăng nhập của Nhân viên / Quản lý
         public static string MaNVDangNhap = "";
         public static string TenNVDangNhap = "";
+
+        // Phiên đăng nhập của Khách hàng
+        public static string MaKHDangNhap = "";
+        public static string TenKHDangNhap = "";
+
+        // Vai trò của tài khoản đang đăng nhập: "Quản lý", "Nhân viên" hoặc "Khách hàng"
         public static string VaiTroDangNhap = "";
 
         private readonly NhanVienBUS nhanVienBus = new NhanVienBUS();
+        private readonly KhachHangBUS khachHangBus = new KhachHangBUS();
 
         public Form9()
         {
@@ -35,7 +49,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             if (string.IsNullOrWhiteSpace(tk) || string.IsNullOrWhiteSpace(mk))
             {
                 MessageBox.Show(
-                    "Vui lòng nhập đầy đủ mã nhân viên và mật khẩu!",
+                    "Vui lòng nhập đầy đủ tài khoản và mật khẩu!",
                     "Thông báo",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
@@ -43,48 +57,83 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 return;
             }
 
-            // Kiểm tra đăng nhập qua BUS
-            if (nhanVienBus.DangNhap(tk, mk, out NhanVien? nv, out string error))
+            XoaThongTinDangNhap();
+
+            // 1. Tài khoản Nhân viên / Quản lý (tblNhanVien) → Form10
+            if (nhanVienBus.DangNhap(tk, mk, out NhanVien? nv, out _))
             {
                 MaNVDangNhap = nv!.MaNV;
                 TenNVDangNhap = nv.HoTen;
                 VaiTroDangNhap = nv.VaiTro;
 
-               
-
-                // Ẩn Form đăng nhập
-                this.Hide();
-
-                // Mở Form10
-                Form10 main = new Form10();
-
-                // Khi Form10 đóng thì quay lại Form9
-                main.FormClosed += (s, args) =>
-                {
-                    txtMatKhau.Clear();
-                    txtMaNhanVien.Focus();
-
-                    // Xóa thông tin phiên đăng nhập
-                    MaNVDangNhap = "";
-                    TenNVDangNhap = "";
-                    VaiTroDangNhap = "";
-
-                    this.Show();
-                };
-
-                main.Show();
+                MoFormNhanVien();
+                return;
             }
-            else
+
+            // 2. Tài khoản Khách hàng (tblKhachHang) → Form12
+            if (khachHangBus.DangNhap(tk, mk, out KhachHang? kh, out _))
             {
-                MessageBox.Show(
-                    error,
-                    "Lỗi đăng nhập",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                MaKHDangNhap = kh!.MaKH;
+                TenKHDangNhap = kh.HoTen;
+                VaiTroDangNhap = "Khách hàng";
 
-                txtMatKhau.Focus();
-                txtMatKhau.SelectAll();
+                MoFormKhachHang();
+                return;
             }
+
+            // 3. Không khớp tài khoản nào
+            MessageBox.Show(
+                "Tên đăng nhập hoặc mật khẩu không chính xác!",
+                "Lỗi đăng nhập",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
+
+            txtMatKhau.Focus();
+            txtMatKhau.SelectAll();
+        }
+
+        /// <summary>Xóa toàn bộ thông tin phiên đăng nhập (cả nhân viên và khách hàng).</summary>
+        private static void XoaThongTinDangNhap()
+        {
+            MaNVDangNhap = "";
+            TenNVDangNhap = "";
+
+            MaKHDangNhap = "";
+            TenKHDangNhap = "";
+
+            VaiTroDangNhap = "";
+        }
+
+        /// <summary>Khi Form10 hoặc Form12 đóng thì quay lại màn hình đăng nhập.</summary>
+        private void XuLyDongForm(object? sender, FormClosedEventArgs e)
+        {
+            XoaThongTinDangNhap();
+
+            txtMaNhanVien.Clear();
+            txtMatKhau.Clear();
+            txtMaNhanVien.Focus();
+
+            Show();
+        }
+
+        /// <summary>Mở Form10 (Dashboard quản trị) cho Nhân viên / Quản lý.</summary>
+        private void MoFormNhanVien()
+        {
+            Hide();
+
+            Form10 main = new Form10();
+            main.FormClosed += XuLyDongForm;
+            main.Show();
+        }
+
+        /// <summary>Mở Form12 (trang Khách hàng) cho tài khoản trong tblKhachHang.</summary>
+        private void MoFormKhachHang()
+        {
+            Hide();
+
+            Form12 khachHang = new Form12();
+            khachHang.FormClosed += XuLyDongForm;
+            khachHang.Show();
         }
 
         // Mở biểu mẫu đăng ký tài khoản Khách hàng / Nhân viên (FormDangKy)

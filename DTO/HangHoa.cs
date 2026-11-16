@@ -13,6 +13,9 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         public string? MaMau { get; set; }
         public string? MaDungLuong { get; set; }
 
+        /// <summary>Tên tệp ảnh trong thư mục Images/ (ví dụ SP001.jpg), rỗng nếu chưa có ảnh.</summary>
+        public string? TenAnh { get; set; }
+
         /// <summary>Mô tả cấu hình (chip, camera...) - hiển thị trên bảng hàng.</summary>
         public string? MoTa { get; set; }
 

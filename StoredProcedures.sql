@@ -35,7 +35,8 @@ BEGIN
            h.MaLoai,
            h.MaMau,
            h.MaDungLuong,
-           ISNULL(h.MoTa, N'')          AS MoTa
+           ISNULL(h.MoTa, N'')          AS MoTa,
+           ISNULL(h.TenAnh, N'')        AS TenAnh
     FROM dbo.tblHang AS h
     LEFT JOIN dbo.tblHangSX    AS hsx ON h.MaHangSX    = hsx.MaHangSX
     LEFT JOIN dbo.tblLoai      AS l   ON h.MaLoai      = l.MaLoai
@@ -58,7 +59,8 @@ BEGIN
            ISNULL(l.TenLoai, N'')       AS Loai,
            ISNULL(m.TenMau, N'')        AS Mau,
            ISNULL(dl.TenDungLuong, N'') AS DungLuong,
-           ISNULL(h.MoTa, N'')          AS MoTa
+           ISNULL(h.MoTa, N'')          AS MoTa,
+           ISNULL(h.TenAnh, N'')        AS TenAnh
     FROM dbo.tblHang AS h
     LEFT JOIN dbo.tblHangSX    AS hsx ON h.MaHangSX    = hsx.MaHangSX
     LEFT JOIN dbo.tblLoai      AS l   ON h.MaLoai      = l.MaLoai
@@ -88,17 +90,18 @@ CREATE OR ALTER PROCEDURE sp_ThemHang
     @DonGiaNhap  DECIMAL(18,2) = 0,
     @DonGiaBan   DECIMAL(18,2) = 0,
     @SoLuongTon  INT           = 0,
-    @MoTa        NVARCHAR(500) = NULL
+    @MoTa        NVARCHAR(500) = NULL,
+    @TenAnh      NVARCHAR(255) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
     INSERT INTO dbo.tblHang
         (MaHang, TenHang, MaHangSX, MaLoai, MaMau, MaDungLuong,
-         DonGiaNhap, DonGiaBan, SoLuongTon, MoTa)
+         DonGiaNhap, DonGiaBan, SoLuongTon, MoTa, TenAnh)
     VALUES
         (@MaHang, @TenHang, @MaHangSX, @MaLoai, @MaMau, @MaDungLuong,
-         @DonGiaNhap, @DonGiaBan, @SoLuongTon, @MoTa);
+         @DonGiaNhap, @DonGiaBan, @SoLuongTon, @MoTa, @TenAnh);
 END;
 GO
 
@@ -113,7 +116,8 @@ CREATE OR ALTER PROCEDURE sp_CapNhatHang
     @DonGiaNhap  DECIMAL(18,2) = 0,
     @DonGiaBan   DECIMAL(18,2) = 0,
     @SoLuongTon  INT           = 0,
-    @MoTa        NVARCHAR(500) = NULL
+    @MoTa        NVARCHAR(500) = NULL,
+    @TenAnh      NVARCHAR(255) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -127,7 +131,8 @@ BEGIN
         DonGiaNhap  = @DonGiaNhap,
         DonGiaBan   = @DonGiaBan,
         SoLuongTon  = @SoLuongTon,
-        MoTa        = @MoTa
+        MoTa        = @MoTa,
+        TenAnh      = @TenAnh
     WHERE MaHang = @MaHang;
 END;
 GO
@@ -170,7 +175,8 @@ BEGIN
            ISNULL(l.TenLoai, N'')      AS Loai,
            ISNULL(m.TenMau, N'')       AS Mau,
            ISNULL(dl.TenDungLuong, N'') AS DungLuong,
-           h.DonGiaBan, h.SoLuongTon
+           h.DonGiaBan, h.SoLuongTon,
+           ISNULL(h.TenAnh, N'')       AS TenAnh
     FROM dbo.tblHang AS h
     LEFT JOIN dbo.tblHangSX    AS sx ON h.MaHangSX    = sx.MaHangSX
     LEFT JOIN dbo.tblLoai      AS l  ON h.MaLoai      = l.MaLoai
@@ -536,6 +542,88 @@ BEGIN
     END
 
     SELECT @MaKH AS MaKH, @LaKhachMoi AS LaKhachMoi;
+END;
+GO
+
+-- 6.9 Kiểm tra tài khoản Khách hàng đã có người dùng chưa (chức năng Đăng ký)
+CREATE OR ALTER PROCEDURE sp_KiemTraTaiKhoanKhachHang
+    @TaiKhoan NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) AS SoLuong
+    FROM dbo.tblKhachHang
+    WHERE TaiKhoan = @TaiKhoan;
+END;
+GO
+
+-- 6.10 Kiểm tra email đã được đăng ký chưa
+CREATE OR ALTER PROCEDURE sp_KiemTraEmailKhachHang
+    @Email NVARCHAR(150)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) AS SoLuong
+    FROM dbo.tblKhachHang
+    WHERE Email = @Email;
+END;
+GO
+
+-- 6.11 Đăng ký tài khoản Khách hàng: tự sinh MaKH kế tiếp (KH011, KH012, ...)
+--      và ghi thẳng hồ sơ vào tblKhachHang (không tạo hồ sơ nhân viên).
+CREATE OR ALTER PROCEDURE sp_DangKyKhachHang
+    @TenKH    NVARCHAR(100),
+    @SDT      NVARCHAR(20)  = NULL,
+    @DiaChi   NVARCHAR(200) = NULL,
+    @Email    NVARCHAR(150) = NULL,
+    @TaiKhoan NVARCHAR(50),
+    @MatKhau  NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @MaKH NVARCHAR(20);
+    DECLARE @SoTiepTheo INT;
+
+    SELECT @SoTiepTheo = ISNULL(MAX(TRY_CAST(SUBSTRING(MaKH, 3, 18) AS INT)), 0) + 1
+    FROM dbo.tblKhachHang
+    WHERE MaKH LIKE N'KH%'
+      AND TRY_CAST(SUBSTRING(MaKH, 3, 18) AS INT) IS NOT NULL;
+
+    IF @SoTiepTheo > 999
+        SET @MaKH = N'KH' + CAST(@SoTiepTheo AS NVARCHAR(10));
+    ELSE
+        SET @MaKH = N'KH' + RIGHT(N'000' + CAST(@SoTiepTheo AS NVARCHAR(10)), 3);
+
+    INSERT INTO dbo.tblKhachHang (MaKH, TenKH, SDT, DiaChi, Email, TaiKhoan, MatKhau)
+    VALUES (@MaKH, LTRIM(RTRIM(@TenKH)),
+            NULLIF(LTRIM(RTRIM(@SDT)), N''),
+            NULLIF(LTRIM(RTRIM(@DiaChi)), N''),
+            NULLIF(LTRIM(RTRIM(@Email)), N''),
+            @TaiKhoan, @MatKhau);
+
+    SELECT @MaKH AS MaKH;
+END;
+GO
+
+-- 6.12 Đăng nhập Khách hàng: trả về hồ sơ khách hàng khi tài khoản và mật khẩu đúng
+CREATE OR ALTER PROCEDURE sp_DangNhapKhachHang
+    @TaiKhoan NVARCHAR(50),
+    @MatKhau  NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT MaKH, TenKH,
+           ISNULL(SDT, N'')      AS SDT,
+           ISNULL(DiaChi, N'')   AS DiaChi,
+           ISNULL(Email, N'')    AS Email,
+           ISNULL(TaiKhoan, N'') AS TaiKhoan
+    FROM dbo.tblKhachHang
+    WHERE TaiKhoan = @TaiKhoan
+      AND MatKhau  = @MatKhau;
 END;
 GO
 
@@ -965,6 +1053,68 @@ BEGIN
 
     INSERT INTO dbo.tblChiTietHDB (MaHDB, MaHang, SoLuong, DonGia, GiamGia, ThanhTien)
     VALUES (@MaHDB, @MaHang, @SoLuong, @DonGia, @GiamGia, @ThanhTien);
+END;
+GO
+
+-- 9.9 Danh sách hóa đơn của một khách hàng (trang Khách hàng - Form12)
+--     @ChiChuaThanhToan = 1: chỉ lấy hóa đơn chưa thanh toán hoặc chờ xác nhận chuyển khoản.
+CREATE OR ALTER PROCEDURE sp_LayHoaDonKhachHang
+    @MaKH             NVARCHAR(20),
+    @ChiChuaThanhToan BIT = 0
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT h.MaHDB AS MaHD,
+           h.NgayLap,
+           h.TongTien,
+           ISNULL(h.TrangThaiThanhToan, N'Chưa thanh toán') AS TrangThaiThanhToan,
+           ISNULL(h.PhuongThucThanhToan, N'')               AS PhuongThucThanhToan
+    FROM dbo.tblHoaDonBan AS h
+    WHERE h.MaKH = @MaKH
+      AND (@ChiChuaThanhToan = 0
+           OR h.TrangThaiThanhToan IN (N'Chưa thanh toán', N'Chờ xác nhận chuyển khoản'))
+    ORDER BY h.NgayLap DESC;
+END;
+GO
+
+-- 9.10 Một hóa đơn của đúng khách hàng đang đăng nhập (kiểm tra quyền sở hữu hóa đơn)
+CREATE OR ALTER PROCEDURE sp_LayHoaDonKhachHangTheoMa
+    @MaHDB NVARCHAR(30),
+    @MaKH  NVARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT h.MaHDB AS MaHD,
+           h.NgayLap,
+           h.TongTien,
+           ISNULL(h.TrangThaiThanhToan, N'Chưa thanh toán') AS TrangThaiThanhToan,
+           ISNULL(h.PhuongThucThanhToan, N'')               AS PhuongThucThanhToan
+    FROM dbo.tblHoaDonBan AS h
+    WHERE h.MaHDB = @MaHDB
+      AND h.MaKH  = @MaKH;
+END;
+GO
+
+-- 9.11 Khách hàng chọn phương thức thanh toán cho hóa đơn của mình
+--     Trả về số dòng đã cập nhật (0 nếu hóa đơn không thuộc khách hàng này).
+CREATE OR ALTER PROCEDURE sp_CapNhatPhuongThucThanhToan
+    @MaHDB      NVARCHAR(30),
+    @MaKH       NVARCHAR(20),
+    @PhuongThuc NVARCHAR(50),
+    @TrangThai  NVARCHAR(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.tblHoaDonBan
+    SET PhuongThucThanhToan = @PhuongThuc,
+        TrangThaiThanhToan  = @TrangThai
+    WHERE MaHDB = @MaHDB
+      AND MaKH  = @MaKH;
+
+    SELECT @@ROWCOUNT AS SoDong;
 END;
 GO
 

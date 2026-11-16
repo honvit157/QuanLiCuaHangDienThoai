@@ -129,7 +129,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                         dgvHang.Columns[kv.Key]!.HeaderText = kv.Value;
                 }
 
-                foreach (var col in new[] { "MaHangSX", "MaLoai", "MaMau", "MaDungLuong", "MoTa" })
+                foreach (var col in new[] { "MaHangSX", "MaLoai", "MaMau", "MaDungLuong", "MoTa", "TenAnh" })
                 {
                     if (dgvHang.Columns.Contains(col))
                         dgvHang.Columns[col]!.Visible = false;
@@ -178,9 +178,11 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
             txtSoLuong.Text = r["SoLuong"].ToString();
 
-            tenAnh = "";
-            lblTenAnh.Text = "";
-            HienAnh("");
+            tenAnh = r.Table.Columns.Contains("TenAnh") && r["TenAnh"] != DBNull.Value
+                ? r["TenAnh"].ToString() ?? ""
+                : "";
+            lblTenAnh.Text = tenAnh;
+            HienAnh(tenAnh);
         }
 
         private void btnChonAnh_Click(object? sender, EventArgs e)
@@ -255,7 +257,10 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 cboMau.SelectedValue?.ToString(),
                 cboDungLuong.SelectedValue?.ToString(),
                 gn, gb, sl
-            );
+            )
+            {
+                TenAnh = string.IsNullOrWhiteSpace(tenAnh) ? null : tenAnh
+            };
             return true;
         }
 

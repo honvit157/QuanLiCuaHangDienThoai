@@ -80,13 +80,13 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             label4.AutoSize = false;
             label4.Location = new Point(35, 65);
             label4.Size = new Size(500, 35);
-            label4.Text = "Vui lòng nhập thông tin tài khoản của bạn";
+            label4.Text = "Nhân viên, Quản lý và Khách hàng đều đăng nhập tại đây";
             label4.Font = new Font("Segoe UI", 10F);
             label4.ForeColor = Color.FromArgb(110, 125, 145);
 
             label2.AutoSize = true;
             label2.Location = new Point(38, 125);
-            label2.Text = "MÃ NHÂN VIÊN";
+            label2.Text = "TÀI KHOẢN (MÃ NV HOẶC TÊN ĐĂNG NHẬP)";
             label2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             label2.ForeColor = Color.FromArgb(45, 65, 85);
 

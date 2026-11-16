@@ -86,5 +86,52 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             return DatabaseAccess.DemBanGhi("sp_KiemTraKhachHangTonTai",
                 new[] { DatabaseAccess.ThamSo("@MaKH", maKH) }) > 0;
         }
+
+        // ------------------------------------------------------------------
+        // Tài khoản Khách hàng: Đăng ký - Đăng nhập (FormDangKy, Form9)
+        // ------------------------------------------------------------------
+
+        /// <summary>Tên đăng nhập đã có người dùng chưa (bảng tblKhachHang).</summary>
+        public bool KiemTraTaiKhoan(string taiKhoan)
+        {
+            return DatabaseAccess.DemBanGhi("sp_KiemTraTaiKhoanKhachHang",
+                new[] { DatabaseAccess.ThamSo("@TaiKhoan", taiKhoan) }) > 0;
+        }
+
+        /// <summary>Email đã được đăng ký chưa.</summary>
+        public bool KiemTraEmail(string email)
+        {
+            return DatabaseAccess.DemBanGhi("sp_KiemTraEmailKhachHang",
+                new[] { DatabaseAccess.ThamSo("@Email", email) }) > 0;
+        }
+
+        /// <summary>
+        /// Đăng ký tài khoản Khách hàng: thủ tục tự sinh mã KH kế tiếp và ghi
+        /// tên đăng nhập, mật khẩu vào tblKhachHang. Trả về bảng một dòng gồm MaKH.
+        /// </summary>
+        public DataTable DangKy(KhachHang kh)
+        {
+            return DatabaseAccess.DocBangProc("sp_DangKyKhachHang",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@TenKH", kh.HoTen),
+                    DatabaseAccess.ThamSo("@SDT", kh.SDT),
+                    DatabaseAccess.ThamSo("@DiaChi", string.IsNullOrWhiteSpace(kh.DiaChi) ? null : kh.DiaChi),
+                    DatabaseAccess.ThamSo("@Email", string.IsNullOrWhiteSpace(kh.Email) ? null : kh.Email),
+                    DatabaseAccess.ThamSo("@TaiKhoan", kh.TaiKhoan),
+                    DatabaseAccess.ThamSo("@MatKhau", kh.MatKhau)
+                });
+        }
+
+        /// <summary>Kiểm tra đăng nhập Khách hàng; trả về bảng rỗng nếu sai tài khoản hoặc mật khẩu.</summary>
+        public DataTable DangNhap(string taiKhoan, string matKhau)
+        {
+            return DatabaseAccess.DocBangProc("sp_DangNhapKhachHang",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@TaiKhoan", taiKhoan),
+                    DatabaseAccess.ThamSo("@MatKhau", matKhau)
+                });
+        }
     }
 }

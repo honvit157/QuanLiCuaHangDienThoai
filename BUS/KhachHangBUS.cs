@@ -250,5 +250,173 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 return false;
             }
         }
+
+        // ------------------------------------------------------------------
+        // TÀI KHOẢN KHÁCH HÀNG: ĐĂNG KÝ - ĐĂNG NHẬP (FormDangKy, Form9)
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Đăng ký tài khoản Khách hàng: kiểm tra dữ liệu rồi ghi thẳng hồ sơ
+        /// (kèm tên đăng nhập và mật khẩu) vào tblKhachHang qua thủ tục lưu trữ.
+        /// Khác với Nhân viên, khách hàng không cần hồ sơ trong tblNhanVien.
+        /// </summary>
+        public bool DangKy(KhachHang kh, out string maKH, out string error)
+        {
+            maKH = "";
+            error = "";
+
+            string tenChuan = AppHelpers.ChuanHoaChuoi(kh.HoTen);
+            string sdtChuan = (kh.SDT ?? "").Trim();
+            string emailChuan = (kh.Email ?? "").Trim();
+            string diaChiChuan = AppHelpers.ChuanHoaChuoi(kh.DiaChi);
+            string taiKhoanChuan = (kh.TaiKhoan ?? "").Trim();
+
+            if (tenChuan == "")
+            {
+                error = "Vui lòng nhập họ và tên!";
+                return false;
+            }
+
+            if (tenChuan.Length > 100)
+            {
+                error = "Họ và tên tối đa 100 ký tự!";
+                return false;
+            }
+
+            if (!AppHelpers.KiemTraSoDienThoai(sdtChuan))
+            {
+                error = "Số điện thoại phải gồm 10 chữ số và bắt đầu bằng 0!";
+                return false;
+            }
+
+            if (emailChuan.Length > 150)
+            {
+                error = "Email tối đa 150 ký tự!";
+                return false;
+            }
+
+            // Email không bắt buộc, nhưng nếu đã nhập thì phải đúng định dạng
+            if (!AppHelpers.KiemTraEmail(emailChuan))
+            {
+                error = "Địa chỉ email không hợp lệ!";
+                return false;
+            }
+
+            if (diaChiChuan.Length > 200)
+            {
+                error = "Địa chỉ tối đa 200 ký tự!";
+                return false;
+            }
+
+            if (taiKhoanChuan.Length < 4)
+            {
+                error = "Tên đăng nhập phải có ít nhất 4 ký tự!";
+                return false;
+            }
+
+            if (taiKhoanChuan.Length > 50)
+            {
+                error = "Tên đăng nhập tối đa 50 ký tự!";
+                return false;
+            }
+
+            if (taiKhoanChuan.Contains(" "))
+            {
+                error = "Tên đăng nhập không được chứa khoảng trắng!";
+                return false;
+            }
+
+            if ((kh.MatKhau ?? "").Length < 6)
+            {
+                error = "Mật khẩu phải có ít nhất 6 ký tự!";
+                return false;
+            }
+
+            try
+            {
+                if (dal.KiemTraTaiKhoan(taiKhoanChuan))
+                {
+                    error = "Tên đăng nhập đã có người dùng. Vui lòng chọn tên khác!";
+                    return false;
+                }
+
+                if (emailChuan != "" && dal.KiemTraEmail(emailChuan))
+                {
+                    error = "Email này đã được đăng ký!";
+                    return false;
+                }
+
+                kh.HoTen = tenChuan;
+                kh.SDT = sdtChuan;
+                kh.Email = emailChuan;
+                kh.DiaChi = diaChiChuan;
+                kh.TaiKhoan = taiKhoanChuan;
+
+                DataTable dt = dal.DangKy(kh);
+
+                if (dt.Rows.Count == 0 || dt.Rows[0]["MaKH"] == DBNull.Value)
+                {
+                    error = "Đăng ký tài khoản không thành công. Vui lòng thử lại!";
+                    return false;
+                }
+
+                maKH = dt.Rows[0]["MaKH"].ToString() ?? "";
+                kh.MaKH = maKH;
+
+                AppHelpers.GhiLog($"Đăng ký tài khoản Khách hàng {maKH} - {taiKhoanChuan}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = "Lỗi đăng ký tài khoản: " + ex.Message;
+                return false;
+            }
+        }
+
+        /// <summary>Đăng nhập tài khoản Khách hàng; trả về hồ sơ khách hàng khi thành công.</summary>
+        public bool DangNhap(string taiKhoan, string matKhau, out KhachHang? kh, out string error)
+        {
+            kh = null;
+            error = "";
+
+            string tk = (taiKhoan ?? "").Trim();
+
+            if (tk == "" || string.IsNullOrWhiteSpace(matKhau))
+            {
+                error = "Vui lòng nhập tên đăng nhập và mật khẩu!";
+                return false;
+            }
+
+            try
+            {
+                DataTable dt = dal.DangNhap(tk, matKhau);
+
+                if (dt.Rows.Count == 0)
+                {
+                    error = "Tên đăng nhập hoặc mật khẩu không chính xác!";
+                    return false;
+                }
+
+                DataRow r = dt.Rows[0];
+
+                kh = new KhachHang(
+                    r["MaKH"].ToString() ?? "",
+                    r["TenKH"].ToString() ?? "",
+                    r["SDT"] == DBNull.Value ? "" : r["SDT"].ToString() ?? "",
+                    r["DiaChi"] == DBNull.Value ? "" : r["DiaChi"].ToString() ?? "",
+                    r["Email"] == DBNull.Value ? "" : r["Email"].ToString() ?? "")
+                {
+                    TaiKhoan = r["TaiKhoan"] == DBNull.Value ? tk : r["TaiKhoan"].ToString() ?? tk
+                };
+
+                AppHelpers.GhiLog($"Khách hàng {kh.MaKH} đăng nhập ({tk})");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = "Lỗi đăng nhập: " + ex.Message;
+                return false;
+            }
+        }
     }
 }

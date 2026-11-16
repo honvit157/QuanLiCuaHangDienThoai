@@ -40,6 +40,69 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         }
 
         /// <summary>
+        /// Danh sách hóa đơn của khách hàng đang đăng nhập (trang Khách hàng - Form12).
+        /// chiChuaThanhToan = true: chỉ lấy hóa đơn chưa thanh toán / chờ xác nhận chuyển khoản.
+        /// </summary>
+        public DataTable LayHoaDonKhachHang(string maKH, bool chiChuaThanhToan)
+        {
+            if (string.IsNullOrWhiteSpace(maKH)) return new DataTable();
+            return dal.LayHoaDonKhachHang(maKH.Trim(), chiChuaThanhToan);
+        }
+
+        /// <summary>Một hóa đơn thuộc về khách hàng đang đăng nhập (bảng rỗng nếu không phải chủ hóa đơn).</summary>
+        public DataTable LayHoaDonKhachHangTheoMa(string maHDB, string maKH)
+        {
+            if (string.IsNullOrWhiteSpace(maHDB) || string.IsNullOrWhiteSpace(maKH))
+                return new DataTable();
+
+            return dal.LayHoaDonKhachHangTheoMa(maHDB.Trim(), maKH.Trim());
+        }
+
+        /// <summary>
+        /// Khách hàng chọn phương thức thanh toán cho hóa đơn của mình:
+        /// Tiền mặt -> Chưa thanh toán (trả khi nhận hàng),
+        /// Chuyển khoản -> Chờ xác nhận chuyển khoản.
+        /// </summary>
+        public bool CapNhatPhuongThucThanhToan(string maHDB, string maKH,
+                                               string phuongThuc, out string error)
+        {
+            error = "";
+
+            if (string.IsNullOrWhiteSpace(maHDB) || string.IsNullOrWhiteSpace(maKH))
+            {
+                error = "Chưa xác định được hóa đơn hoặc khách hàng!";
+                return false;
+            }
+
+            if (phuongThuc != "Tiền mặt" && phuongThuc != "Chuyển khoản")
+            {
+                error = "Phương thức thanh toán không hợp lệ!";
+                return false;
+            }
+
+            string trangThai = phuongThuc == "Chuyển khoản"
+                ? "Chờ xác nhận chuyển khoản"
+                : "Chưa thanh toán";
+
+            try
+            {
+                if (dal.CapNhatPhuongThucThanhToan(maHDB.Trim(), maKH.Trim(), phuongThuc, trangThai) <= 0)
+                {
+                    error = "Không tìm thấy hóa đơn của bạn để cập nhật phương thức thanh toán!";
+                    return false;
+                }
+
+                AppHelpers.GhiLog($"Khách hàng {maKH} chọn thanh toán {phuongThuc} cho hóa đơn {maHDB}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = "Lỗi lưu phương thức thanh toán: " + ex.Message;
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Lưu hóa đơn bán hàng sau khi kiểm tra nghiệp vụ.
         /// </summary>
         public bool LuuHoaDon(HoaDonBan hd, out string error)

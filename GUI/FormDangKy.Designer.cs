@@ -37,6 +37,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             txtMatKhau = new TextBox();
             labelNhapLaiMK = new Label();
             txtNhapLaiMK = new TextBox();
+            labelEmail = new Label();
+            txtEmail = new TextBox();
             labelVaiTro = new Label();
             cboVaiTro = new ComboBox();
             btnDangKy = new Button();
@@ -52,7 +54,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(241, 246, 252);
-            ClientSize = new Size(720, 710);
+            ClientSize = new Size(720, 777);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -82,7 +84,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             groupBox1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             groupBox1.Text = "ĐĂNG KÝ TÀI KHOẢN";
             groupBox1.Location = new Point(70, 20);
-            groupBox1.Size = new Size(580, 575);
+            groupBox1.Size = new Size(580, 642);
             groupBox1.TabStop = false;
             groupBox1.Padding = new Padding(20);
 
@@ -161,12 +163,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             txtNhapLaiMK.Name = "txtNhapLaiMK";
 
             labelVaiTro.AutoSize = true;
-            labelVaiTro.Location = new Point(38, 424);
+            labelVaiTro.Location = new Point(38, 491);
             labelVaiTro.Text = "VAI TRÒ";
             labelVaiTro.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             labelVaiTro.ForeColor = Color.FromArgb(45, 65, 85);
 
-            cboVaiTro.Location = new Point(40, 449);
+            cboVaiTro.Location = new Point(40, 516);
             cboVaiTro.Size = new Size(490, 34);
             cboVaiTro.Font = new Font("Segoe UI", 12F);
             cboVaiTro.BackColor = Color.FromArgb(248, 250, 253);
@@ -174,7 +176,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             cboVaiTro.Items.AddRange(new object[] { "Khách hàng", "Nhân viên" });
             cboVaiTro.Name = "cboVaiTro";
 
-            btnDangKy.Location = new Point(40, 505);
+            btnDangKy.Location = new Point(40, 572);
             btnDangKy.Size = new Size(240, 46);
             btnDangKy.Text = "ĐĂNG KÝ";
             btnDangKy.Name = "btnDangKy";
@@ -186,7 +188,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             btnDangKy.Cursor = Cursors.Hand;
             btnDangKy.UseVisualStyleBackColor = false;
 
-            btnHuy.Location = new Point(300, 505);
+            btnHuy.Location = new Point(300, 572);
             btnHuy.Size = new Size(230, 46);
             btnHuy.Text = "HỦY / QUAY LẠI";
             btnHuy.Name = "btnHuy";
@@ -197,6 +199,22 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             btnHuy.FlatAppearance.BorderSize = 0;
             btnHuy.Cursor = Cursors.Hand;
             btnHuy.UseVisualStyleBackColor = false;
+
+            labelEmail.AutoSize = true;
+            labelEmail.Location = new Point(38, 424);
+            labelEmail.Text = "EMAIL (không bắt buộc)";
+            labelEmail.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            labelEmail.ForeColor = Color.FromArgb(45, 65, 85);
+
+            txtEmail.Location = new Point(40, 449);
+            txtEmail.Size = new Size(490, 32);
+            txtEmail.Font = new Font("Segoe UI", 12F);
+            txtEmail.BorderStyle = BorderStyle.FixedSingle;
+            txtEmail.BackColor = Color.FromArgb(248, 250, 253);
+            txtEmail.Name = "txtEmail";
+
+            groupBox1.Controls.Add(labelEmail);
+            groupBox1.Controls.Add(txtEmail);
 
             groupBox1.Controls.Add(labelThongTin);
             groupBox1.Controls.Add(labelHoTen);
@@ -246,6 +264,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
         private TextBox txtMatKhau;
         private Label labelNhapLaiMK;
         private TextBox txtNhapLaiMK;
+        private Label labelEmail;
+        private TextBox txtEmail;
         private Label labelVaiTro;
         private ComboBox cboVaiTro;
         private Button btnDangKy;

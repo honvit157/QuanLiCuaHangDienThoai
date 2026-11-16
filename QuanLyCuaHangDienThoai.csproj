@@ -31,6 +31,17 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- Ảnh sản phẩm, banner khuyến mãi trong Images/ được chép sang thư mục chạy khi build,
+       để Dashboard (Form10), Form1 và trang Khách hàng (Form12) đọc được ảnh theo tên tệp. -->
+  <ItemGroup>
+    <None Update="Images\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Update="Images\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <!-- Các biểu mẫu nằm trong GUI/ và dùng namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI.
        Nhờ vậy tên tài nguyên nhúng mặc định của SDK-style
        (<RootNamespace>.GUI.FormX.resources) trùng đúng với namespace của FormX, nên

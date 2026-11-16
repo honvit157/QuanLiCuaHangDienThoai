@@ -35,6 +35,54 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 new[] { DatabaseAccess.ThamSo("@MaHDB", maHDB) });
         }
 
+        // ------------------------------------------------------------------
+        // Hóa đơn của Khách hàng (trang Khách hàng - Form12)
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Danh sách hóa đơn của một khách hàng kèm trạng thái và phương thức thanh toán.
+        /// chiChuaThanhToan = true: chỉ lấy hóa đơn chưa thanh toán / chờ xác nhận chuyển khoản.
+        /// </summary>
+        public DataTable LayHoaDonKhachHang(string maKH, bool chiChuaThanhToan)
+        {
+            return DatabaseAccess.DocBangProc("sp_LayHoaDonKhachHang",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@MaKH", maKH),
+                    DatabaseAccess.ThamSo("@ChiChuaThanhToan", chiChuaThanhToan ? 1 : 0)
+                });
+        }
+
+        /// <summary>Một hóa đơn của đúng khách hàng đang đăng nhập (bảng rỗng nếu không phải chủ).</summary>
+        public DataTable LayHoaDonKhachHangTheoMa(string maHDB, string maKH)
+        {
+            return DatabaseAccess.DocBangProc("sp_LayHoaDonKhachHangTheoMa",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@MaHDB", maHDB),
+                    DatabaseAccess.ThamSo("@MaKH", maKH)
+                });
+        }
+
+        /// <summary>
+        /// Lưu phương thức và trạng thái thanh toán của hóa đơn thuộc về khách hàng đang đăng nhập.
+        /// Trả về số dòng đã cập nhật (0 = không tìm thấy hóa đơn của khách hàng này).
+        /// </summary>
+        public int CapNhatPhuongThucThanhToan(string maHDB, string maKH,
+                                             string phuongThuc, string trangThai)
+        {
+            object? kq = DatabaseAccess.GiaTriProc("sp_CapNhatPhuongThucThanhToan",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@MaHDB", maHDB),
+                    DatabaseAccess.ThamSo("@MaKH", maKH),
+                    DatabaseAccess.ThamSo("@PhuongThuc", phuongThuc),
+                    DatabaseAccess.ThamSo("@TrangThai", trangThai)
+                });
+
+            return kq == null || kq == DBNull.Value ? 0 : Convert.ToInt32(kq);
+        }
+
         /// <summary>
         /// Lưu hóa đơn bán hàng trong một giao dịch.
         /// Trả về số dòng chi tiết đã ghi; ném ngoại lệ nếu không đủ tồn kho
