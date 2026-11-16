@@ -178,7 +178,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
             txtSoLuong.Text = r["SoLuong"].ToString();
 
-            tenAnh = r.Table.Columns.Contains("TenAnh") && r["TenAnh"] != DBNull.Value
+            tenAnh = r.Row.Table.Columns.Contains("TenAnh") && r["TenAnh"] != DBNull.Value
                 ? r["TenAnh"].ToString() ?? ""
                 : "";
             lblTenAnh.Text = tenAnh;
