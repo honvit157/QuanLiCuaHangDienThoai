@@ -101,5 +101,32 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             return DatabaseAccess.DemBanGhi("sp_KiemTraNhanVienTonTai",
                 new[] { DatabaseAccess.ThamSo("@MaNV", maNV) }) > 0;
         }
+
+        /// <summary>Kiểm tra tên đăng nhập đã có nhân viên nào dùng chưa.</summary>
+        public bool KiemTraTenDangNhapTonTai(string tenDangNhap)
+        {
+            return DatabaseAccess.DemBanGhi("sp_KiemTraTenDangNhapTonTai",
+                new[] { DatabaseAccess.ThamSo("@TenDangNhap", tenDangNhap) }) > 0;
+        }
+
+        /// <summary>
+        /// Đăng ký tài khoản nhân viên mới hoàn toàn trong Stored Procedure
+        /// (tự sinh MaNV, chức vụ "Nhân viên", trạng thái "Đang làm việc"),
+        /// trả về mã nhân viên do SQL sinh ra.
+        /// </summary>
+        public string DangKy(string hoTen, string sdt, string tenDangNhap, string matKhau)
+        {
+            SqlParameter[] pars =
+            {
+                DatabaseAccess.ThamSo("@TenNV", hoTen),
+                DatabaseAccess.ThamSo("@SDT", sdt),
+                DatabaseAccess.ThamSo("@TenDangNhap", tenDangNhap),
+                DatabaseAccess.ThamSo("@MatKhau", matKhau)
+            };
+
+            DataTable dt = DatabaseAccess.DocBangProc("sp_DangKyNhanVien", pars);
+            if (dt.Rows.Count == 0 || dt.Rows[0]["MaNV"] == DBNull.Value) return "";
+            return dt.Rows[0]["MaNV"].ToString() ?? "";
+        }
     }
 }

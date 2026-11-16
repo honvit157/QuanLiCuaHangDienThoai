@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
     /// <summary>
     /// Form quản lý 4 danh mục tra cứu: hãng sản xuất, loại hàng, màu sắc, dung lượng.

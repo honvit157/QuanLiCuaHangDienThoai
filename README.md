@@ -24,12 +24,14 @@ Kho này là bản nộp của **Nhóm 4**, gộp hai phần việc:
 | Truy cập dữ liệu | ADO.NET + `Microsoft.Data.SqlClient` |
 | Cơ sở dữ liệu | SQL Server (`.\\SQLEXPRESS`) |
 | Xuất báo cáo | `ClosedXML` (Excel `.xlsx`) |
-| Kiến trúc | 3 tầng: GUI (`Form*.cs`) → BUS → DAL → Stored Procedure |
+| Kiến trúc | 3 tầng: GUI (`GUI/Form*.cs`) → BUS → DAL → Stored Procedure |
 
 ## 2. Cấu trúc thư mục
 
 ```
-├── Form1..Form10, FormBaoCao     # Tầng GUI (giao diện)
+├── GUI/                          # Tầng giao diện (WinForms, namespace ..._Nhóm_4.GUI)
+│   ├── Form1..Form10, FormBaoCao, FormDangKy   # mỗi biểu mẫu: .cs + .Designer.cs (+ .resx)
+├── Program.cs                    # Điểm vào của ứng dụng, mở Form9 đăng nhập
 ├── BUS/                          # Tầng nghiệp vụ (Business Logic)
 │   ├── HangHoaBUS.cs  KhachHangBUS.cs  NhaCungCapBUS.cs  NhanVienBUS.cs
 │   ├── DanhMucBUS.cs  HoaDonBanBUS.cs  HoaDonNhapBUS.cs
@@ -59,6 +61,13 @@ Kho này là bản nộp của **Nhóm 4**, gộp hai phần việc:
 └── docs/                         # Hướng dẫn Crystal Report, kết quả kiểm tra tĩnh
 ```
 
+**Vì sao namespace của biểu mẫu là `..._Nhóm_4.GUI`:** trong dự án SDK-style, tệp
+`GUI/FormX.resx` được nhúng dưới tên `<RootNamespace>.GUI.FormX.resources`; namespace của `FormX`
+cũng là `..._Nhóm_4.GUI` nên `ComponentResourceManager(typeof(FormX))` luôn tìm đúng tài nguyên và
+không ném `MissingManifestResourceException` khi chạy trên Windows. Đổi tên thư mục hoặc
+namespace của biểu mẫu thì phải đổi cả hai cho khớp (kiểm tra tự động: `tools/kiem_tra_tinh.py`,
+mục `[GUI]`).
+
 ## 3. Cài đặt cơ sở dữ liệu
 
 1. Mở SQL Server Management Studio.
@@ -85,17 +94,27 @@ Có thể đổi server mà không sửa code bằng biến môi trường `QLCH
 
 Chỉ tài khoản **Quản lý** mới thấy mục *Nhân viên* trên menu Dashboard.
 
+Ngay trên `Form9` có liên kết **“Chưa có tài khoản? Đăng ký ngay”** để mở `FormDangKy`
+(Họ tên, Số điện thoại, Tên đăng nhập, Mật khẩu, Nhập lại mật khẩu). Tài khoản tự đăng ký được
+ghi thẳng vào `tblNhanVien` bằng Stored Procedure `sp_DangKyNhanVien`: mã nhân viên do SQL tự sinh
+tiếp theo (`NV009`, `NV010`, ...), tên đăng nhập được kiểm tra trùng qua
+`sp_KiemTraTenDangNhapTonTai`, và luôn có chức vụ **Nhân viên**, trạng thái **Đang làm việc**
+(không thể tự đăng ký thành Quản lý). Đăng ký xong, tên đăng nhập được điền sẵn lại `Form9`.
+
+Mật khẩu dùng chung ở mức đủ cho bài tập lớn (lưu thẳng trong `tblNhanVien` như dữ liệu mẫu),
+chưa băm mật khẩu.
+
 ## 5. Quy ước tầng
 
 - **GUI** chỉ đọc dữ liệu từ control, kiểm tra định dạng cơ bản, gọi BUS và hiển thị kết quả.
-  Không có `SqlConnection`, `SqlCommand` hay chuỗi SQL nào trong các `Form*.cs`.
+  Không có `SqlConnection`, `SqlCommand` hay chuỗi SQL nào trong các `GUI/Form*.cs`.
 - **BUS** kiểm tra nghiệp vụ (trùng mã, số điện thoại, email, tồn kho, chặn xóa dữ liệu đã
   phát sinh hóa đơn), ghi nhật ký thao tác, rồi mới gọi DAL. Dashboard `Form10` cũng đi qua
   `ThongKeBUS` chứ không gọi thẳng tầng DAL.
 - **DAL** chỉ gọi Stored Procedure qua `DatabaseAccess` với `CommandType.StoredProcedure`.
   Việc lưu hóa đơn (nhiều bước) được thực hiện trong một transaction tại `HoaDonBanDAL` /
   `HoaDonNhapDAL`.
-- **SQL** chứa toàn bộ truy vấn: **78 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
+- **SQL** chứa toàn bộ truy vấn: **80 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
   khách hàng, nhà cung cấp, nhân viên, hóa đơn bán, hóa đơn nhập, báo cáo và thống kê Dashboard.
 
 ## 6. Yêu cầu hướng đối tượng của học phần
@@ -111,6 +130,7 @@ Chỉ tài khoản **Quản lý** mới thấy mục *Nhân viên* trên menu Da
 
 | Nhóm | Chức năng |
 |---|---|
+| Đăng nhập | Đăng nhập bằng tài khoản nhân viên (`Form9`), đăng ký tài khoản mới (`FormDangKy`) |
 | Tổng quan | Dashboard 3 cột: menu phân quyền, 4 thẻ thống kê, biểu đồ doanh thu 7 ngày, sidebar ảnh |
 | Quản lý cửa hàng | Điện thoại (CRUD + ảnh + tìm nhanh), Danh mục (hãng/loại/màu/dung lượng), Nhân viên, Khách hàng, Nhà cung cấp |
 | Giao dịch | Hóa đơn bán (trừ tồn kho, giảm giá, xuất Excel), Hóa đơn nhập (cộng tồn kho, cập nhật giá nhập, xuất Excel) |

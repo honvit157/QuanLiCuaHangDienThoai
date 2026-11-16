@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
-    partial class Form3
+    partial class Form4
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -29,12 +29,26 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             groupBox3 = new GroupBox();
             groupBox4 = new GroupBox();
             groupBox5 = new GroupBox();
-            txtEmail = new TextBox();
-            txtTenKH = new TextBox();
-            txtDiaChi = new TextBox();
+            txtMaNCC = new TextBox();
+            txtTenNCC = new TextBox();
             txtSDT = new TextBox();
-            txtMaKH = new TextBox();
+            txtDiaChi = new TextBox();
+            txtEmail = new TextBox();
+            txtNguoiLH = new TextBox();
             txtTim = new TextBox();
+            btnThem = new Button();
+            btnSua = new Button();
+            btnXoa = new Button();
+            btnLamLai = new Button();
+            btnThoat = new Button();
+            button1 = new Button();
+            dgvKhachHang = new DataGridView();
+            colMaNCC = new DataGridViewTextBoxColumn();
+            colTenNCC = new DataGridViewTextBoxColumn();
+            colSDT = new DataGridViewTextBoxColumn();
+            colDiaChi = new DataGridViewTextBoxColumn();
+            colEmail = new DataGridViewTextBoxColumn();
+            colNguoiLH = new DataGridViewTextBoxColumn();
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -43,91 +57,71 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             label6 = new Label();
             label7 = new Label();
             label8 = new Label();
-            label9 = new Label();
-            label10 = new Label();
-            btnThem = new Button();
-            btnSua = new Button();
-            btnXoa = new Button();
-            btnLamLai = new Button();
-            btnThoat = new Button();
-            dgvKhachHang = new DataGridView();
-            colMaKH = new DataGridViewTextBoxColumn();
-            colTenKH = new DataGridViewTextBoxColumn();
-            colSDT = new DataGridViewTextBoxColumn();
-            colEmail = new DataGridViewTextBoxColumn();
-            colDiaChi = new DataGridViewTextBoxColumn();
+            label11 = new Label();
 
             SuspendLayout();
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(244, 247, 251);
+            ForeColor = Color.FromArgb(35, 51, 72);
             Font = new Font("Segoe UI", 9.5F);
             ClientSize = new Size(1100, 760);
-            MinimumSize = new Size(850, 600);
-            Name = "Form3";
-            Text = "PHONE STORE - Quản lý khách hàng";
+            MinimumSize = new Size(900, 650);
+            Name = "Form4";
+            Text = "PHONE STORE - Quản lý nhà cung cấp";
+            StartPosition = FormStartPosition.CenterScreen;
 
             root = new TableLayoutPanel();
 
             root.Dock = DockStyle.Fill;
             root.ColumnCount = 1;
-            root.RowCount = 3;
-            root.Padding = new Padding(15);
+            root.RowCount = 4;
+            root.Padding = new Padding(16);
             root.BackColor = Color.FromArgb(244, 247, 251);
             root.Margin = Padding.Empty;
-            root.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 285F));
-            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 245F));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 105F));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 90F));
             root.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            top = new TableLayoutPanel();
-
-            top.Dock = DockStyle.Fill;
-            top.ColumnCount = 2;
-            top.RowCount = 1;
-            top.BackColor = Color.FromArgb(244, 247, 251);
-            top.Margin = Padding.Empty;
-            top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
-            top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
-
-            groupBox1.Text = "THÔNG TIN KHÁCH HÀNG";
-            groupBox1.Dock = DockStyle.Fill;
-            groupBox1.Margin = new Padding(0, 0, 10, 0);
+            groupBox1.Text = "THÔNG TIN NHÀ CUNG CẤP";
             groupBox1.BackColor = Color.White;
             groupBox1.ForeColor = Color.FromArgb(20, 43, 74);
             groupBox1.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             groupBox1.Padding = new Padding(10);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Margin = new Padding(0, 0, 0, 8);
 
             fields = new TableLayoutPanel();
 
             fields.Dock = DockStyle.Fill;
             fields.ColumnCount = 4;
             fields.RowCount = 3;
-            fields.Padding = new Padding(12, 12, 12, 12);
+            fields.Padding = new Padding(12, 10, 12, 10);
             fields.BackColor = Color.White;
-            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 105F));
+            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
             fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 85F));
+            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
             fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             fields.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
             fields.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
-            fields.RowStyles.Add(new RowStyle(SizeType.Percent, 33.34F));
+            fields.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
 
-            label1.Text = "Mã khách hàng";
+            label1.Text = "Mã nhà cung cấp";
             label1.Dock = DockStyle.Fill;
             label1.TextAlign = ContentAlignment.MiddleLeft;
             label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label1.ForeColor = Color.FromArgb(35, 51, 72);
             label1.Margin = new Padding(3);
 
-            label2.Text = "Số điện thoại";
+            label2.Text = "Tên nhà cung cấp";
             label2.Dock = DockStyle.Fill;
             label2.TextAlign = ContentAlignment.MiddleLeft;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label2.ForeColor = Color.FromArgb(35, 51, 72);
             label2.Margin = new Padding(3);
 
-            label3.Text = "Địa chỉ";
+            label3.Text = "Số điện thoại";
             label3.Dock = DockStyle.Fill;
             label3.TextAlign = ContentAlignment.MiddleLeft;
             label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
@@ -141,156 +135,137 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             label4.ForeColor = Color.FromArgb(35, 51, 72);
             label4.Margin = new Padding(3);
 
-            label5.Text = "Tên khách hàng";
+            label5.Text = "Địa chỉ";
             label5.Dock = DockStyle.Fill;
             label5.TextAlign = ContentAlignment.MiddleLeft;
             label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label5.ForeColor = Color.FromArgb(35, 51, 72);
             label5.Margin = new Padding(3);
 
-            txtMaKH.Font = new Font("Segoe UI", 9.5F);
-            txtMaKH.BackColor = Color.FromArgb(248, 250, 253);
-            txtMaKH.ForeColor = Color.FromArgb(35, 51, 72);
-            txtMaKH.BorderStyle = BorderStyle.FixedSingle;
-            txtMaKH.Dock = DockStyle.Fill;
-            txtMaKH.Margin = new Padding(5, 7, 8, 7);
+            label11.Text = "Người liên hệ";
+            label11.Dock = DockStyle.Fill;
+            label11.TextAlign = ContentAlignment.MiddleLeft;
+            label11.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label11.ForeColor = Color.FromArgb(35, 51, 72);
+            label11.Margin = new Padding(3);
 
-            txtTenKH.Font = new Font("Segoe UI", 9.5F);
-            txtTenKH.BackColor = Color.FromArgb(248, 250, 253);
-            txtTenKH.ForeColor = Color.FromArgb(35, 51, 72);
-            txtTenKH.BorderStyle = BorderStyle.FixedSingle;
-            txtTenKH.Dock = DockStyle.Fill;
-            txtTenKH.Margin = new Padding(5, 7, 8, 7);
+            txtMaNCC.Font = new Font("Segoe UI", 10F);
+            txtMaNCC.BackColor = Color.FromArgb(248, 250, 253);
+            txtMaNCC.ForeColor = Color.FromArgb(35, 51, 72);
+            txtMaNCC.BorderStyle = BorderStyle.FixedSingle;
+            txtMaNCC.Dock = DockStyle.Fill;
+            txtMaNCC.Margin = new Padding(5, 5, 8, 5);
 
-            txtSDT.Font = new Font("Segoe UI", 9.5F);
+            txtTenNCC.Font = new Font("Segoe UI", 10F);
+            txtTenNCC.BackColor = Color.FromArgb(248, 250, 253);
+            txtTenNCC.ForeColor = Color.FromArgb(35, 51, 72);
+            txtTenNCC.BorderStyle = BorderStyle.FixedSingle;
+            txtTenNCC.Dock = DockStyle.Fill;
+            txtTenNCC.Margin = new Padding(5, 5, 8, 5);
+
+            txtSDT.Font = new Font("Segoe UI", 10F);
             txtSDT.BackColor = Color.FromArgb(248, 250, 253);
             txtSDT.ForeColor = Color.FromArgb(35, 51, 72);
             txtSDT.BorderStyle = BorderStyle.FixedSingle;
             txtSDT.Dock = DockStyle.Fill;
-            txtSDT.Margin = new Padding(5, 7, 8, 7);
+            txtSDT.Margin = new Padding(5, 5, 8, 5);
 
-            txtEmail.Font = new Font("Segoe UI", 9.5F);
+            txtEmail.Font = new Font("Segoe UI", 10F);
             txtEmail.BackColor = Color.FromArgb(248, 250, 253);
             txtEmail.ForeColor = Color.FromArgb(35, 51, 72);
             txtEmail.BorderStyle = BorderStyle.FixedSingle;
             txtEmail.Dock = DockStyle.Fill;
-            txtEmail.Margin = new Padding(5, 7, 8, 7);
+            txtEmail.Margin = new Padding(5, 5, 8, 5);
 
-            txtDiaChi.Font = new Font("Segoe UI", 9.5F);
+            txtDiaChi.Font = new Font("Segoe UI", 10F);
             txtDiaChi.BackColor = Color.FromArgb(248, 250, 253);
             txtDiaChi.ForeColor = Color.FromArgb(35, 51, 72);
             txtDiaChi.BorderStyle = BorderStyle.FixedSingle;
             txtDiaChi.Dock = DockStyle.Fill;
-            txtDiaChi.Margin = new Padding(5, 7, 8, 7);
+            txtDiaChi.Margin = new Padding(5, 5, 8, 5);
+
+            txtNguoiLH.Font = new Font("Segoe UI", 10F);
+            txtNguoiLH.BackColor = Color.FromArgb(248, 250, 253);
+            txtNguoiLH.ForeColor = Color.FromArgb(35, 51, 72);
+            txtNguoiLH.BorderStyle = BorderStyle.FixedSingle;
+            txtNguoiLH.Dock = DockStyle.Fill;
+            txtNguoiLH.Margin = new Padding(5, 5, 8, 5);
 
             fields.Controls.Add(label1, 0, 0);
-            fields.Controls.Add(txtMaKH, 1, 0);
-            fields.Controls.Add(label5, 2, 0);
-            fields.Controls.Add(txtTenKH, 3, 0);
-            fields.Controls.Add(label2, 0, 1);
+            fields.Controls.Add(txtMaNCC, 1, 0);
+            fields.Controls.Add(label2, 2, 0);
+            fields.Controls.Add(txtTenNCC, 3, 0);
+            fields.Controls.Add(label3, 0, 1);
             fields.Controls.Add(txtSDT, 1, 1);
             fields.Controls.Add(label4, 2, 1);
             fields.Controls.Add(txtEmail, 3, 1);
-            fields.Controls.Add(label3, 0, 2);
+            fields.Controls.Add(label5, 0, 2);
             fields.Controls.Add(txtDiaChi, 1, 2);
-
-            fields.SetColumnSpan(txtDiaChi, 3);
+            fields.Controls.Add(label11, 2, 2);
+            fields.Controls.Add(txtNguoiLH, 3, 2);
 
             groupBox1.Controls.Add(fields);
 
-            groupBox2.Text = "LƯU Ý";
-            groupBox2.Dock = DockStyle.Fill;
-            groupBox2.Margin = new Padding(0);
+            groupBox2.Text = "GHI CHÚ";
             groupBox2.BackColor = Color.White;
             groupBox2.ForeColor = Color.FromArgb(20, 43, 74);
             groupBox2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             groupBox2.Padding = new Padding(10);
+            groupBox2.Dock = DockStyle.Fill;
+            groupBox2.Margin = new Padding(0, 0, 0, 8);
 
-            noteLayout = new TableLayoutPanel();
+            notes = new TableLayoutPanel();
 
-            noteLayout.Dock = DockStyle.Fill;
-            noteLayout.ColumnCount = 1;
-            noteLayout.RowCount = 4;
-            noteLayout.Padding = new Padding(12);
-            noteLayout.BackColor = Color.White;
-            noteLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            noteLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            noteLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-            noteLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            notes.Dock = DockStyle.Fill;
+            notes.ColumnCount = 1;
+            notes.RowCount = 2;
+            notes.Padding = new Padding(14, 12, 14, 8);
+            notes.BackColor = Color.White;
+            notes.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            notes.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
 
-            label7.Text = "• Số điện thoại là thông tin tra cứu chính.";
+            label7.Text = "• Nhập đầy đủ thông tin nhà cung cấp trước khi lưu.";
+
+            label8.Text = "• Kiểm tra số điện thoại và email để tránh sai sót.";
+
             label7.Dock = DockStyle.Fill;
             label7.TextAlign = ContentAlignment.MiddleLeft;
-            label7.Font = new Font("Segoe UI", 8.5F);
-            label7.ForeColor = Color.FromArgb(55, 72, 95);
-            label7.AutoEllipsis = true;
-            label7.Margin = new Padding(2);
+            label7.Font = new Font("Segoe UI", 9.5F);
+            label7.ForeColor = Color.FromArgb(112, 128, 150);
+            label7.AutoSize = false;
 
-            label9.Text = "• Nhập SĐT trên hóa đơn để tìm khách hàng.";
-            label9.Dock = DockStyle.Fill;
-            label9.TextAlign = ContentAlignment.MiddleLeft;
-            label9.Font = new Font("Segoe UI", 8.5F);
-            label9.ForeColor = Color.FromArgb(55, 72, 95);
-            label9.AutoEllipsis = true;
-            label9.Margin = new Padding(2);
-
-            label8.Text = "• Khách mới sẽ được thêm tự động khi lập hóa đơn.";
             label8.Dock = DockStyle.Fill;
             label8.TextAlign = ContentAlignment.MiddleLeft;
-            label8.Font = new Font("Segoe UI", 8.5F);
-            label8.ForeColor = Color.FromArgb(55, 72, 95);
-            label8.AutoEllipsis = true;
-            label8.Margin = new Padding(2);
+            label8.Font = new Font("Segoe UI", 9.5F);
+            label8.ForeColor = Color.FromArgb(112, 128, 150);
+            label8.AutoSize = false;
 
-            label10.Text = "• Tại đây có thể xem, sửa và xóa khách hàng.";
-            label10.Dock = DockStyle.Fill;
-            label10.TextAlign = ContentAlignment.MiddleLeft;
-            label10.Font = new Font("Segoe UI", 8.5F);
-            label10.ForeColor = Color.FromArgb(55, 72, 95);
-            label10.AutoEllipsis = true;
-            label10.Margin = new Padding(2);
+            notes.Controls.Add(label7, 0, 0);
+            notes.Controls.Add(label8, 0, 1);
 
-            noteLayout.Controls.Add(label7, 0, 0);
-            noteLayout.Controls.Add(label9, 0, 1);
-            noteLayout.Controls.Add(label8, 0, 2);
-            noteLayout.Controls.Add(label10, 0, 3);
-
-            groupBox2.Controls.Add(noteLayout);
-
-            top.Controls.Add(groupBox1, 0, 0);
-            top.Controls.Add(groupBox2, 1, 0);
-
-            commandLayout = new TableLayoutPanel();
-
-            commandLayout.Dock = DockStyle.Fill;
-            commandLayout.ColumnCount = 2;
-            commandLayout.RowCount = 1;
-            commandLayout.BackColor = Color.FromArgb(244, 247, 251);
-            commandLayout.Margin = new Padding(0, 5, 0, 5);
-            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68F));
-            commandLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32F));
+            groupBox2.Controls.Add(notes);
 
             groupBox3.Text = "CHỨC NĂNG";
-            groupBox3.Dock = DockStyle.Fill;
-            groupBox3.Margin = new Padding(0, 0, 10, 0);
             groupBox3.BackColor = Color.White;
             groupBox3.ForeColor = Color.FromArgb(20, 43, 74);
             groupBox3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             groupBox3.Padding = new Padding(10);
+            groupBox3.Dock = DockStyle.Fill;
+            groupBox3.Margin = new Padding(0, 0, 0, 8);
 
             actions = new FlowLayoutPanel();
 
             actions.Dock = DockStyle.Fill;
             actions.FlowDirection = FlowDirection.LeftToRight;
             actions.WrapContents = false;
-            actions.Padding = new Padding(5, 7, 5, 2);
+            actions.Padding = new Padding(10, 5, 10, 2);
             actions.BackColor = Color.White;
 
             btnThem.BackColor = Color.FromArgb(36, 120, 212);
             btnThem.ForeColor = Color.White;
             btnThem.FlatStyle = FlatStyle.Flat;
             btnThem.FlatAppearance.BorderSize = 0;
-            btnThem.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnThem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnThem.Cursor = Cursors.Hand;
             btnThem.UseVisualStyleBackColor = false;
 
@@ -298,7 +273,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             btnSua.ForeColor = Color.White;
             btnSua.FlatStyle = FlatStyle.Flat;
             btnSua.FlatAppearance.BorderSize = 0;
-            btnSua.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnSua.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnSua.Cursor = Cursors.Hand;
             btnSua.UseVisualStyleBackColor = false;
 
@@ -306,7 +281,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             btnXoa.ForeColor = Color.White;
             btnXoa.FlatStyle = FlatStyle.Flat;
             btnXoa.FlatAppearance.BorderSize = 0;
-            btnXoa.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnXoa.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnXoa.Cursor = Cursors.Hand;
             btnXoa.UseVisualStyleBackColor = false;
 
@@ -314,7 +289,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             btnLamLai.ForeColor = Color.White;
             btnLamLai.FlatStyle = FlatStyle.Flat;
             btnLamLai.FlatAppearance.BorderSize = 0;
-            btnLamLai.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnLamLai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnLamLai.Cursor = Cursors.Hand;
             btnLamLai.UseVisualStyleBackColor = false;
 
@@ -322,7 +297,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             btnThoat.ForeColor = Color.White;
             btnThoat.FlatStyle = FlatStyle.Flat;
             btnThoat.FlatAppearance.BorderSize = 0;
-            btnThoat.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnThoat.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnThoat.Cursor = Cursors.Hand;
             btnThoat.UseVisualStyleBackColor = false;
 
@@ -336,138 +311,163 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             btnThoat.Text = "THOÁT";
 
-            btnThem.Size = new Size(88, 40);
-            btnThem.Margin = new Padding(3, 5, 3, 5);
+            btnThem.Size = new Size(130, 45);
+            btnThem.Margin = new Padding(8, 5, 12, 5);
 
             actions.Controls.Add(btnThem);
 
-            btnSua.Size = new Size(88, 40);
-            btnSua.Margin = new Padding(3, 5, 3, 5);
+            btnSua.Size = new Size(130, 45);
+            btnSua.Margin = new Padding(8, 5, 12, 5);
 
             actions.Controls.Add(btnSua);
 
-            btnXoa.Size = new Size(88, 40);
-            btnXoa.Margin = new Padding(3, 5, 3, 5);
+            btnXoa.Size = new Size(130, 45);
+            btnXoa.Margin = new Padding(8, 5, 12, 5);
 
             actions.Controls.Add(btnXoa);
 
-            btnLamLai.Size = new Size(88, 40);
-            btnLamLai.Margin = new Padding(3, 5, 3, 5);
+            btnLamLai.Size = new Size(130, 45);
+            btnLamLai.Margin = new Padding(8, 5, 12, 5);
 
             actions.Controls.Add(btnLamLai);
 
-            btnThoat.Size = new Size(88, 40);
-            btnThoat.Margin = new Padding(3, 5, 3, 5);
+            btnThoat.Size = new Size(130, 45);
+            btnThoat.Margin = new Padding(8, 5, 12, 5);
 
             actions.Controls.Add(btnThoat);
 
             groupBox3.Controls.Add(actions);
 
-            groupBox5.Text = "TÌM KIẾM KHÁCH HÀNG";
-            groupBox5.Dock = DockStyle.Fill;
-            groupBox5.Margin = new Padding(0);
+            groupBox5.Text = "TÌM KIẾM NHÀ CUNG CẤP";
             groupBox5.BackColor = Color.White;
             groupBox5.ForeColor = Color.FromArgb(20, 43, 74);
             groupBox5.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             groupBox5.Padding = new Padding(10);
+            groupBox5.Dock = DockStyle.Fill;
+            groupBox5.Margin = new Padding(0, 0, 0, 8);
 
             searchLayout = new TableLayoutPanel();
 
             searchLayout.Dock = DockStyle.Fill;
-            searchLayout.ColumnCount = 2;
+            searchLayout.ColumnCount = 3;
             searchLayout.RowCount = 1;
-            searchLayout.Padding = new Padding(8, 8, 8, 8);
+            searchLayout.Padding = new Padding(10, 4, 10, 4);
             searchLayout.BackColor = Color.White;
-            searchLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 65F));
+            searchLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160F));
             searchLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            searchLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
 
-            label6.Text = "Từ khóa";
+            label6.Text = "Tên hoặc mã NCC";
             label6.Dock = DockStyle.Fill;
             label6.TextAlign = ContentAlignment.MiddleLeft;
             label6.Font = new Font("Segoe UI", 9.5F);
             label6.ForeColor = Color.FromArgb(35, 51, 72);
 
-            txtTim.Font = new Font("Segoe UI", 9.5F);
+            txtTim.Font = new Font("Segoe UI", 10F);
             txtTim.BackColor = Color.FromArgb(248, 250, 253);
             txtTim.ForeColor = Color.FromArgb(35, 51, 72);
             txtTim.BorderStyle = BorderStyle.FixedSingle;
             txtTim.Dock = DockStyle.Fill;
-            txtTim.Margin = new Padding(5, 7, 8, 7);
+            txtTim.Margin = new Padding(5, 5, 8, 5);
             txtTim.Dock = DockStyle.Fill;
+            txtTim.Margin = new Padding(5, 3, 10, 3);
+
+            button1.Text = "TÌM KIẾM";
+            button1.Dock = DockStyle.Fill;
+            button1.BackColor = Color.FromArgb(36, 120, 212);
+            button1.ForeColor = Color.White;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.FlatAppearance.BorderSize = 0;
+            button1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            button1.Cursor = Cursors.Hand;
+            button1.UseVisualStyleBackColor = false;
 
             searchLayout.Controls.Add(label6, 0, 0);
             searchLayout.Controls.Add(txtTim, 1, 0);
+            searchLayout.Controls.Add(button1, 2, 0);
 
             groupBox5.Controls.Add(searchLayout);
 
-            commandLayout.Controls.Add(groupBox3, 0, 0);
-            commandLayout.Controls.Add(groupBox5, 1, 0);
-
-            groupBox4.Text = "DANH SÁCH KHÁCH HÀNG";
-            groupBox4.Dock = DockStyle.Fill;
-            groupBox4.Margin = new Padding(0);
+            groupBox4.Text = "DANH SÁCH NHÀ CUNG CẤP";
             groupBox4.BackColor = Color.White;
             groupBox4.ForeColor = Color.FromArgb(20, 43, 74);
             groupBox4.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             groupBox4.Padding = new Padding(10);
+            groupBox4.Dock = DockStyle.Fill;
+            groupBox4.Margin = new Padding(0);
 
             dgvKhachHang.Dock = DockStyle.Fill;
-            dgvKhachHang.AllowUserToAddRows = false;
-            dgvKhachHang.AllowUserToDeleteRows = false;
-            dgvKhachHang.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvKhachHang.BackgroundColor = Color.White;
             dgvKhachHang.BorderStyle = BorderStyle.None;
             dgvKhachHang.EnableHeadersVisualStyles = false;
             dgvKhachHang.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 43, 74);
             dgvKhachHang.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             dgvKhachHang.DefaultCellStyle.Font = new Font("Segoe UI", 9.5F);
             dgvKhachHang.DefaultCellStyle.ForeColor = Color.FromArgb(35, 51, 72);
             dgvKhachHang.DefaultCellStyle.BackColor = Color.White;
-            dgvKhachHang.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 248, 252);
             dgvKhachHang.DefaultCellStyle.SelectionBackColor = Color.FromArgb(220, 235, 252);
             dgvKhachHang.DefaultCellStyle.SelectionForeColor = Color.FromArgb(20, 43, 74);
+            dgvKhachHang.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 248, 252);
             dgvKhachHang.ColumnHeadersHeight = 42;
             dgvKhachHang.RowTemplate.Height = 36;
+            dgvKhachHang.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvKhachHang.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvKhachHang.MultiSelect = false;
             dgvKhachHang.ReadOnly = true;
+            dgvKhachHang.AllowUserToAddRows = false;
             dgvKhachHang.RowHeadersVisible = false;
             dgvKhachHang.GridColor = Color.FromArgb(220, 228, 238);
-            dgvKhachHang.Columns.AddRange(new DataGridViewColumn[] { colMaKH, colTenKH, colSDT, colEmail, colDiaChi });
 
-            colMaKH.Name = "colMaKH";
-            colMaKH.HeaderText = "Mã khách hàng";
-            colMaKH.ReadOnly = true;
-            colMaKH.FillWeight = 85;
+            colMaNCC.Name = "colMaNCC";
+            colMaNCC.HeaderText = "Mã NCC";
+            colMaNCC.DataPropertyName = "MaNCC";
 
-            colTenKH.Name = "colTenKH";
-            colTenKH.HeaderText = "Tên khách hàng";
-            colTenKH.ReadOnly = true;
-            colTenKH.FillWeight = 130;
+            colTenNCC.Name = "colTenNCC";
+            colTenNCC.HeaderText = "Tên nhà cung cấp";
+            colTenNCC.DataPropertyName = "TenNCC";
 
             colSDT.Name = "colSDT";
             colSDT.HeaderText = "Số điện thoại";
-            colSDT.ReadOnly = true;
-            colSDT.FillWeight = 100;
-
-            colEmail.Name = "colEmail";
-            colEmail.HeaderText = "Email";
-            colEmail.ReadOnly = true;
-            colEmail.FillWeight = 130;
+            colSDT.DataPropertyName = "SDT";
 
             colDiaChi.Name = "colDiaChi";
             colDiaChi.HeaderText = "Địa chỉ";
-            colDiaChi.ReadOnly = true;
-            colDiaChi.FillWeight = 160;
+            colDiaChi.DataPropertyName = "DiaChi";
 
-            groupBox4.Padding = new Padding(10);
+            colEmail.Name = "colEmail";
+            colEmail.HeaderText = "Email";
+            colEmail.DataPropertyName = "Email";
+
+            colNguoiLH.Name = "colNguoiLH";
+            colNguoiLH.HeaderText = "Người liên hệ";
+            colNguoiLH.DataPropertyName = "NguoiLH";
+
+            dgvKhachHang.Columns.AddRange(new DataGridViewColumn[] { colMaNCC, colTenNCC, colSDT, colDiaChi, colEmail, colNguoiLH });
 
             groupBox4.Controls.Add(dgvKhachHang);
 
+            top = new TableLayoutPanel();
+
+            top.Dock = DockStyle.Fill;
+            top.ColumnCount = 2;
+            top.RowCount = 1;
+            top.BackColor = Color.FromArgb(244, 247, 251);
+            top.Margin = Padding.Empty;
+            top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
+            top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+
+            groupBox1.Margin = new Padding(0, 0, 10, 0);
+
+            groupBox2.Margin = new Padding(0);
+
+            top.Controls.Add(groupBox1, 0, 0);
+            top.Controls.Add(groupBox2, 1, 0);
+
             root.Controls.Add(top, 0, 0);
-            root.Controls.Add(commandLayout, 0, 1);
-            root.Controls.Add(groupBox4, 0, 2);
+            root.Controls.Add(groupBox3, 0, 1);
+            root.Controls.Add(groupBox5, 0, 2);
+            root.Controls.Add(groupBox4, 0, 3);
 
             Controls.Add(root);
 
@@ -481,12 +481,26 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private GroupBox groupBox3;
         private GroupBox groupBox4;
         private GroupBox groupBox5;
-        private TextBox txtEmail;
-        private TextBox txtTenKH;
-        private TextBox txtDiaChi;
+        private TextBox txtMaNCC;
+        private TextBox txtTenNCC;
         private TextBox txtSDT;
-        private TextBox txtMaKH;
+        private TextBox txtDiaChi;
+        private TextBox txtEmail;
+        private TextBox txtNguoiLH;
         private TextBox txtTim;
+        private Button btnThem;
+        private Button btnSua;
+        private Button btnXoa;
+        private Button btnLamLai;
+        private Button btnThoat;
+        private Button button1;
+        private DataGridView dgvKhachHang;
+        private DataGridViewTextBoxColumn colMaNCC;
+        private DataGridViewTextBoxColumn colTenNCC;
+        private DataGridViewTextBoxColumn colSDT;
+        private DataGridViewTextBoxColumn colDiaChi;
+        private DataGridViewTextBoxColumn colEmail;
+        private DataGridViewTextBoxColumn colNguoiLH;
         private Label label1;
         private Label label2;
         private Label label3;
@@ -495,25 +509,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private Label label6;
         private Label label7;
         private Label label8;
-        private Label label9;
-        private Label label10;
-        private Button btnThem;
-        private Button btnSua;
-        private Button btnXoa;
-        private Button btnLamLai;
-        private Button btnThoat;
-        private DataGridView dgvKhachHang;
-        private DataGridViewTextBoxColumn colMaKH;
-        private DataGridViewTextBoxColumn colTenKH;
-        private DataGridViewTextBoxColumn colSDT;
-        private DataGridViewTextBoxColumn colEmail;
-        private DataGridViewTextBoxColumn colDiaChi;
+        private Label label11;
         private TableLayoutPanel root;
-        private TableLayoutPanel top;
         private TableLayoutPanel fields;
-        private TableLayoutPanel noteLayout;
-        private TableLayoutPanel commandLayout;
+        private TableLayoutPanel notes;
         private FlowLayoutPanel actions;
         private TableLayoutPanel searchLayout;
+        private TableLayoutPanel top;
     }
 }

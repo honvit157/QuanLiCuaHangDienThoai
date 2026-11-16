@@ -1132,6 +1132,53 @@ BEGIN
 END;
 GO
 
+-- 8.6 Kiểm tra tên đăng nhập đã có người dùng chưa (chức năng Đăng ký tài khoản)
+CREATE OR ALTER PROCEDURE sp_KiemTraTenDangNhapTonTai
+    @TenDangNhap NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) AS SoLuong
+    FROM dbo.tblNhanVien
+    WHERE TaiKhoan = @TenDangNhap;
+END;
+GO
+
+-- 8.7 Đăng ký tài khoản nhân viên: tự sinh MaNV kế tiếp (NV001, NV002, ...),
+--     luôn gán chức vụ N'Nhân viên' và trạng thái N'Đang làm việc'.
+CREATE OR ALTER PROCEDURE sp_DangKyNhanVien
+    @TenNV       NVARCHAR(100),
+    @SDT         NVARCHAR(20),
+    @TenDangNhap NVARCHAR(50),
+    @MatKhau     NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @MaNVMoi NVARCHAR(20);
+    DECLARE @SoTiepTheo INT;
+
+    -- Lấy số lớn nhất trong các mã dạng NVxxx rồi cộng thêm 1
+    SELECT @SoTiepTheo = ISNULL(MAX(TRY_CAST(SUBSTRING(MaNV, 3, 18) AS INT)), 0) + 1
+    FROM dbo.tblNhanVien
+    WHERE MaNV LIKE N'NV%'
+      AND TRY_CAST(SUBSTRING(MaNV, 3, 18) AS INT) IS NOT NULL;
+
+    IF @SoTiepTheo > 999
+        SET @MaNVMoi = N'NV' + CAST(@SoTiepTheo AS NVARCHAR(10));
+    ELSE
+        SET @MaNVMoi = N'NV' + RIGHT(N'000' + CAST(@SoTiepTheo AS NVARCHAR(10)), 3);
+
+    INSERT INTO dbo.tblNhanVien
+        (MaNV, TenNV, SDT, TaiKhoan, MatKhau, ChucVu, TrangThai)
+    VALUES
+        (@MaNVMoi, @TenNV, @SDT, @TenDangNhap, @MatKhau, N'Nhân viên', N'Đang làm việc');
+
+    SELECT @MaNVMoi AS MaNV;
+END;
+GO
+
 -- ============================================================================
 --  PHẦN 9. HÓA ĐƠN BÁN HÀNG (tblHoaDonBan, tblChiTietHDB)
 -- ============================================================================

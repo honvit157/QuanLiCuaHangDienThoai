@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
     partial class Form9
     {
@@ -33,6 +33,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             txtMatKhau = new TextBox();
             button1 = new Button();
             button2 = new Button();
+            lnkDangKy = new LinkLabel();
 
             panelHeader.SuspendLayout();
 
@@ -72,7 +73,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             groupBox1.ForeColor = Color.FromArgb(11, 46, 77);
             groupBox1.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             groupBox1.Text = "ĐĂNG NHẬP HỆ THỐNG";
-            groupBox1.Size = new Size(580, 420);
+            groupBox1.Size = new Size(580, 448);
             groupBox1.TabStop = false;
             groupBox1.Padding = new Padding(20);
 
@@ -133,6 +134,18 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             button2.Cursor = Cursors.Hand;
             button2.UseVisualStyleBackColor = false;
 
+            lnkDangKy.AutoSize = true;
+            lnkDangKy.Location = new Point(40, 392);
+            lnkDangKy.Name = "lnkDangKy";
+            lnkDangKy.Text = "Chưa có tài khoản? Đăng ký ngay";
+            lnkDangKy.Font = new Font("Segoe UI", 10F);
+            lnkDangKy.LinkColor = Color.FromArgb(8, 120, 209);
+            lnkDangKy.ActiveLinkColor = Color.FromArgb(11, 46, 77);
+            lnkDangKy.VisitedLinkColor = Color.FromArgb(8, 120, 209);
+            lnkDangKy.LinkBehavior = LinkBehavior.HoverUnderline;
+            lnkDangKy.Cursor = Cursors.Hand;
+            lnkDangKy.TabStop = true;
+
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(txtMaNhanVien);
@@ -140,6 +153,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             groupBox1.Controls.Add(txtMatKhau);
             groupBox1.Controls.Add(button1);
             groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(lnkDangKy);
 
             panelContent.Controls.Add(groupBox1);
 
@@ -169,5 +183,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private TextBox txtMatKhau;
         private Button button1;
         private Button button2;
+        private LinkLabel lnkDangKy;
     }
 }

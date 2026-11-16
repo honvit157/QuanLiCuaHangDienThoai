@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using ClosedXML.Excel;
 
-namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
     /// <summary>
     /// Form tìm kiếm nâng cao: lọc hàng theo tên, hãng, loại, màu và khoảng giá;

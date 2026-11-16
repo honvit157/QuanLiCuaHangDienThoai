@@ -3,7 +3,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
     public partial class Form9 : Form
     {
@@ -21,6 +21,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             button1.Click += btnDangNhap_Click;
             button2.Click += (s, e) => Application.Exit();
+            lnkDangKy.LinkClicked += lnkDangKy_LinkClicked;
 
             AcceptButton = button1;
             CancelButton = button2;
@@ -83,6 +84,20 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
                 txtMatKhau.Focus();
                 txtMatKhau.SelectAll();
+            }
+        }
+
+        // Mở biểu mẫu đăng ký tài khoản nhân viên (FormDangKy)
+        private void lnkDangKy_LinkClicked(object? sender, LinkLabelLinkClickedEventArgs e)
+        {
+            using (FormDangKy frmDangKy = new FormDangKy())
+            {
+                if (frmDangKy.ShowDialog(this) != DialogResult.OK) return;
+
+                // Điền sẵn tên đăng nhập vừa tạo để đăng nhập luôn
+                txtMaNhanVien.Text = frmDangKy.TenDangNhapDaTao;
+                txtMatKhau.Clear();
+                txtMatKhau.Focus();
             }
         }
 

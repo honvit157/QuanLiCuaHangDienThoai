@@ -2,9 +2,9 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
-    partial class Form8
+    partial class Form7
     {
         private System.ComponentModel.IContainer components = null;
 
@@ -42,21 +42,23 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             label12 = new Label();
             label13 = new Label();
             label14 = new Label();
-            cboMaHDN = new ComboBox();
+            label15 = new Label();
+            cboMaHD = new ComboBox();
             txtMaNV = new TextBox();
-            cboNCC = new ComboBox();
             txtSDT = new TextBox();
-            dtpNgayNhap = new DateTimePicker();
+            txtTenKH = new TextBox();
             txtTenNV = new TextBox();
-            txtMaNCC = new TextBox();
+            dtpNgayLap = new DateTimePicker();
+            txtMaKH = new TextBox();
             txtDiaChi = new TextBox();
             cboMaHang = new ComboBox();
-            txtTenHang = new TextBox();
-            txtDonGiaNhap = new TextBox();
             txtSoLuong = new TextBox();
+            txtTenHang = new TextBox();
+            txtGiamGia = new TextBox();
+            txtDonGia = new TextBox();
             txtThanhTien = new TextBox();
             btnTim = new Button();
-            button1 = new Button();
+            btnThemHang = new Button();
             dgvChiTiet = new DataGridView();
             lblTongTien = new Label();
             btnThemHD = new Button();
@@ -70,8 +72,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(244, 247, 251);
             Font = new Font("Segoe UI", 10F);
-            Name = "Form8";
-            Text = "HÓA ĐƠN NHẬP HÀNG";
+            Name = "Form7";
+            Text = "HÓA ĐƠN BÁN HÀNG";
             StartPosition = FormStartPosition.CenterScreen;
             Dock = DockStyle.Fill;
             AutoScroll = false;
@@ -84,14 +86,13 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             tblMain.BackColor = Color.FromArgb(244, 247, 251);
             tblMain.Padding = new Padding(8);
             tblMain.Margin = Padding.Empty;
-            tblMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tblMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
             tblMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 320F));
             tblMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 280F));
             tblMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tblMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 110F));
 
-            label1.Text = "HÓA ĐƠN NHẬP HÀNG";
+            label1.Text = "HÓA ĐƠN BÁN HÀNG";
             label1.Font = new Font("Segoe UI", 17F, FontStyle.Bold);
             label1.ForeColor = Color.FromArgb(20, 43, 74);
             label1.Dock = DockStyle.Fill;
@@ -124,47 +125,47 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             tblThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33F));
             tblThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
 
-            pnlMaHoaDonNhap = new Panel();
+            pnlMaHoaDon = new Panel();
 
-            pnlMaHoaDonNhap.Dock = DockStyle.Fill;
-            pnlMaHoaDonNhap.BackColor = Color.White;
-            pnlMaHoaDonNhap.Padding = new Padding(4, 2, 8, 2);
-            pnlMaHoaDonNhap.Margin = new Padding(2);
+            pnlMaHoaDon.Dock = DockStyle.Fill;
+            pnlMaHoaDon.BackColor = Color.White;
+            pnlMaHoaDon.Padding = new Padding(4, 2, 8, 2);
+            pnlMaHoaDon.Margin = new Padding(2);
 
-            tblMaHoaDonNhap = new TableLayoutPanel();
+            tblMaHoaDon = new TableLayoutPanel();
 
-            tblMaHoaDonNhap.Dock = DockStyle.Fill;
-            tblMaHoaDonNhap.ColumnCount = 1;
-            tblMaHoaDonNhap.RowCount = 2;
-            tblMaHoaDonNhap.BackColor = Color.White;
-            tblMaHoaDonNhap.Margin = Padding.Empty;
-            tblMaHoaDonNhap.Padding = Padding.Empty;
-            tblMaHoaDonNhap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblMaHoaDonNhap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tblMaHoaDonNhap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblMaHoaDon.Dock = DockStyle.Fill;
+            tblMaHoaDon.ColumnCount = 1;
+            tblMaHoaDon.RowCount = 2;
+            tblMaHoaDon.BackColor = Color.White;
+            tblMaHoaDon.Margin = Padding.Empty;
+            tblMaHoaDon.Padding = Padding.Empty;
+            tblMaHoaDon.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblMaHoaDon.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblMaHoaDon.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            label2.Text = "Mã hóa đơn nhập";
+            label2.Text = "Mã hóa đơn";
             label2.Dock = DockStyle.Fill;
             label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label2.ForeColor = Color.FromArgb(35, 51, 72);
             label2.TextAlign = ContentAlignment.MiddleLeft;
             label2.Margin = Padding.Empty;
 
-            tblInputMaHoaDonNhap = new TableLayoutPanel();
+            tblInputMaHoaDon = new TableLayoutPanel();
 
-            tblInputMaHoaDonNhap.Dock = DockStyle.Fill;
-            tblInputMaHoaDonNhap.ColumnCount = 2;
-            tblInputMaHoaDonNhap.RowCount = 1;
-            tblInputMaHoaDonNhap.Margin = new Padding(0, 8, 0, 1);
-            tblInputMaHoaDonNhap.Padding = Padding.Empty;
-            tblInputMaHoaDonNhap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblInputMaHoaDonNhap.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 65F));
-            tblInputMaHoaDonNhap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblInputMaHoaDon.Dock = DockStyle.Fill;
+            tblInputMaHoaDon.ColumnCount = 2;
+            tblInputMaHoaDon.RowCount = 1;
+            tblInputMaHoaDon.Margin = new Padding(0, 8, 0, 1);
+            tblInputMaHoaDon.Padding = Padding.Empty;
+            tblInputMaHoaDon.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblInputMaHoaDon.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 65F));
+            tblInputMaHoaDon.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            cboMaHDN.Font = new Font("Segoe UI", 9.5F);
-            cboMaHDN.ForeColor = Color.FromArgb(35, 51, 72);
-            cboMaHDN.Dock = DockStyle.Fill;
-            cboMaHDN.Margin = new Padding(0, 0, 4, 0);
+            cboMaHD.Font = new Font("Segoe UI", 9.5F);
+            cboMaHD.ForeColor = Color.FromArgb(35, 51, 72);
+            cboMaHD.Dock = DockStyle.Fill;
+            cboMaHD.Margin = new Padding(0, 0, 4, 0);
 
             btnTim.Text = "⌕ Tìm";
             btnTim.BackColor = Color.FromArgb(36, 120, 212);
@@ -178,53 +179,53 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             btnTim.Margin = Padding.Empty;
             btnTim.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
 
-            tblInputMaHoaDonNhap.Controls.Add(cboMaHDN, 0, 0);
-            tblInputMaHoaDonNhap.Controls.Add(btnTim, 1, 0);
+            tblInputMaHoaDon.Controls.Add(cboMaHD, 0, 0);
+            tblInputMaHoaDon.Controls.Add(btnTim, 1, 0);
 
-            tblMaHoaDonNhap.Controls.Add(label2, 0, 0);
-            tblMaHoaDonNhap.Controls.Add(tblInputMaHoaDonNhap, 0, 1);
+            tblMaHoaDon.Controls.Add(label2, 0, 0);
+            tblMaHoaDon.Controls.Add(tblInputMaHoaDon, 0, 1);
 
-            pnlMaHoaDonNhap.Controls.Add(tblMaHoaDonNhap);
+            pnlMaHoaDon.Controls.Add(tblMaHoaDon);
 
-            tblThongTin.Controls.Add(pnlMaHoaDonNhap, 0, 0);
+            tblThongTin.Controls.Add(pnlMaHoaDon, 0, 0);
 
-            pnlNgayNhap = new Panel();
+            pnlNgayLap = new Panel();
 
-            pnlNgayNhap.Dock = DockStyle.Fill;
-            pnlNgayNhap.BackColor = Color.White;
-            pnlNgayNhap.Padding = new Padding(4, 2, 8, 2);
-            pnlNgayNhap.Margin = new Padding(2);
+            pnlNgayLap.Dock = DockStyle.Fill;
+            pnlNgayLap.BackColor = Color.White;
+            pnlNgayLap.Padding = new Padding(4, 2, 8, 2);
+            pnlNgayLap.Margin = new Padding(2);
 
-            tblNgayNhap = new TableLayoutPanel();
+            tblNgayLap = new TableLayoutPanel();
 
-            tblNgayNhap.Dock = DockStyle.Fill;
-            tblNgayNhap.ColumnCount = 1;
-            tblNgayNhap.RowCount = 2;
-            tblNgayNhap.BackColor = Color.White;
-            tblNgayNhap.Margin = Padding.Empty;
-            tblNgayNhap.Padding = Padding.Empty;
-            tblNgayNhap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblNgayNhap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tblNgayNhap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblNgayLap.Dock = DockStyle.Fill;
+            tblNgayLap.ColumnCount = 1;
+            tblNgayLap.RowCount = 2;
+            tblNgayLap.BackColor = Color.White;
+            tblNgayLap.Margin = Padding.Empty;
+            tblNgayLap.Padding = Padding.Empty;
+            tblNgayLap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblNgayLap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblNgayLap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            label6.Text = "Ngày nhập";
+            label6.Text = "Ngày lập";
             label6.Dock = DockStyle.Fill;
             label6.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label6.ForeColor = Color.FromArgb(35, 51, 72);
             label6.TextAlign = ContentAlignment.MiddleLeft;
             label6.Margin = Padding.Empty;
 
-            dtpNgayNhap.Font = new Font("Segoe UI", 9.5F);
-            dtpNgayNhap.ForeColor = Color.FromArgb(35, 51, 72);
-            dtpNgayNhap.Dock = DockStyle.Fill;
-            dtpNgayNhap.Margin = new Padding(0, 8, 0, 1);
+            dtpNgayLap.Font = new Font("Segoe UI", 9.5F);
+            dtpNgayLap.ForeColor = Color.FromArgb(35, 51, 72);
+            dtpNgayLap.Dock = DockStyle.Fill;
+            dtpNgayLap.Margin = new Padding(0, 8, 0, 1);
 
-            tblNgayNhap.Controls.Add(label6, 0, 0);
-            tblNgayNhap.Controls.Add(dtpNgayNhap, 0, 1);
+            tblNgayLap.Controls.Add(label6, 0, 0);
+            tblNgayLap.Controls.Add(dtpNgayLap, 0, 1);
 
-            pnlNgayNhap.Controls.Add(tblNgayNhap);
+            pnlNgayLap.Controls.Add(tblNgayLap);
 
-            tblThongTin.Controls.Add(pnlNgayNhap, 1, 0);
+            tblThongTin.Controls.Add(pnlNgayLap, 1, 0);
 
             pnlMaNhanVien = new Panel();
 
@@ -306,69 +307,71 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             tblThongTin.Controls.Add(pnlTenNhanVien, 0, 1);
 
-            pnlNhaCungCap = new Panel();
+            pnlMaKhachHang = new Panel();
 
-            pnlNhaCungCap.Dock = DockStyle.Fill;
-            pnlNhaCungCap.BackColor = Color.White;
-            pnlNhaCungCap.Padding = new Padding(4, 2, 8, 2);
-            pnlNhaCungCap.Margin = new Padding(2);
+            pnlMaKhachHang.Dock = DockStyle.Fill;
+            pnlMaKhachHang.BackColor = Color.White;
+            pnlMaKhachHang.Padding = new Padding(4, 2, 8, 2);
+            pnlMaKhachHang.Margin = new Padding(2);
 
-            tblNhaCungCap = new TableLayoutPanel();
+            tblMaKhachHang = new TableLayoutPanel();
 
-            tblNhaCungCap.Dock = DockStyle.Fill;
-            tblNhaCungCap.ColumnCount = 1;
-            tblNhaCungCap.RowCount = 2;
-            tblNhaCungCap.BackColor = Color.White;
-            tblNhaCungCap.Margin = Padding.Empty;
-            tblNhaCungCap.Padding = Padding.Empty;
-            tblNhaCungCap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblNhaCungCap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tblNhaCungCap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblMaKhachHang.Dock = DockStyle.Fill;
+            tblMaKhachHang.ColumnCount = 1;
+            tblMaKhachHang.RowCount = 2;
+            tblMaKhachHang.BackColor = Color.White;
+            tblMaKhachHang.Margin = Padding.Empty;
+            tblMaKhachHang.Padding = Padding.Empty;
+            tblMaKhachHang.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblMaKhachHang.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblMaKhachHang.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            label4.Text = "Nhà cung cấp";
+            label8.Text = "Mã khách hàng";
+            label8.Dock = DockStyle.Fill;
+            label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label8.ForeColor = Color.FromArgb(35, 51, 72);
+            label8.TextAlign = ContentAlignment.MiddleLeft;
+            label8.Margin = Padding.Empty;
+
+            txtMaKH.Font = new Font("Segoe UI", 9.5F);
+            txtMaKH.ForeColor = Color.FromArgb(35, 51, 72);
+            txtMaKH.BorderStyle = BorderStyle.FixedSingle;
+            txtMaKH.BackColor = Color.FromArgb(250, 252, 255);
+            txtMaKH.Dock = DockStyle.Fill;
+            txtMaKH.Margin = new Padding(0, 8, 0, 1);
+
+            tblMaKhachHang.Controls.Add(label8, 0, 0);
+            tblMaKhachHang.Controls.Add(txtMaKH, 0, 1);
+
+            pnlMaKhachHang.Controls.Add(tblMaKhachHang);
+
+            tblThongTin.Controls.Add(pnlMaKhachHang, 1, 1);
+
+            pnlSdtKhach = new Panel();
+
+            pnlSdtKhach.Dock = DockStyle.Fill;
+            pnlSdtKhach.BackColor = Color.White;
+            pnlSdtKhach.Padding = new Padding(4, 2, 8, 2);
+            pnlSdtKhach.Margin = new Padding(2);
+
+            tblSdtKhach = new TableLayoutPanel();
+
+            tblSdtKhach.Dock = DockStyle.Fill;
+            tblSdtKhach.ColumnCount = 1;
+            tblSdtKhach.RowCount = 2;
+            tblSdtKhach.BackColor = Color.White;
+            tblSdtKhach.Margin = Padding.Empty;
+            tblSdtKhach.Padding = Padding.Empty;
+            tblSdtKhach.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblSdtKhach.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblSdtKhach.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            label4.Text = "SĐT khách";
             label4.Dock = DockStyle.Fill;
             label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label4.ForeColor = Color.FromArgb(35, 51, 72);
             label4.TextAlign = ContentAlignment.MiddleLeft;
             label4.Margin = Padding.Empty;
-
-            cboNCC.Font = new Font("Segoe UI", 9.5F);
-            cboNCC.ForeColor = Color.FromArgb(35, 51, 72);
-            cboNCC.Dock = DockStyle.Fill;
-            cboNCC.Margin = new Padding(0, 8, 0, 1);
-
-            tblNhaCungCap.Controls.Add(label4, 0, 0);
-            tblNhaCungCap.Controls.Add(cboNCC, 0, 1);
-
-            pnlNhaCungCap.Controls.Add(tblNhaCungCap);
-
-            tblThongTin.Controls.Add(pnlNhaCungCap, 1, 1);
-
-            pnlSdtNhaCungCap = new Panel();
-
-            pnlSdtNhaCungCap.Dock = DockStyle.Fill;
-            pnlSdtNhaCungCap.BackColor = Color.White;
-            pnlSdtNhaCungCap.Padding = new Padding(4, 2, 8, 2);
-            pnlSdtNhaCungCap.Margin = new Padding(2);
-
-            tblSdtNhaCungCap = new TableLayoutPanel();
-
-            tblSdtNhaCungCap.Dock = DockStyle.Fill;
-            tblSdtNhaCungCap.ColumnCount = 1;
-            tblSdtNhaCungCap.RowCount = 2;
-            tblSdtNhaCungCap.BackColor = Color.White;
-            tblSdtNhaCungCap.Margin = Padding.Empty;
-            tblSdtNhaCungCap.Padding = Padding.Empty;
-            tblSdtNhaCungCap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblSdtNhaCungCap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tblSdtNhaCungCap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-
-            label5.Text = "SĐT nhà cung cấp";
-            label5.Dock = DockStyle.Fill;
-            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label5.ForeColor = Color.FromArgb(35, 51, 72);
-            label5.TextAlign = ContentAlignment.MiddleLeft;
-            label5.Margin = Padding.Empty;
 
             txtSDT.Font = new Font("Segoe UI", 9.5F);
             txtSDT.ForeColor = Color.FromArgb(35, 51, 72);
@@ -377,52 +380,52 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             txtSDT.Dock = DockStyle.Fill;
             txtSDT.Margin = new Padding(0, 8, 0, 1);
 
-            tblSdtNhaCungCap.Controls.Add(label5, 0, 0);
-            tblSdtNhaCungCap.Controls.Add(txtSDT, 0, 1);
+            tblSdtKhach.Controls.Add(label4, 0, 0);
+            tblSdtKhach.Controls.Add(txtSDT, 0, 1);
 
-            pnlSdtNhaCungCap.Controls.Add(tblSdtNhaCungCap);
+            pnlSdtKhach.Controls.Add(tblSdtKhach);
 
-            tblThongTin.Controls.Add(pnlSdtNhaCungCap, 2, 1);
+            tblThongTin.Controls.Add(pnlSdtKhach, 2, 1);
 
-            pnlMaNhaCungCap = new Panel();
+            pnlTenKhach = new Panel();
 
-            pnlMaNhaCungCap.Dock = DockStyle.Fill;
-            pnlMaNhaCungCap.BackColor = Color.White;
-            pnlMaNhaCungCap.Padding = new Padding(4, 2, 8, 2);
-            pnlMaNhaCungCap.Margin = new Padding(2);
+            pnlTenKhach.Dock = DockStyle.Fill;
+            pnlTenKhach.BackColor = Color.White;
+            pnlTenKhach.Padding = new Padding(4, 2, 8, 2);
+            pnlTenKhach.Margin = new Padding(2);
 
-            tblMaNhaCungCap = new TableLayoutPanel();
+            tblTenKhach = new TableLayoutPanel();
 
-            tblMaNhaCungCap.Dock = DockStyle.Fill;
-            tblMaNhaCungCap.ColumnCount = 1;
-            tblMaNhaCungCap.RowCount = 2;
-            tblMaNhaCungCap.BackColor = Color.White;
-            tblMaNhaCungCap.Margin = Padding.Empty;
-            tblMaNhaCungCap.Padding = Padding.Empty;
-            tblMaNhaCungCap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblMaNhaCungCap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tblMaNhaCungCap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblTenKhach.Dock = DockStyle.Fill;
+            tblTenKhach.ColumnCount = 1;
+            tblTenKhach.RowCount = 2;
+            tblTenKhach.BackColor = Color.White;
+            tblTenKhach.Margin = Padding.Empty;
+            tblTenKhach.Padding = Padding.Empty;
+            tblTenKhach.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblTenKhach.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblTenKhach.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            label8.Text = "Mã nhà cung cấp";
-            label8.Dock = DockStyle.Fill;
-            label8.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label8.ForeColor = Color.FromArgb(35, 51, 72);
-            label8.TextAlign = ContentAlignment.MiddleLeft;
-            label8.Margin = Padding.Empty;
+            label5.Text = "Tên khách";
+            label5.Dock = DockStyle.Fill;
+            label5.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label5.ForeColor = Color.FromArgb(35, 51, 72);
+            label5.TextAlign = ContentAlignment.MiddleLeft;
+            label5.Margin = Padding.Empty;
 
-            txtMaNCC.Font = new Font("Segoe UI", 9.5F);
-            txtMaNCC.ForeColor = Color.FromArgb(35, 51, 72);
-            txtMaNCC.BorderStyle = BorderStyle.FixedSingle;
-            txtMaNCC.BackColor = Color.FromArgb(250, 252, 255);
-            txtMaNCC.Dock = DockStyle.Fill;
-            txtMaNCC.Margin = new Padding(0, 8, 0, 1);
+            txtTenKH.Font = new Font("Segoe UI", 9.5F);
+            txtTenKH.ForeColor = Color.FromArgb(35, 51, 72);
+            txtTenKH.BorderStyle = BorderStyle.FixedSingle;
+            txtTenKH.BackColor = Color.FromArgb(250, 252, 255);
+            txtTenKH.Dock = DockStyle.Fill;
+            txtTenKH.Margin = new Padding(0, 8, 0, 1);
 
-            tblMaNhaCungCap.Controls.Add(label8, 0, 0);
-            tblMaNhaCungCap.Controls.Add(txtMaNCC, 0, 1);
+            tblTenKhach.Controls.Add(label5, 0, 0);
+            tblTenKhach.Controls.Add(txtTenKH, 0, 1);
 
-            pnlMaNhaCungCap.Controls.Add(tblMaNhaCungCap);
+            pnlTenKhach.Controls.Add(tblTenKhach);
 
-            tblThongTin.Controls.Add(pnlMaNhaCungCap, 0, 2);
+            tblThongTin.Controls.Add(pnlTenKhach, 0, 2);
 
             pnlDiaChi = new Panel();
 
@@ -477,6 +480,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             groupBox2.Dock = DockStyle.Fill;
             groupBox2.Margin = new Padding(0, 0, 0, 7);
             groupBox2.Padding = new Padding(8, 12, 8, 5);
+            groupBox2.Location = new Point(18, 320);
 
             tblMatHang = new TableLayoutPanel();
 
@@ -571,45 +575,45 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             tblMatHang.Controls.Add(pnlTenHang, 1, 0);
 
-            pnlDonGiaNhap = new Panel();
+            pnlDonGia = new Panel();
 
-            pnlDonGiaNhap.Dock = DockStyle.Fill;
-            pnlDonGiaNhap.BackColor = Color.White;
-            pnlDonGiaNhap.Padding = new Padding(4, 2, 8, 2);
-            pnlDonGiaNhap.Margin = new Padding(2);
+            pnlDonGia.Dock = DockStyle.Fill;
+            pnlDonGia.BackColor = Color.White;
+            pnlDonGia.Padding = new Padding(4, 2, 8, 2);
+            pnlDonGia.Margin = new Padding(2);
 
-            tblDonGiaNhap = new TableLayoutPanel();
+            tblDonGia = new TableLayoutPanel();
 
-            tblDonGiaNhap.Dock = DockStyle.Fill;
-            tblDonGiaNhap.ColumnCount = 1;
-            tblDonGiaNhap.RowCount = 2;
-            tblDonGiaNhap.BackColor = Color.White;
-            tblDonGiaNhap.Margin = Padding.Empty;
-            tblDonGiaNhap.Padding = Padding.Empty;
-            tblDonGiaNhap.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tblDonGiaNhap.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
-            tblDonGiaNhap.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tblDonGia.Dock = DockStyle.Fill;
+            tblDonGia.ColumnCount = 1;
+            tblDonGia.RowCount = 2;
+            tblDonGia.BackColor = Color.White;
+            tblDonGia.Margin = Padding.Empty;
+            tblDonGia.Padding = Padding.Empty;
+            tblDonGia.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblDonGia.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblDonGia.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            label14.Text = "Đơn giá nhập";
+            label14.Text = "Đơn giá";
             label14.Dock = DockStyle.Fill;
             label14.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             label14.ForeColor = Color.FromArgb(35, 51, 72);
             label14.TextAlign = ContentAlignment.MiddleLeft;
             label14.Margin = Padding.Empty;
 
-            txtDonGiaNhap.Font = new Font("Segoe UI", 9.5F);
-            txtDonGiaNhap.ForeColor = Color.FromArgb(35, 51, 72);
-            txtDonGiaNhap.BorderStyle = BorderStyle.FixedSingle;
-            txtDonGiaNhap.BackColor = Color.FromArgb(250, 252, 255);
-            txtDonGiaNhap.Dock = DockStyle.Fill;
-            txtDonGiaNhap.Margin = new Padding(0, 8, 0, 1);
+            txtDonGia.Font = new Font("Segoe UI", 9.5F);
+            txtDonGia.ForeColor = Color.FromArgb(35, 51, 72);
+            txtDonGia.BorderStyle = BorderStyle.FixedSingle;
+            txtDonGia.BackColor = Color.FromArgb(250, 252, 255);
+            txtDonGia.Dock = DockStyle.Fill;
+            txtDonGia.Margin = new Padding(0, 8, 0, 1);
 
-            tblDonGiaNhap.Controls.Add(label14, 0, 0);
-            tblDonGiaNhap.Controls.Add(txtDonGiaNhap, 0, 1);
+            tblDonGia.Controls.Add(label14, 0, 0);
+            tblDonGia.Controls.Add(txtDonGia, 0, 1);
 
-            pnlDonGiaNhap.Controls.Add(tblDonGiaNhap);
+            pnlDonGia.Controls.Add(tblDonGia);
 
-            tblMatHang.Controls.Add(pnlDonGiaNhap, 2, 0);
+            tblMatHang.Controls.Add(pnlDonGia, 2, 0);
 
             pnlSoLuong = new Panel();
 
@@ -651,6 +655,46 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             tblMatHang.Controls.Add(pnlSoLuong, 0, 1);
 
+            pnlGiamGia = new Panel();
+
+            pnlGiamGia.Dock = DockStyle.Fill;
+            pnlGiamGia.BackColor = Color.White;
+            pnlGiamGia.Padding = new Padding(4, 2, 8, 2);
+            pnlGiamGia.Margin = new Padding(2);
+
+            tblGiamGia = new TableLayoutPanel();
+
+            tblGiamGia.Dock = DockStyle.Fill;
+            tblGiamGia.ColumnCount = 1;
+            tblGiamGia.RowCount = 2;
+            tblGiamGia.BackColor = Color.White;
+            tblGiamGia.Margin = Padding.Empty;
+            tblGiamGia.Padding = Padding.Empty;
+            tblGiamGia.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tblGiamGia.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+            tblGiamGia.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            label13.Text = "Giảm giá (%)";
+            label13.Dock = DockStyle.Fill;
+            label13.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label13.ForeColor = Color.FromArgb(35, 51, 72);
+            label13.TextAlign = ContentAlignment.MiddleLeft;
+            label13.Margin = Padding.Empty;
+
+            txtGiamGia.Font = new Font("Segoe UI", 9.5F);
+            txtGiamGia.ForeColor = Color.FromArgb(35, 51, 72);
+            txtGiamGia.BorderStyle = BorderStyle.FixedSingle;
+            txtGiamGia.BackColor = Color.FromArgb(250, 252, 255);
+            txtGiamGia.Dock = DockStyle.Fill;
+            txtGiamGia.Margin = new Padding(0, 8, 0, 1);
+
+            tblGiamGia.Controls.Add(label13, 0, 0);
+            tblGiamGia.Controls.Add(txtGiamGia, 0, 1);
+
+            pnlGiamGia.Controls.Add(tblGiamGia);
+
+            tblMatHang.Controls.Add(pnlGiamGia, 1, 1);
+
             pnlThanhTien = new Panel();
 
             pnlThanhTien.Dock = DockStyle.Fill;
@@ -670,12 +714,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             tblThanhTien.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
             tblThanhTien.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
 
-            label13.Text = "Thành tiền";
-            label13.Dock = DockStyle.Fill;
-            label13.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label13.ForeColor = Color.FromArgb(35, 51, 72);
-            label13.TextAlign = ContentAlignment.MiddleLeft;
-            label13.Margin = Padding.Empty;
+            label15.Text = "Thành tiền";
+            label15.Dock = DockStyle.Fill;
+            label15.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label15.ForeColor = Color.FromArgb(35, 51, 72);
+            label15.TextAlign = ContentAlignment.MiddleLeft;
+            label15.Margin = Padding.Empty;
 
             txtThanhTien.Font = new Font("Segoe UI", 9.5F);
             txtThanhTien.ForeColor = Color.FromArgb(35, 51, 72);
@@ -684,37 +728,37 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             txtThanhTien.Dock = DockStyle.Fill;
             txtThanhTien.Margin = new Padding(0, 8, 0, 1);
 
-            tblThanhTien.Controls.Add(label13, 0, 0);
+            tblThanhTien.Controls.Add(label15, 0, 0);
             tblThanhTien.Controls.Add(txtThanhTien, 0, 1);
 
             pnlThanhTien.Controls.Add(tblThanhTien);
 
-            tblMatHang.Controls.Add(pnlThanhTien, 1, 1);
+            tblMatHang.Controls.Add(pnlThanhTien, 2, 1);
 
-            tblMatHang.SetColumnSpan(pnlThanhTien, 2);
+            label13.Click += label13_Click;
 
-            button1.Text = "＋ Thêm hàng";
-            button1.BackColor = Color.FromArgb(36, 155, 110);
-            button1.ForeColor = Color.White;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.FlatAppearance.BorderSize = 0;
-            button1.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            button1.Cursor = Cursors.Hand;
-            button1.UseVisualStyleBackColor = false;
-            button1.Dock = DockStyle.None;
-            button1.Anchor = AnchorStyles.None;
-            button1.Size = new Size(160, 42);
-            button1.Margin = new Padding(5);
+            btnThemHang.Text = "＋ Thêm hàng";
+            btnThemHang.BackColor = Color.FromArgb(36, 155, 110);
+            btnThemHang.ForeColor = Color.White;
+            btnThemHang.FlatStyle = FlatStyle.Flat;
+            btnThemHang.FlatAppearance.BorderSize = 0;
+            btnThemHang.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnThemHang.Cursor = Cursors.Hand;
+            btnThemHang.UseVisualStyleBackColor = false;
+            btnThemHang.Dock = DockStyle.None;
+            btnThemHang.Anchor = AnchorStyles.None;
+            btnThemHang.Size = new Size(150, 42);
+            btnThemHang.Margin = new Padding(5);
 
-            tblMatHang.Controls.Add(button1, 3, 0);
+            tblMatHang.Controls.Add(btnThemHang, 3, 0);
 
-            tblMatHang.SetRowSpan(button1, 2);
+            tblMatHang.SetRowSpan(btnThemHang, 2);
 
             groupBox2.Controls.Add(tblMatHang);
 
             tblMain.Controls.Add(groupBox2, 0, 2);
 
-            groupBox3.Text = "CHI TIẾT HÓA ĐƠN NHẬP";
+            groupBox3.Text = "CHI TIẾT HÓA ĐƠN";
             groupBox3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             groupBox3.ForeColor = Color.FromArgb(20, 43, 74);
             groupBox3.BackColor = Color.White;
@@ -878,21 +922,23 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private Label label12;
         private Label label13;
         private Label label14;
-        private ComboBox cboMaHDN;
+        private Label label15;
+        private ComboBox cboMaHD;
         private TextBox txtMaNV;
-        private ComboBox cboNCC;
         private TextBox txtSDT;
-        private DateTimePicker dtpNgayNhap;
+        private TextBox txtTenKH;
         private TextBox txtTenNV;
-        private TextBox txtMaNCC;
+        private DateTimePicker dtpNgayLap;
+        private TextBox txtMaKH;
         private TextBox txtDiaChi;
         private ComboBox cboMaHang;
-        private TextBox txtTenHang;
-        private TextBox txtDonGiaNhap;
         private TextBox txtSoLuong;
+        private TextBox txtTenHang;
+        private TextBox txtGiamGia;
+        private TextBox txtDonGia;
         private TextBox txtThanhTien;
         private Button btnTim;
-        private Button button1;
+        private Button btnThemHang;
         private DataGridView dgvChiTiet;
         private Label lblTongTien;
         private Button btnThemHD;
@@ -902,21 +948,21 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private Button btnThoat;
         private TableLayoutPanel tblMain;
         private TableLayoutPanel tblThongTin;
-        private Panel pnlMaHoaDonNhap;
-        private TableLayoutPanel tblMaHoaDonNhap;
-        private TableLayoutPanel tblInputMaHoaDonNhap;
-        private Panel pnlNgayNhap;
-        private TableLayoutPanel tblNgayNhap;
+        private Panel pnlMaHoaDon;
+        private TableLayoutPanel tblMaHoaDon;
+        private TableLayoutPanel tblInputMaHoaDon;
+        private Panel pnlNgayLap;
+        private TableLayoutPanel tblNgayLap;
         private Panel pnlMaNhanVien;
         private TableLayoutPanel tblMaNhanVien;
         private Panel pnlTenNhanVien;
         private TableLayoutPanel tblTenNhanVien;
-        private Panel pnlNhaCungCap;
-        private TableLayoutPanel tblNhaCungCap;
-        private Panel pnlSdtNhaCungCap;
-        private TableLayoutPanel tblSdtNhaCungCap;
-        private Panel pnlMaNhaCungCap;
-        private TableLayoutPanel tblMaNhaCungCap;
+        private Panel pnlMaKhachHang;
+        private TableLayoutPanel tblMaKhachHang;
+        private Panel pnlSdtKhach;
+        private TableLayoutPanel tblSdtKhach;
+        private Panel pnlTenKhach;
+        private TableLayoutPanel tblTenKhach;
         private Panel pnlDiaChi;
         private TableLayoutPanel tblDiaChi;
         private TableLayoutPanel tblMatHang;
@@ -924,10 +970,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private TableLayoutPanel tblMaHang;
         private Panel pnlTenHang;
         private TableLayoutPanel tblTenHang;
-        private Panel pnlDonGiaNhap;
-        private TableLayoutPanel tblDonGiaNhap;
+        private Panel pnlDonGia;
+        private TableLayoutPanel tblDonGia;
         private Panel pnlSoLuong;
         private TableLayoutPanel tblSoLuong;
+        private Panel pnlGiamGia;
+        private TableLayoutPanel tblGiamGia;
         private Panel pnlThanhTien;
         private TableLayoutPanel tblThanhTien;
         private TableLayoutPanel tblChiTiet;

@@ -52,6 +52,83 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             }
         }
 
+        /// <summary>
+        /// Đăng ký tài khoản nhân viên mới từ biểu mẫu FormDangKy.
+        /// Kiểm tra họ tên, số điện thoại (10 số), tên đăng nhập chưa trùng, mật khẩu khớp nhau;
+        /// tài khoản tự đăng ký luôn là "Nhân viên" đang làm việc (không thể tự nhận "Quản lý").
+        /// </summary>
+        public bool DangKy(string hoTen, string sdt, string tenDangNhap,
+                           string matKhau, string nhapLaiMatKhau, out string maNV, out string error)
+        {
+            maNV = "";
+            error = "";
+
+            string ten = tenDangNhap.Trim();
+            string mk = matKhau.Trim();
+            string mkNhapLai = nhapLaiMatKhau.Trim();
+
+            if (string.IsNullOrWhiteSpace(hoTen))
+            {
+                error = "Họ tên không được để trống!";
+                return false;
+            }
+
+            if (!AppHelpers.KiemTraSoDienThoai(sdt?.Trim()))
+            {
+                error = "Số điện thoại phải có 10 chữ số bắt đầu bằng 0!";
+                return false;
+            }
+
+            if (ten.Length < 3)
+            {
+                error = "Tên đăng nhập phải có ít nhất 3 ký tự!";
+                return false;
+            }
+
+            if (ten.Contains(" "))
+            {
+                error = "Tên đăng nhập không được chứa khoảng trắng!";
+                return false;
+            }
+
+            if (mk.Length < 6)
+            {
+                error = "Mật khẩu phải có ít nhất 6 ký tự!";
+                return false;
+            }
+
+            if (!string.Equals(mk, mkNhapLai, StringComparison.Ordinal))
+            {
+                error = "Mật khẩu nhập lại không khớp!";
+                return false;
+            }
+
+            try
+            {
+                if (dal.KiemTraTenDangNhapTonTai(ten))
+                {
+                    error = $"Tên đăng nhập '{ten}' đã có người dùng, vui lòng chọn tên khác!";
+                    return false;
+                }
+
+                maNV = dal.DangKy(hoTen.Trim(), sdt.Trim(), ten, mk);
+
+                if (string.IsNullOrEmpty(maNV))
+                {
+                    error = "Không tạo được tài khoản, vui lòng thử lại!";
+                    return false;
+                }
+
+                AppHelpers.GhiLog($"Đăng ký tài khoản mới: {maNV} - {hoTen.Trim()} ({ten})");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = "Lỗi đăng ký tài khoản: " + ex.Message;
+                return false;
+            }
+        }
+
         public DataTable LayDanhSach()
         {
             return dal.LayTatCa();

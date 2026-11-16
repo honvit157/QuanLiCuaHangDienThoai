@@ -31,4 +31,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <!-- Các biểu mẫu nằm trong GUI/ và dùng namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI.
+       Nhờ vậy tên tài nguyên nhúng mặc định của SDK-style
+       (<RootNamespace>.GUI.FormX.resources) trùng đúng với namespace của FormX, nên
+       ComponentResourceManager(typeof(FormX)) luôn tìm thấy tài nguyên — không cần LogicalName. -->
+
 </Project>

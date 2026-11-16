@@ -76,7 +76,10 @@ def kiem_tra_csproj():
             print(f"[csproj] RootNamespace khớp tài nguyên nhúng: {can}")
 
     # Mỗi biểu mẫu phải đủ bộ .cs + .Designer.cs (+ .resx nếu Designer có dùng resx).
-    for tep_designer in glob.glob(os.path.join(GOC, "*.Designer.cs")):
+    for tep_designer in glob.glob(os.path.join(GOC, "**", "*.Designer.cs"), recursive=True):
+        # Properties/Resources.Designer.cs là lớp sinh cho tệp .resx, không phải biểu mẫu.
+        if os.path.basename(tep_designer) == "Resources.Designer.cs":
+            continue
         goc_form = tep_designer[: -len(".Designer.cs")]
         if not os.path.exists(goc_form + ".cs"):
             bao_loi(f"Thiếu mã lệnh cho biểu mẫu: {os.path.basename(goc_form)}.cs")
@@ -87,13 +90,53 @@ def kiem_tra_csproj():
     print("[csproj] Mọi tệp biểu mẫu đều đủ bộ .cs/.Designer.cs/.resx.")
 
     # Ảnh mà Dashboard đọc từ thư mục Images phải có trong kho.
-    form10 = os.path.join(GOC, "Form10.cs")
+    form10 = os.path.join(GOC, "GUI", "Form10.cs")
     if os.path.exists(form10):
         for ten in set(re.findall(r'"([\w\-]+\.(?:jpg|jpeg|png|bmp|gif))"', doc(form10))):
             if not os.path.exists(os.path.join(GOC, "Images", ten)):
                 bao_loi(f"Images/{ten} được Form10.cs dùng nhưng không có trong kho.")
             else:
                 print(f"[Images] Có ảnh Dashboard dùng: Images/{ten}")
+
+
+def kiem_tra_thu_muc_gui():
+    """Biểu mẫu phải nằm gọn trong GUI/ và namespace phải khớp tên tài nguyên nhúng.
+
+    Trong dự án SDK-style, tệp GUI/FormX.resx được nhúng dưới tên
+    <RootNamespace>.GUI.FormX.resources. Nếu namespace của FormX khác <RootNamespace>.GUI thì
+    ComponentResourceManager(typeof(FormX)) sẽ tìm sai tên và ném MissingManifestResourceException
+    lúc chạy trên Windows.
+    """
+    noi_dung = doc(glob.glob(os.path.join(GOC, "*.csproj"))[0])
+    rn = re.search(r"<RootNamespace>(.*?)</RootNamespace>", noi_dung)
+    ten_goc = rn.group(1).strip() if rn else ""
+    can = (ten_goc + ".GUI").strip(".")
+
+    # Không còn tệp biểu mẫu nào ở thư mục gốc.
+    con_o_goc = sorted(os.path.basename(p) for p in glob.glob(os.path.join(GOC, "Form*"))
+                       if os.path.isfile(p))
+    if con_o_goc:
+        bao_loi("Còn tệp biểu mẫu ở thư mục gốc, phải chuyển vào GUI/: " + ", ".join(con_o_goc))
+
+    ds_form = sorted(p for p in glob.glob(os.path.join(GOC, "GUI", "Form*.cs"))
+                     if not p.endswith(".Designer.cs"))
+    if not ds_form:
+        bao_loi("Không tìm thấy biểu mẫu nào trong thư mục GUI/.")
+        return
+
+    so_sai = 0
+    for tep in ds_form:
+        ns = re.search(r"^\s*namespace\s+([\w\.]+)", doc(tep), re.M)
+        ten_ns = ns.group(1) if ns else "?"
+        if ten_ns != can:
+            ten_form = os.path.splitext(os.path.basename(tep))[0]
+            bao_loi(f"GUI/{os.path.basename(tep)} dùng namespace '{ten_ns}' nhưng tài nguyên nhúng "
+                    f"của tệp là '{can}.{ten_form}.resources' — cần namespace '{can}' để tránh "
+                    f"MissingManifestResourceException.")
+            so_sai += 1
+
+    print(f"[GUI] {len(ds_form)} biểu mẫu trong GUI/ dùng namespace '{can}': "
+          f"{len(ds_form) - so_sai} đúng, {so_sai} sai.")
 
 
 def kiem_tra_giao_dien():
@@ -418,6 +461,7 @@ def kiem_tra_inline_sql():
     ]
 
     tep_kiem_tra = glob.glob(os.path.join(GOC, "*.cs"))
+    tep_kiem_tra += glob.glob(os.path.join(GOC, "GUI", "*.cs"))
     tep_kiem_tra += glob.glob(os.path.join(GOC, "BUS", "*.cs"))
     tep_kiem_tra += glob.glob(os.path.join(GOC, "DAL", "*.cs"))
     tep_kiem_tra += glob.glob(os.path.join(GOC, "DTO", "*.cs"))
@@ -619,6 +663,7 @@ def main():
     print("=" * 70)
 
     kiem_tra_csproj()
+    kiem_tra_thu_muc_gui()
     kiem_tra_cu_phap()
     kiem_tra_trung_ten()
     kiem_tra_loi_goi_bus_dal()

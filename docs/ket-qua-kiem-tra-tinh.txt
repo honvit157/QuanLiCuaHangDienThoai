@@ -1,18 +1,19 @@
-KẾT QUẢ KIỂM TRA TĨNH — 16/11/2026 09:43 (giờ máy đóng gói)
+KẾT QUẢ KIỂM TRA TĨNH — 16/11/2026 10:41 (giờ máy đóng gói)
 Chạy: python tools/kiem_tra_tinh.py
 
 ======================================================================
 KIỂM TRA TĨNH BÀI TẬP LỚN - QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI
 ======================================================================
-[csproj] QuanLyCuaHangDienThoai.csproj: tự động gom 59 tệp .cs (SDK-style).
+[csproj] QuanLyCuaHangDienThoai.csproj: tự động gom 61 tệp .cs (SDK-style).
 [csproj] Nền tảng: net10.0-windows
 [csproj] RootNamespace khớp tài nguyên nhúng: Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.Properties.Resources
 [csproj] Mọi tệp biểu mẫu đều đủ bộ .cs/.Designer.cs/.resx.
 [Images] Có ảnh Dashboard dùng: Images/iphone18.jpg
 [Images] Có ảnh Dashboard dùng: Images/banner_khuyenmai.jpg
-[cú pháp] tree-sitter C#: 0 lỗi cú pháp trong 59 tệp .cs.
-[trùng tên] 33 kiểu dữ liệu, 966 thành viên trong các lớp: 0 chỗ trùng tên (CS0101/CS0102).
-[lời gọi] Đối chiếu 120 lời gọi BUS/DAL với khai báo lớp: 0 lời gọi không khớp.
+[GUI] 12 biểu mẫu trong GUI/ dùng namespace 'Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI': 12 đúng, 0 sai.
+[cú pháp] tree-sitter C#: 0 lỗi cú pháp trong 61 tệp .cs.
+[trùng tên] 33 kiểu dữ liệu, 996 thành viên trong các lớp: 0 chỗ trùng tên (CS0101/CS0102).
+[lời gọi] Đối chiếu 123 lời gọi BUS/DAL với khai báo lớp: 0 lời gọi không khớp.
 [interface] Tìm thấy 6 tệp: IHangHoa, IHoaDon, IHoaDonNhap, IKhachHang, INhaCungCap, INhanVien
 [trừu tượng] 3 lớp trừu tượng: ChungTuBase, Nguoi, SanPhamBase
 [kế thừa] 5 lớp kế thừa lớp cơ sở trừu tượng: HangHoa : SanPhamBase, KhachHang : Nguoi, HoaDonBan : ChungTuBase, HoaDonNhap : ChungTuBase, NhanVien : Nguoi
@@ -21,12 +22,12 @@ KIỂM TRA TĨNH BÀI TẬP LỚN - QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI
 [tiện ích] 14 phương thức static: KiemTraSoDienThoai, KiemTraEmail, KiemTraSoNguyenKhongAm, DinhDangTien, DinhDangTienVnd, DinhDangNgay, DocSoTien, ChuanHoaChuoi, TaoTuKhoaTimKiem, GhiLog, HienThongBao, HienCanhBao, XacNhan, SaoChepAnh
 [tiện ích] 1 thuộc tính (ThuMucAnh), 1 trường static (ViVn) → tổng 16 class method/thành viên dùng chung.
 [SQL] Không có câu lệnh SQL viết trực tiếp trong tầng GUI, BUS, DTO, DAL.
-[SQL] StoredProcedures.sql định nghĩa 78 thủ tục lưu trữ.
+[SQL] StoredProcedures.sql định nghĩa 80 thủ tục lưu trữ.
 [SQL] Đối chiếu tham số: mọi lời gọi khớp tên tham số với thủ tục.
-[SQL] 78/78 thủ tục được sử dụng từ tầng DAL.
+[SQL] 80/80 thủ tục được sử dụng từ tầng DAL.
 [CSDL] InitDb.sql tạo 12 bảng: tblHangSX, tblLoai, tblMau, tblDungLuong, tblNhaCungCap, tblNhanVien, tblKhachHang, tblHang, tblHoaDonBan, tblChiTietHDB, tblHoaDonNhap, tblChiTietHDN
 [CSDL] Mọi bảng mà thủ tục tham chiếu đều có trong InitDb.sql.
-[CSDL] Tệp gộp QLCuaHangBanDienThoai.sql đồng bộ: 78 thủ tục.
+[CSDL] Tệp gộp QLCuaHangBanDienThoai.sql đồng bộ: 80 thủ tục.
 [Word] CHƯƠNG 1: 1761 từ ≈ 3.7 trang
 [Word] CHƯƠNG 2: 3467 từ ≈ 7.4 trang
 [Word] CHƯƠNG 3: 3458 từ ≈ 7.4 trang
