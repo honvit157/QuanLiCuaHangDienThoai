@@ -1118,6 +1118,81 @@ BEGIN
 END;
 GO
 
+-- 9.12 Lịch sử hóa đơn bán (FormLichSuHoaDon): danh sách kèm nhân viên, khách hàng, trạng thái thanh toán
+--      @TuKhoa = N''  : trả về toàn bộ hóa đơn
+--      @TuKhoa khác rỗng: lọc theo mã hóa đơn, SĐT, tên khách hàng hoặc tên nhân viên
+CREATE OR ALTER PROCEDURE sp_TimHoaDonBan
+    @TuKhoa NVARCHAR(100) = N''
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SET @TuKhoa = LTRIM(RTRIM(ISNULL(@TuKhoa, N'')));
+
+    SELECT h.MaHDB                                   AS MaHD,
+           h.NgayLap,
+           h.MaNV,
+           ISNULL(n.TenNV, N'')                      AS TenNV,
+           ISNULL(h.MaKH, N'')                       AS MaKH,
+           ISNULL(k.TenKH, N'Khách lẻ')              AS TenKH,
+           ISNULL(k.SDT, N'')                        AS SDT,
+           h.TongTien,
+           ISNULL(h.TrangThaiThanhToan, N'Chưa thanh toán') AS TrangThaiThanhToan,
+           ISNULL(h.PhuongThucThanhToan, N'')        AS PhuongThucThanhToan
+    FROM dbo.tblHoaDonBan AS h
+    INNER JOIN dbo.tblNhanVien  AS n ON h.MaNV = n.MaNV
+    LEFT  JOIN dbo.tblKhachHang AS k ON h.MaKH = k.MaKH
+    WHERE @TuKhoa = N''
+       OR h.MaHDB                 LIKE N'%' + @TuKhoa + N'%'
+       OR ISNULL(k.SDT, N'')      LIKE N'%' + @TuKhoa + N'%'
+       OR ISNULL(k.TenKH, N'')    LIKE N'%' + @TuKhoa + N'%'
+       OR ISNULL(n.TenNV, N'')    LIKE N'%' + @TuKhoa + N'%'
+    ORDER BY h.NgayLap DESC, h.MaHDB DESC;
+END;
+GO
+
+-- 9.13 Hoàn lại tồn kho khi hủy hóa đơn (chỉ cộng số lượng, giữ nguyên giá nhập)
+CREATE OR ALTER PROCEDURE sp_HoanTonKho
+    @MaHang  NVARCHAR(20),
+    @SoLuong INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.tblHang
+    SET SoLuongTon = SoLuongTon + @SoLuong
+    WHERE MaHang = @MaHang;
+
+    SELECT @@ROWCOUNT AS SoDong;
+END;
+GO
+
+-- 9.14 Xóa toàn bộ dòng chi tiết của một hóa đơn bán
+CREATE OR ALTER PROCEDURE sp_XoaChiTietHoaDonBan
+    @MaHDB NVARCHAR(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM dbo.tblChiTietHDB WHERE MaHDB = @MaHDB;
+
+    SELECT @@ROWCOUNT AS SoDong;
+END;
+GO
+
+-- 9.15 Xóa đầu hóa đơn bán (dùng khi hủy đơn - phải xóa chi tiết trước)
+CREATE OR ALTER PROCEDURE sp_XoaHoaDonBan
+    @MaHDB NVARCHAR(30)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM dbo.tblHoaDonBan WHERE MaHDB = @MaHDB;
+
+    SELECT @@ROWCOUNT AS SoDong;
+END;
+GO
+
 -- ============================================================================
 --  PHẦN 10. HÓA ĐƠN NHẬP HÀNG (tblHoaDonNhap, tblChiTietHDN)
 -- ============================================================================

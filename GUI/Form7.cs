@@ -7,10 +7,10 @@ using ClosedXML.Excel;
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 {
     /// <summary>
-    /// Form lập hóa đơn bán hàng.
-    /// - Nhân viên: form tự sinh mã HDB mới, tự điền nhân viên đang đăng nhập, chọn khách hàng
-    ///   có sẵn trong danh sách hoặc nhập khách hàng mới ngay trên hóa đơn.
-    /// - Quản lý: mở ở chế độ chỉ xem, nạp sẵn danh sách hóa đơn đã bán để tra cứu và in Excel.
+    /// Form lập hóa đơn bán hàng tại quầy (dành cho Nhân viên).
+    /// - Form tự sinh mã hóa đơn mới và tự điền nhân viên đang đăng nhập.
+    /// - Chọn khách hàng có sẵn trong danh sách hoặc nhập khách hàng mới ngay trên hóa đơn.
+    /// - Việc tra cứu / xem lại hóa đơn đã bán nằm ở FormLichSuHoaDon.
     /// Toàn bộ truy vấn đi qua tầng BUS; khách hàng mới được thêm bằng thủ tục lưu trữ
     /// sp_ThemKhachHangTuDong trước khi lưu hóa đơn.
     /// </summary>
@@ -25,10 +25,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
         private readonly DataTable bangChiTiet = new DataTable();
 
-        private readonly bool chiXem;
         private bool hoaDonDaTonTai = false;
         private bool dangNapKhachHang = false;
-        private bool dangNapHoaDon = false;
         private bool daNapDuLieu = false;
         private string maKhachHangDangChon = "";
 
@@ -50,17 +48,9 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             }
         }
 
-        /// <summary>Form ở chế độ lập đơn đầy đủ (dùng cho Nhân viên).</summary>
-        public Form7() : this(false)
-        {
-        }
-
-        /// <summary>Form ở chế độ chỉ xem danh sách hóa đơn đã bán (dùng cho Quản lý).</summary>
-        public Form7(bool chiXem)
+        public Form7()
         {
             InitializeComponent();
-
-            this.chiXem = chiXem;
 
             CauHinhBangChiTiet();
             CauHinhDieuKhien();
@@ -81,16 +71,37 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             bangChiTiet.Columns.Add("GiamGia", typeof(decimal));
             bangChiTiet.Columns.Add("ThanhTien", typeof(decimal));
 
+            dgvChiTiet.AutoGenerateColumns = true;
             dgvChiTiet.DataSource = bangChiTiet;
             dgvChiTiet.AllowUserToAddRows = false;
             dgvChiTiet.ReadOnly = true;
             dgvChiTiet.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvChiTiet.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // Tiêu đề cột tiếng Việt có dấu + định dạng số kiểu 24,000,000
+            dgvChiTiet.Columns["MaHang"].HeaderText = "Mã hàng";
+            dgvChiTiet.Columns["TenHang"].HeaderText = "Tên hàng";
+            dgvChiTiet.Columns["DonGia"].HeaderText = "Đơn giá";
+            dgvChiTiet.Columns["SoLuong"].HeaderText = "Số lượng";
+            dgvChiTiet.Columns["GiamGia"].HeaderText = "Giảm giá (%)";
+            dgvChiTiet.Columns["ThanhTien"].HeaderText = "Thành tiền";
+
+            dgvChiTiet.Columns["DonGia"].DefaultCellStyle.Format = "N0";
+            dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Format = "N0";
+            dgvChiTiet.Columns["GiamGia"].DefaultCellStyle.Format = "0.##";
+
+            dgvChiTiet.Columns["MaHang"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvChiTiet.Columns["TenHang"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvChiTiet.Columns["DonGia"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvChiTiet.Columns["SoLuong"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvChiTiet.Columns["GiamGia"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
 
         private void CauHinhDieuKhien()
         {
             // Các ô luôn chỉ đọc: nhân viên lập đơn tự điền, các ô tính toán tự cập nhật
+            txtMaHD.ReadOnly = true;
             txtMaNV.ReadOnly = true;
             txtTenNV.ReadOnly = true;
             txtTenHang.ReadOnly = true;
@@ -99,7 +110,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
             cboMaHang.DropDownStyle = ComboBoxStyle.DropDownList;
             cboKhachHang.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboMaHD.DropDownStyle = chiXem ? ComboBoxStyle.DropDownList : ComboBoxStyle.DropDown;
 
             // Gỡ trước khi gắn để tránh xử lý hai lần
             cboMaHang.SelectedIndexChanged -= cboMaHang_SelectedIndexChanged;
@@ -107,9 +117,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
             cboKhachHang.SelectedIndexChanged -= cboKhachHang_SelectedIndexChanged;
             cboKhachHang.SelectedIndexChanged += cboKhachHang_SelectedIndexChanged;
-
-            cboMaHD.SelectedIndexChanged -= cboMaHD_SelectedIndexChanged;
-            cboMaHD.SelectedIndexChanged += cboMaHD_SelectedIndexChanged;
 
             txtSoLuong.TextChanged -= txtSoLuong_TextChanged;
             txtSoLuong.TextChanged += txtSoLuong_TextChanged;
@@ -132,9 +139,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             btnLuu.Click -= btnLuu_Click;
             btnLuu.Click += btnLuu_Click;
 
-            btnTim.Click -= btnTim_Click;
-            btnTim.Click += btnTim_Click;
-
             btnThoat.Click -= btnThoat_Click;
             btnThoat.Click += btnThoat_Click;
 
@@ -146,28 +150,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
             dtpNgayLap.Value = DateTime.Today;
             lblTongTien.Text = "Tổng tiền: 0 VNĐ";
-
-            if (chiXem) ApDungCheDoChiXem();
-        }
-
-        /// <summary>Ẩn/khóa toàn bộ cụm lập đơn, chỉ giữ tra cứu và in hóa đơn.</summary>
-        private void ApDungCheDoChiXem()
-        {
-            btnThemHD.Visible = false;
-            btnLuu.Visible = false;
-            btnHuy.Visible = false;
-            btnThemHang.Visible = false;
-
-            groupBox2.Visible = false;
-            tblMain.RowStyles[2].Height = 0F;
-
-            dtpNgayLap.Enabled = false;
-            cboKhachHang.Enabled = false;
-            txtTenKH.ReadOnly = true;
-            txtSDT.ReadOnly = true;
-            txtDiaChi.ReadOnly = true;
-
-            Text = "HÓA ĐƠN BÁN HÀNG (CHẾ ĐỘ CHỈ XEM)";
         }
 
         private void Form7_Load(object? sender, EventArgs e)
@@ -179,10 +161,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             {
                 NapDanhSachKhachHang();
                 NapDanhSachHang();
-                NapDanhSachHoaDon();
-
-                if (chiXem) ChuanBiCheDoChiXem();
-                else ChuanBiHoaDonMoi(false);
+                ChuanBiHoaDonMoi(false);
             }
             catch (Exception ex)
             {
@@ -237,52 +216,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             }
         }
 
-        private void NapDanhSachHoaDon()
-        {
-            dangNapHoaDon = true;
-            try
-            {
-                cboMaHD.Items.Clear();
-                DataTable dt = hoaDonBus.LayDanhSachMa();
-                foreach (DataRow r in dt.Rows) cboMaHD.Items.Add(r["MaHDB"].ToString());
-            }
-            catch (Exception ex)
-            {
-                AppHelpers.HienCanhBao("Không tải được danh sách hóa đơn:\n" + ex.Message);
-            }
-            finally
-            {
-                dangNapHoaDon = false;
-            }
-        }
-
-        /// <summary>Chế độ Quản lý: chọn sẵn hóa đơn mới nhất trong danh sách để xem chi tiết.</summary>
-        private void ChuanBiCheDoChiXem()
-        {
-            if (cboMaHD.Items.Count == 0)
-            {
-                cboMaHD.Text = "";
-                lblTongTien.Text = "Chưa có hóa đơn nào để xem";
-                return;
-            }
-
-            string maHD = Convert.ToString(cboMaHD.Items[cboMaHD.Items.Count - 1]) ?? "";
-
-            dangNapHoaDon = true;
-            cboMaHD.SelectedIndex = cboMaHD.Items.Count - 1;
-            dangNapHoaDon = false;
-
-            try
-            {
-                HienThiHoaDon(maHD, false);
-            }
-            catch (Exception ex)
-            {
-                AppHelpers.HienCanhBao("Không xem được hóa đơn " + maHD + ":\n" + ex.Message);
-            }
-        }
-
-        /// <summary>Chế độ Nhân viên: sẵn sàng một hóa đơn mới với nhân viên đang đăng nhập.</summary>
+        /// <summary>Chuẩn bị một hóa đơn bán mới với mã tự sinh và nhân viên đang đăng nhập.</summary>
         private void ChuanBiHoaDonMoi(bool hoiXacNhan)
         {
             if (hoiXacNhan && !AppHelpers.XacNhan("Tạo hóa đơn mới? Các mặt hàng chưa lưu hiện tại sẽ bị xóa."))
@@ -291,7 +225,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             bangChiTiet.Rows.Clear();
             XoaThongTinHangDangChon();
 
-            cboMaHD.Text = HoaDonBan.TaoMaMoi();
+            txtMaHD.Text = HoaDonBan.TaoMaMoi();
             dtpNgayLap.Value = DateTime.Now;
 
             // Tự điền nhân viên đang đăng nhập, không bắt nhân viên gõ tay mã của mình
@@ -365,7 +299,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
         /// <summary>Chỉ cho sửa tên/SĐT/địa chỉ khi đang nhập khách hàng mới.</summary>
         private void CapNhatOTKhachHang()
         {
-            bool choNhap = !chiXem && !hoaDonDaTonTai && maKhachHangDangChon == "";
+            bool choNhap = !hoaDonDaTonTai && maKhachHangDangChon == "";
 
             txtTenKH.ReadOnly = !choNhap;
             txtSDT.ReadOnly = !choNhap;
@@ -394,23 +328,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             }
 
             return false;
-        }
-
-        private void cboMaHD_SelectedIndexChanged(object? sender, EventArgs e)
-        {
-            if (!chiXem || dangNapHoaDon) return;
-
-            string maHD = cboMaHD.Text.Trim();
-            if (maHD == "") return;
-
-            try
-            {
-                HienThiHoaDon(maHD, false);
-            }
-            catch (Exception ex)
-            {
-                AppHelpers.HienCanhBao("Không xem được hóa đơn " + maHD + ":\n" + ex.Message);
-            }
         }
 
         private void cboMaHang_SelectedIndexChanged(object? sender, EventArgs e)
@@ -489,11 +406,9 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
         private void btnThemHang_Click(object? sender, EventArgs e)
         {
-            if (chiXem) return;
-
             if (hoaDonDaTonTai)
             {
-                AppHelpers.HienCanhBao("Đây là hóa đơn đã lưu. Hãy bấm Thêm mới để lập hóa đơn khác.");
+                AppHelpers.HienCanhBao("Đây là hóa đơn đã lưu. Hãy bấm Đơn mới để lập hóa đơn khác.");
                 return;
             }
 
@@ -563,17 +478,14 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
         private void btnThemHD_Click(object? sender, EventArgs e)
         {
-            if (chiXem) return;
             ChuanBiHoaDonMoi(true);
         }
 
         private void btnHuy_Click(object? sender, EventArgs e)
         {
-            if (chiXem) return;
-
             if (hoaDonDaTonTai)
             {
-                AppHelpers.HienCanhBao("Đây là hóa đơn đã lưu. Chức năng này không xóa hóa đơn trong cơ sở dữ liệu.");
+                AppHelpers.HienCanhBao("Đây là hóa đơn đã lưu. Chức năng này chỉ xóa các dòng đang lập.");
                 return;
             }
 
@@ -590,19 +502,13 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
         private void btnLuu_Click(object? sender, EventArgs e)
         {
-            if (chiXem)
-            {
-                AppHelpers.HienCanhBao("Tài khoản Quản lý chỉ được xem hóa đơn, không lập hóa đơn mới.");
-                return;
-            }
-
             if (hoaDonDaTonTai)
             {
-                AppHelpers.HienCanhBao("Hóa đơn này đã được lưu. Hãy bấm Thêm mới nếu muốn lập hóa đơn khác.");
+                AppHelpers.HienCanhBao("Hóa đơn này đã được lưu. Hãy bấm Đơn mới nếu muốn lập hóa đơn khác.");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(cboMaHD.Text))
+            if (string.IsNullOrWhiteSpace(txtMaHD.Text))
             {
                 AppHelpers.HienCanhBao("Vui lòng tạo mã hóa đơn!");
                 return;
@@ -660,7 +566,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             // Dựng đối tượng hóa đơn từ dữ liệu trên form
             var hd = new HoaDonBan
             {
-                MaHD = cboMaHD.Text.Trim(),
+                MaHD = txtMaHD.Text.Trim(),
                 MaNV = txtMaNV.Text.Trim(),
                 MaKH = maKH,
                 NgayLap = dtpNgayLap.Value
@@ -688,9 +594,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             }
 
             hoaDonDaTonTai = true;
-            NapDanhSachHoaDon();
             NapDanhSachKhachHang();
-            cboMaHD.Text = hd.MaHD;
             CapNhatOTKhachHang();
 
             string thongDiep = "Lưu hóa đơn " + hd.MaHD + " thành công!\n" +
@@ -708,105 +612,11 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
         }
 
         // ==================================================================
-        // TÌM HÓA ĐƠN ĐÃ LƯU
-        // ==================================================================
-
-        private void btnTim_Click(object? sender, EventArgs e)
-        {
-            string maHD = cboMaHD.Text.Trim();
-
-            if (maHD == "")
-            {
-                AppHelpers.HienCanhBao("Vui lòng nhập hoặc chọn mã hóa đơn cần tìm!");
-                return;
-            }
-
-            try
-            {
-                HienThiHoaDon(maHD, true);
-            }
-            catch (Exception ex)
-            {
-                AppHelpers.HienCanhBao("Không thể tìm hóa đơn:\n" + ex.Message);
-            }
-        }
-
-        /// <summary>Nạp một hóa đơn đã lưu lên form (dùng cho nút Tìm và chế độ chỉ xem).</summary>
-        private bool HienThiHoaDon(string maHD, bool thongBao)
-        {
-            DataTable dtHoaDon = hoaDonBus.LayHoaDon(maHD);
-
-            if (dtHoaDon.Rows.Count == 0)
-            {
-                if (thongBao) AppHelpers.HienCanhBao("Không tìm thấy hóa đơn này.");
-                return false;
-            }
-
-            DataRow r = dtHoaDon.Rows[0];
-
-            txtMaNV.Text = r["MaNV"].ToString();
-            txtTenNV.Text = r["TenNV"] == DBNull.Value ? "" : r["TenNV"].ToString() ?? "";
-            dtpNgayLap.Value = Convert.ToDateTime(r["NgayLap"]);
-
-            string maKH = r["MaKH"] == DBNull.Value ? "" : r["MaKH"].ToString() ?? "";
-            string tenKH = r["TenKH"] == DBNull.Value ? "" : r["TenKH"].ToString() ?? "";
-            string sdt = r["SDT"] == DBNull.Value ? "" : r["SDT"].ToString() ?? "";
-            string diaChi = r["DiaChi"] == DBNull.Value ? "" : r["DiaChi"].ToString() ?? "";
-
-            dangNapKhachHang = true;
-            if (maKH == "")
-            {
-                cboKhachHang.SelectedIndex = cboKhachHang.Items.Count > 0 ? 0 : -1;
-            }
-            else if (!ChonKhachHangTheoMa(maKH))
-            {
-                cboKhachHang.Items.Add(new MucKhachHang(maKH, TaoChuoiKhachHang(maKH, tenKH, sdt)));
-                cboKhachHang.SelectedIndex = cboKhachHang.Items.Count - 1;
-            }
-            dangNapKhachHang = false;
-
-            maKhachHangDangChon = maKH;
-            txtTenKH.Text = tenKH;
-            txtSDT.Text = sdt;
-            txtDiaChi.Text = diaChi;
-
-            bangChiTiet.Rows.Clear();
-
-            foreach (DataRow row in hoaDonBus.LayChiTiet(maHD).Rows)
-            {
-                bangChiTiet.Rows.Add(
-                    row["MaHang"],
-                    row["TenHang"],
-                    row["DonGia"],
-                    row["SoLuong"],
-                    row["GiamGia"],
-                    row["ThanhTien"]);
-            }
-
-            dangNapHoaDon = true;
-            cboMaHD.Text = maHD;
-            dangNapHoaDon = false;
-
-            hoaDonDaTonTai = true;
-            TinhTongTien();
-            CapNhatOTKhachHang();
-
-            if (thongBao)
-            {
-                AppHelpers.HienThongBao("Đã nạp hóa đơn " + maHD + " (" +
-                                        bangChiTiet.Rows.Count + " mặt hàng).");
-            }
-
-            return true;
-        }
-
-        // ==================================================================
         // XÓA MỘT DÒNG CHI TIẾT
         // ==================================================================
 
         private void dgvChiTiet_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (chiXem) return;
             if (e.RowIndex < 0 || e.RowIndex >= bangChiTiet.Rows.Count) return;
 
             if (hoaDonDaTonTai)
@@ -834,11 +644,11 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 return;
             }
 
-            string maHD = cboMaHD.Text.Trim();
+            string maHD = txtMaHD.Text.Trim();
 
             if (maHD == "")
             {
-                AppHelpers.HienCanhBao("Vui lòng chọn hóa đơn đã lưu trước khi in!");
+                AppHelpers.HienCanhBao("Chưa có mã hóa đơn để xuất!");
                 return;
             }
 

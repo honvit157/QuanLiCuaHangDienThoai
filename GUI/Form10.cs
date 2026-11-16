@@ -528,10 +528,10 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
 
                 if (LaQuanLy())
                 {
-                    // Quản lý chỉ tra cứu hóa đơn bán: xem chi tiết và in Excel, không lập đơn
-                    flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán (chỉ xem)", () =>
+                    // Quản lý: tra cứu lịch sử hóa đơn bán (chỉ xem, không hủy đơn) và lập hóa đơn nhập
+                    flpMenu.Controls.Add(TaoNutMenu("▦", "Lịch sử hóa đơn bán", () =>
                     {
-                        MoForm(new Form7(chiXem: true), "Hóa đơn bán hàng (chỉ xem)");
+                        MoForm(new FormLichSuHoaDon(chiXem: true), "Lịch sử hóa đơn bán (chỉ xem)");
                     }));
 
                     // Hóa đơn nhập là mục riêng của Quản lý, Nhân viên không thấy mục này
@@ -542,9 +542,15 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 }
                 else
                 {
+                    // Nhân viên: lập hóa đơn bán tại quầy + tra cứu lịch sử để xem chi tiết / hủy đơn
                     flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán", () =>
                     {
-                        MoForm(new Form7(), "Hóa đơn bán hàng");
+                        MoForm(new Form7(), "Lập hóa đơn bán hàng");
+                    }));
+
+                    flpMenu.Controls.Add(TaoNutMenu("▦", "Lịch sử hóa đơn", () =>
+                    {
+                        MoForm(new FormLichSuHoaDon(), "Lịch sử hóa đơn bán");
                     }));
                 }
 

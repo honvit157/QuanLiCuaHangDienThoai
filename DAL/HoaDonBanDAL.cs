@@ -162,5 +162,70 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 throw;
             }
         }
+
+        // ------------------------------------------------------------------
+        // Lịch sử hóa đơn bán (FormLichSuHoaDon)
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Danh sách hóa đơn bán kèm nhân viên, khách hàng và trạng thái thanh toán.
+        /// Từ khóa rỗng thì trả về toàn bộ hóa đơn; ngược lại lọc theo mã hóa đơn,
+        /// số điện thoại, tên khách hàng hoặc tên nhân viên.
+        /// </summary>
+        public DataTable TimHoaDon(string tuKhoa)
+        {
+            return DatabaseAccess.DocBangProc("sp_TimHoaDonBan",
+                new[] { DatabaseAccess.ThamSo("@TuKhoa", tuKhoa) });
+        }
+
+        /// <summary>
+        /// Hủy một hóa đơn bán trong một giao dịch: hoàn lại tồn kho theo từng dòng chi tiết,
+        /// xóa chi tiết rồi xóa đầu hóa đơn. Trả về số dòng đầu hóa đơn đã xóa (0 = không tìm thấy).
+        /// </summary>
+        public int HuyHoaDon(string maHDB)
+        {
+            using SqlConnection conn = DatabaseAccess.TaoKetNoi();
+            conn.Open();
+
+            using SqlTransaction tran = conn.BeginTransaction();
+            try
+            {
+                // 1. Đọc chi tiết để biết cần hoàn lại bao nhiêu hàng
+                DataTable chiTiet = DatabaseAccess.DocBangProc(conn, tran, "sp_LayChiTietHoaDonBan",
+                    new[] { DatabaseAccess.ThamSo("@MaHDB", maHDB) });
+
+                if (chiTiet.Rows.Count == 0)
+                {
+                    tran.Rollback();
+                    return 0;
+                }
+
+                // 2. Hoàn lại tồn kho cho từng mặt hàng
+                foreach (DataRow r in chiTiet.Rows)
+                {
+                    DatabaseAccess.ThucThiProc(conn, tran, "sp_HoanTonKho",
+                        new[]
+                        {
+                            DatabaseAccess.ThamSo("@MaHang", r["MaHang"].ToString()),
+                            DatabaseAccess.ThamSo("@SoLuong", Convert.ToInt32(r["SoLuong"]))
+                        });
+                }
+
+                // 3. Xóa chi tiết rồi xóa đầu hóa đơn
+                DatabaseAccess.ThucThiProc(conn, tran, "sp_XoaChiTietHoaDonBan",
+                    new[] { DatabaseAccess.ThamSo("@MaHDB", maHDB) });
+
+                int soDong = DatabaseAccess.ThucThiProc(conn, tran, "sp_XoaHoaDonBan",
+                    new[] { DatabaseAccess.ThamSo("@MaHDB", maHDB) });
+
+                tran.Commit();
+                return soDong;
+            }
+            catch
+            {
+                try { tran.Rollback(); } catch { /* bỏ qua lỗi rollback */ }
+                throw;
+            }
+        }
     }
 }

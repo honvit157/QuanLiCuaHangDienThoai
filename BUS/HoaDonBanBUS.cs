@@ -160,5 +160,52 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 return false;
             }
         }
+
+        // ------------------------------------------------------------------
+        // Lịch sử hóa đơn bán (FormLichSuHoaDon)
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Danh sách hóa đơn bán để tra cứu. Từ khóa rỗng trả về toàn bộ,
+        /// ngược lại lọc theo mã hóa đơn, số điện thoại, tên khách hàng hoặc tên nhân viên.
+        /// </summary>
+        public DataTable TimHoaDon(string tuKhoa)
+        {
+            return dal.TimHoaDon((tuKhoa ?? "").Trim());
+        }
+
+        /// <summary>
+        /// Hủy hóa đơn bán: hoàn lại tồn kho rồi xóa hóa đơn khỏi hệ thống.
+        /// </summary>
+        public bool HuyHoaDon(string maHDB, out string error)
+        {
+            error = "";
+
+            if (string.IsNullOrWhiteSpace(maHDB))
+            {
+                error = "Chưa chọn hóa đơn để hủy!";
+                return false;
+            }
+
+            try
+            {
+                int soDong = dal.HuyHoaDon(maHDB.Trim());
+
+                if (soDong <= 0)
+                {
+                    error = "Không tìm thấy hóa đơn " + maHDB.Trim() + " để hủy!";
+                    return false;
+                }
+
+                AppHelpers.GhiLog($"Hủy hóa đơn bán {maHDB.Trim()}: đã hoàn lại tồn kho");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+                AppHelpers.GhiLog($"Lỗi hủy hóa đơn bán {maHDB.Trim()}: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

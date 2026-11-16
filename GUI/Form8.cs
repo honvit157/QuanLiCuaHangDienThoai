@@ -52,6 +52,12 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
             dgvChiTiet.Columns["ThanhTien"].HeaderText = "Thành tiền";
             dgvChiTiet.Columns["DonGiaNhap"].DefaultCellStyle.Format = "N0";
             dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Format = "N0";
+
+            dgvChiTiet.Columns["MaHang"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvChiTiet.Columns["TenHang"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvChiTiet.Columns["DonGiaNhap"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvChiTiet.Columns["SoLuong"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvChiTiet.Columns["ThanhTien"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         }
 
         private void CauHinhGiaoDien()
