@@ -13,10 +13,10 @@ desktop.ini
 # Ẩn tệp nhật ký do ứng dụng sinh ra khi chạy
 Logs/
 
-# Ẩn thư mục ảnh do người dùng thêm vào khi chạy thử
-Images/
-
 # Ẩn tệp tạm của Python
 __pycache__/
 *.pyc
 build/
+
+# Lưu ý: thư mục Images/ (banner khuyến mãi, ảnh sản phẩm) được đưa lên kho
+# vì Dashboard cần đọc ảnh từ <thư mục chạy>\Images khi mở Form10.

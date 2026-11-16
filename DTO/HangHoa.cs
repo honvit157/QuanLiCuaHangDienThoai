@@ -1,6 +1,6 @@
 using System;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Mặt hàng điện thoại trong cửa hàng.

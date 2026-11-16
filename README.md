@@ -1,142 +1,165 @@
-# Quản lý cửa hàng điện thoại
+# QuanLyCuaHangDienThoai — Bài tập lớn Lập trình trực quan (C# WinForms)
 
-Bài tập lớn học phần **Lập trình trực quan (C# WinForms)** - ứng dụng quản lý cửa hàng bán lẻ điện thoại,
-xây dựng theo kiến trúc ba tầng **GUI - BUS - DAL** trên nền .NET 10, cơ sở dữ liệu **SQL Server**, toàn bộ
-truy vấn nằm trong **70 thủ tục lưu trữ (Stored Procedure)**.
+Hệ thống quản lý cửa hàng bán điện thoại, xây dựng theo **mô hình 3 tầng (GUI – BUS – DAL)**,
+toàn bộ truy vấn dữ liệu chạy bằng **Stored Procedure** trên SQL Server.
 
 Giảng viên hướng dẫn: **TS. Cao Thị Luyến**
 
+Kho này là bản nộp của **Nhóm 4**, gộp hai phần việc:
+
+- **Giao diện Dashboard mới của nhóm** (commit `f816963` trên nhánh `main` của kho nhóm): `Form10`
+  dựng hoàn toàn bằng mã với bố cục 3 cột, cùng `Form1`–`Form9` giữ nguyên theo bộ `*.Designer.cs`
+  của nhóm và thư mục `Images/`.
+- **Bản chuẩn hóa 3 tầng** (commit `545d1af` trên nhánh `hoan`): chuyển toàn bộ câu SQL viết trực
+  tiếp trong C# sang Stored Procedure, bổ sung đầy đủ DAL/BUS cho mọi danh mục, thêm `ThongKeBUS`
+  cho Dashboard, thêm lớp trừu tượng, giao diện và lớp tiện ích dùng chung.
+
 ---
 
-## 1. Chức năng chính
+## 1. Công nghệ sử dụng
 
-| Nhóm | Chức năng |
-|------|-----------|
-| Đăng nhập | Xác thực tài khoản, phân quyền Quản lý / Nhân viên |
-| Danh mục | Hàng hóa, hãng sản xuất, loại hàng, màu sắc, dung lượng |
-| Hồ sơ | Nhân viên, khách hàng, nhà cung cấp (kiểm tra SĐT, email) |
-| Bán hàng | Lập hóa đơn, giảm giá, trừ tồn kho trong giao dịch, xuất Excel |
-| Nhập hàng | Lập phiếu nhập, cộng tồn kho, cập nhật giá nhập, xuất Excel |
-| Tìm kiếm | Theo tên, hãng, loại, màu và khoảng giá; xuất Excel |
-| Báo cáo | Doanh thu theo tháng, tồn kho, top 10 bán chạy; xuất Excel 3 trang tính |
+| Thành phần | Công nghệ |
+|---|---|
+| Giao diện | WinForms (.NET 10, `net10.0-windows`) |
+| Truy cập dữ liệu | ADO.NET + `Microsoft.Data.SqlClient` |
+| Cơ sở dữ liệu | SQL Server (`.\\SQLEXPRESS`) |
+| Xuất báo cáo | `ClosedXML` (Excel `.xlsx`) |
+| Kiến trúc | 3 tầng: GUI (`Form*.cs`) → BUS → DAL → Stored Procedure |
 
 ## 2. Cấu trúc thư mục
 
 ```
-.
-├── BUS/                         # Tầng nghiệp vụ (Business Logic)
+├── Form1..Form10, FormBaoCao     # Tầng GUI (giao diện)
+├── BUS/                          # Tầng nghiệp vụ (Business Logic)
 │   ├── HangHoaBUS.cs  KhachHangBUS.cs  NhaCungCapBUS.cs  NhanVienBUS.cs
-│   └── DanhMucBUS.cs  HoaDonBanBUS.cs  HoaDonNhapBUS.cs  BaoCaoBUS.cs
-├── DAL/                         # Tầng truy cập dữ liệu (chỉ gọi stored procedure)
-│   ├── DatabaseAccess.cs        # Kết nối + 4 hàm thực thi thủ tục dùng chung
+│   ├── DanhMucBUS.cs  HoaDonBanBUS.cs  HoaDonNhapBUS.cs
+│   ├── BaoCaoBUS.cs   ThongKeBUS.cs        # ThongKeBUS phục vụ Dashboard Form10
+├── DAL/                          # Tầng truy cập dữ liệu
+│   ├── DatabaseAccess.cs         # Kết nối + chạy Stored Procedure
 │   ├── HangHoaDAL.cs  KhachHangDAL.cs  NhaCungCapDAL.cs  NhanVienDAL.cs
-│   └── DanhMucDAL.cs  HoaDonBanDAL.cs  HoaDonNhapDAL.cs  BaoCaoDAL.cs
-├── DTO/                         # Lớp đối tượng: Nguoi, SanPhamBase, ChungTuBase, HangHoa, ...
-├── Interfaces/                  # 5 giao diện: IHangHoa, IKhachHang, INhanVien, INhaCungCap, IHoaDon
-├── Utilities/AppHelpers.cs      # 14 phương thức tiện ích dùng chung
-├── Form1..Form10, FormBaoCao    # 11 biểu mẫu WinForms (tệp .cs + .Designer.cs + .resx)
-├── InitDb.sql                   # Bước 1: tạo CSDL, bảng, dữ liệu mẫu
-├── StoredProcedures.sql         # Bước 2: 70 thủ tục lưu trữ
-├── QLCuaHangBanDienThoai.sql    # Tệp gộp (sinh tự động) = InitDb.sql + StoredProcedures.sql
-├── BaoCaoDataSet.xsd            # Tập dữ liệu cho báo cáo (chuẩn bị cho Crystal Report)
-├── make_doc.py / make_ppt.py    # Sinh báo cáo Word và slide thuyết trình
-├── tai_lieu/                    # Mã nguồn nội dung báo cáo, bộ dựng docx, sơ đồ (PNG)
-├── docs/                        # Hướng dẫn chuyển báo cáo sang Crystal Report
-└── tools/                       # Kiểm tra tĩnh, gộp kịch bản SQL
+│   ├── DanhMucDAL.cs  HoaDonBanDAL.cs  HoaDonNhapDAL.cs
+│   ├── BaoCaoDAL.cs   ThongKeDAL.cs
+├── DTO/                          # Lớp thực thể (Entity)
+│   ├── Nguoi.cs (abstract)  SanPhamBase.cs (abstract)  ChungTuBase.cs (abstract)
+│   ├── HangHoa.cs  KhachHang.cs  NhanVien.cs  NhaCungCap.cs
+│   ├── ChiTietHoaDonBan.cs (+ ChiTietHoaDonNhap)  LoaiDanhMuc.cs
+├── Interfaces/                   # 6 giao diện (interface)
+│   ├── IHangHoa.cs  IHoaDon.cs  IHoaDonNhap.cs
+│   ├── IKhachHang.cs  INhaCungCap.cs  INhanVien.cs
+├── Utilities/AppHelpers.cs       # 16 class method / thành viên tiện ích dùng chung
+├── Images/                       # Ảnh minh họa (banner khuyến mãi, ảnh sản phẩm)
+├── InitDb.sql                    # Bước 1: tạo CSDL, bảng, dữ liệu mẫu
+├── StoredProcedures.sql          # Bước 2: tạo toàn bộ thủ tục lưu trữ
+├── QLCuaHangBanDienThoai.sql     # Tệp gộp sẵn cả 2 bước (chạy 1 lần là đủ)
+├── BaoCaoDataSet.xsd             # Tập dữ liệu 3 báo cáo (dùng nếu chuyển sang Crystal Report)
+├── BaoCao_BTL_QuanLyCuaHangDienThoai.docx   # Báo cáo Word
+├── ThuyetTrinh_BTL_QuanLyCuaHangDienThoai.pptx / .pdf   # Slide và bản PDF của slide
+├── tai_lieu/, make_doc.py, make_ppt.py      # Mã nguồn Python dựng báo cáo và slide
+├── tools/                        # Kiểm tra tĩnh, gộp tệp SQL, xuất PDF từ slide
+└── docs/                         # Hướng dẫn Crystal Report, kết quả kiểm tra tĩnh
 ```
 
-## 3. Yêu cầu môi trường
+## 3. Cài đặt cơ sở dữ liệu
 
-- Windows 10/11
-- Visual Studio 2022 (hoặc `dotnet build` với .NET SDK 10) - dự án đích `net10.0-windows`
-- SQL Server 2019 hoặc SQL Server Express (thực thể mặc định `.\SQLEXPRESS`)
-- Python 3.10+ nếu muốn sinh lại tài liệu: `pip install -r requirements.txt`
-
-## 4. Cài đặt và chạy
-
-### Bước 1 - Tạo cơ sở dữ liệu
-
-Mở SQL Server Management Studio và chạy **một trong hai** cách sau:
-
-- Cách gọn: mở `QLCuaHangBanDienThoai.sql` và Execute (tạo CSDL + bảng + dữ liệu mẫu + 70 thủ tục).
-- Cách tách bước: chạy `InitDb.sql` trước, sau đó chạy `StoredProcedures.sql`.
-
-Lưu ý: `InitDb.sql` sẽ **xóa** cơ sở dữ liệu `QLCuaHangBanDienThoai` nếu đã tồn tại.
-
-### Bước 2 - Cấu hình chuỗi kết nối
-
-Mặc định trong `DAL/DatabaseAccess.cs`:
+1. Mở SQL Server Management Studio.
+2. Mở **một trong hai** cách sau:
+   - Chạy `QLCuaHangBanDienThoai.sql` (đã gộp sẵn tạo CSDL + dữ liệu + thủ tục), hoặc
+   - Chạy lần lượt `InitDb.sql` rồi `StoredProcedures.sql`.
+3. Kiểm tra chuỗi kết nối trong `DAL/DatabaseAccess.cs` cho khớp máy của bạn:
 
 ```csharp
-Server=.\SQLEXPRESS;Database=QLCuaHangBanDienThoai;Integrated Security=True;TrustServerCertificate=True;
+public static string ChuoiKetNoi { get; set; } =
+    Environment.GetEnvironmentVariable("QLCHD_CONNECTION")
+    ?? @"Server=.\SQLEXPRESS;Database=QLCuaHangBanDienThoai;Integrated Security=True;TrustServerCertificate=True;";
 ```
 
-Nếu máy bạn dùng thực thể khác (ví dụ `.\SQLEXPRESS01`) hoặc xác thực SQL Server, **không cần sửa mã nguồn**:
-đặt biến môi trường `QLCHD_CONNECTION` trước khi chạy.
+Có thể đổi server mà không sửa code bằng biến môi trường `QLCHD_CONNECTION`.
 
-```
-setx QLCHD_CONNECTION "Server=.\SQLEXPRESS01;Database=QLCuaHangBanDienThoai;User Id=sa;Password=...;TrustServerCertificate=True;"
-```
-
-### Bước 3 - Build và chạy
-
-Mở `QuanLyCuaHangDienThoai.slnx` bằng Visual Studio rồi nhấn F5, hoặc:
-
-```
-dotnet build
-dotnet run
-```
-
-### Tài khoản dùng thử
+## 4. Tài khoản đăng nhập mẫu
 
 | Tài khoản | Mật khẩu | Chức vụ |
-|-----------|----------|---------|
-| `an`    | `123456` | Quản lý |
-| `binh`  | `123456` | Nhân viên |
-| `hoa`   | `123456` | Quản lý |
+|---|---|---|
+| `an` | `123456` | Quản lý |
+| `binh` | `123456` | Nhân viên |
+| `hoa` | `123456` | Quản lý |
 
-## 5. Kiểm tra tĩnh
+Chỉ tài khoản **Quản lý** mới thấy mục *Nhân viên* trên menu Dashboard.
+
+## 5. Quy ước tầng
+
+- **GUI** chỉ đọc dữ liệu từ control, kiểm tra định dạng cơ bản, gọi BUS và hiển thị kết quả.
+  Không có `SqlConnection`, `SqlCommand` hay chuỗi SQL nào trong các `Form*.cs`.
+- **BUS** kiểm tra nghiệp vụ (trùng mã, số điện thoại, email, tồn kho, chặn xóa dữ liệu đã
+  phát sinh hóa đơn), ghi nhật ký thao tác, rồi mới gọi DAL. Dashboard `Form10` cũng đi qua
+  `ThongKeBUS` chứ không gọi thẳng tầng DAL.
+- **DAL** chỉ gọi Stored Procedure qua `DatabaseAccess` với `CommandType.StoredProcedure`.
+  Việc lưu hóa đơn (nhiều bước) được thực hiện trong một transaction tại `HoaDonBanDAL` /
+  `HoaDonNhapDAL`.
+- **SQL** chứa toàn bộ truy vấn: **78 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
+  khách hàng, nhà cung cấp, nhân viên, hóa đơn bán, hóa đơn nhập, báo cáo và thống kê Dashboard.
+
+## 6. Yêu cầu hướng đối tượng của học phần
+
+| Yêu cầu | Hiện thực trong mã nguồn |
+|---|---|
+| Tối thiểu 5 giao diện | **6 interface**: `IHangHoa`, `IHoaDon`, `IHoaDonNhap`, `IKhachHang`, `INhaCungCap`, `INhanVien`; 6 lớp DTO triển khai |
+| Tối thiểu 3 lớp kế thừa | **5 lớp kế thừa** trên **3 lớp trừu tượng**: `HangHoa : SanPhamBase`, `KhachHang`/`NhanVien : Nguoi`, `HoaDonBan`/`HoaDonNhap : ChungTuBase` |
+| Đa hình | Các lớp dẫn xuất ghi đè phương thức ảo (`HienThi`, `KiemTraHopLe`, …) của lớp cơ sở |
+| Class method tiện ích | **16 class method / thành viên** trong `Utilities/AppHelpers.cs`: 14 phương thức `public static` + thuộc tính `ThuMucAnh` + trường `ViVn` |
+
+## 7. Chức năng chính
+
+| Nhóm | Chức năng |
+|---|---|
+| Tổng quan | Dashboard 3 cột: menu phân quyền, 4 thẻ thống kê, biểu đồ doanh thu 7 ngày, sidebar ảnh |
+| Quản lý cửa hàng | Điện thoại (CRUD + ảnh + tìm nhanh), Danh mục (hãng/loại/màu/dung lượng), Nhân viên, Khách hàng, Nhà cung cấp |
+| Giao dịch | Hóa đơn bán (trừ tồn kho, giảm giá, xuất Excel), Hóa đơn nhập (cộng tồn kho, cập nhật giá nhập, xuất Excel) |
+| Thống kê | Báo cáo doanh thu theo tháng, tồn kho, top bán chạy; xuất Excel 3 sheet |
+
+## 8. Báo cáo và điểm cần lưu ý về Crystal Report
+
+Chức năng báo cáo hiện **xuất tệp Excel bằng thư viện `ClosedXML`**, hiển thị trên `DataGridView`
+của `FormBaoCao`; **chưa dùng Crystal Report** như thang điểm của học phần yêu cầu, nên phần này
+chỉ đạt mức điểm thấp hơn. Điều này được ghi trung thực ở phần hạn chế trong báo cáo Word, trong
+slide thuyết trình và trong `docs/HUONG_DAN_CRYSTAL_REPORT.md` (hướng dẫn chuyển ba báo cáo sang
+Crystal Report trên máy Windows có Visual Studio, dùng `BaoCaoDataSet.xsd` đã khai báo sẵn).
+
+## 9. Tài liệu đi kèm
+
+| Tệp | Nội dung |
+|---|---|
+| `BaoCao_BTL_QuanLyCuaHangDienThoai.docx` | Báo cáo Word theo mẫu của giảng viên: trang bìa để trống các ô cho nhóm/khóa/lớp/mã SV, mục lục tự động, Chương 1–3, kết luận, danh mục sách tham khảo |
+| `ThuyetTrinh_BTL_QuanLyCuaHangDienThoai.pptx` | 15 slide thuyết trình, mỗi slide có ghi chú (Notes) để đọc khi trình bày |
+| `ThuyetTrinh_BTL_QuanLyCuaHangDienThoai.pdf` | Bản PDF của bộ slide để xem trên điện thoại |
+
+Mở báo cáo Word rồi nhấn `Ctrl+A` và `F9` để cập nhật mục lục và số trang.
+
+Dựng lại tài liệu (cần Python 3 và các gói trong `requirements.txt`):
+
+```
+python tai_lieu/bieu_do.py       # vẽ lại 5 sơ đồ trong tai_lieu/hinh
+python make_doc.py               # sinh lại báo cáo Word
+python make_ppt.py               # sinh lại slide
+python tools/xuat_slide_pdf.py   # sinh lại PDF từ slide
+```
+
+## 10. Kiểm tra tĩnh
 
 ```
 python tools/kiem_tra_tinh.py
 ```
 
-Công cụ kiểm tra: số giao diện (≥ 5), số quan hệ kế thừa (≥ 3), số lớp triển khai giao diện (≥ 5),
-số class method tiện ích (≥ 5), không còn câu SQL viết trực tiếp trong GUI/BUS/DTO/DAL, mọi tên thủ tục và
-tên tham số trong DAL khớp với `StoredProcedures.sql`, 12 bảng trong `InitDb.sql` phủ hết bảng mà thủ tục
-tham chiếu, tệp gộp SQL đồng bộ, độ dài ba chương của báo cáo, và các tên giảng viên / tên thành viên giả
-trong tài liệu.
+Công cụ không cần .NET hay SQL Server: nó kiểm tra cú pháp toàn bộ tệp `.cs` bằng tree-sitter C#,
+kiểm tra trùng tên kiểu/thành viên, kiểm tra không còn câu SQL viết trực tiếp, đối chiếu tên và
+tham số thủ tục giữa C# với hai tệp SQL, kiểm tra tính đồng bộ của tệp SQL gộp, kiểm tra tệp
+`.csproj` và các tệp tài liệu. Kết quả lần chạy gần nhất lưu ở `docs/ket-qua-kiem-tra-tinh.txt`.
 
-## 6. Sinh lại tài liệu
+## 11. Ghi chú khi chạy trên máy khác
 
-```
-python tai_lieu/bieu_do.py     # vẽ lại 4 sơ đồ trong tai_lieu/hinh/
-python make_doc.py             # BaoCao_BTL_QuanLyCuaHangDienThoai.docx
-python make_ppt.py             # ThuyetTrinh_BTL_QuanLyCuaHangDienThoai.pptx
-python tools/gop_sql.py        # gộp lại QLCuaHangBanDienThoai.sql từ hai tệp nguồn
-```
-
-Sau khi mở báo cáo bằng Word, bấm `Ctrl+A` rồi `F9` để Word dựng mục lục và số trang.
-
-## 7. Những chỗ cần điền trước khi nộp
-
-Trong báo cáo Word (trang bìa, bảng phân công) và slide, các giá trị sau còn để trong dấu ngoặc vuông:
-
-- `Nhóm số`, `Khóa`, `Lớp`, `Mã sinh viên`
-- Họ tên thành viên: `[Đặng Việt Hoàn]`, `[Họ và tên thành viên 2]`, `[Họ và tên thành viên 3]`, `[Họ và tên thành viên 4]`
-
-Tên giảng viên đã ghi đúng: **TS. Cao Thị Luyến**.
-
-## 8. Ghi chú về báo cáo
-
-Yêu cầu của học phần là chức năng báo cáo dùng **Crystal Report** (nếu chỉ xuất Excel thì bị trừ 0,5 điểm).
-Phiên bản này xuất báo cáo ra Excel bằng thư viện **ClosedXML** và đã chuẩn bị sẵn `BaoCaoDataSet.xsd`
-cùng hướng dẫn chuyển đổi trong `docs/HUONG_DAN_CRYSTAL_REPORT.md`. Việc tạo tệp `.rpt` cần Visual Studio
-trên Windows cùng SAP Crystal Reports nên chưa thực hiện được trong môi trường soạn mã nguồn.
-
-## 9. Trạng thái kiểm thử
-
-- Mã nguồn đã được kiểm tra **tĩnh** (cấu trúc tệp, tên lớp/phương thức, tên thủ tục, tên tham số, sự có mặt
-  của SQL trong từng tầng) bằng `tools/kiem_tra_tinh.py`.
-- Chưa **biên dịch và chạy thử** trong môi trường soạn mã (Linux, không có .NET SDK và SQL Server). Cần mở
-  bằng Visual Studio trên Windows, chạy các kịch bản trong bảng 3.6 của báo cáo để xác nhận trước khi nộp.
+- Cần cài **.NET 10 SDK** và **SQL Server** (bản Express là đủ).
+- Nếu tên instance khác `.\\SQLEXPRESS`, sửa `ChuoiKetNoi` hoặc đặt biến môi trường.
+- Thư mục `Images/` phải nằm cạnh tệp chạy để Dashboard hiển thị banner khuyến mãi và ảnh sản
+  phẩm; ảnh người dùng thêm khi chạy sẽ được chép vào cùng thư mục này.
+- Bản trong kho được đóng gói và kiểm tra trên Linux (không cài Visual Studio, SQL Server),
+  nên **chưa build và chưa chạy thử giao diện** trên Windows; phần kiểm chứng chỉ là kiểm tra
+  tĩnh như mục 10.

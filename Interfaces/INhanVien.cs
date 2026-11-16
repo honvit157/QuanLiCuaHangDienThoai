@@ -1,4 +1,4 @@
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Giao diện quy định tài khoản và quyền hạn của nhân viên.

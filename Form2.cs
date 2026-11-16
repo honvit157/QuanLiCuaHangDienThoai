@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     public partial class Form2 : Form
     {
@@ -304,7 +304,7 @@ namespace QuanLyCuaHangDienThoai
         private void btnLamLai_Click(object? sender, EventArgs e)
         {
             txtTim.Clear();
-            if (dvNV?.Table != null) dvNV.RowFilter = "";
+            if (dvNV != null) dvNV.RowFilter = "";
             LamLai();
         }
 
@@ -327,7 +327,7 @@ namespace QuanLyCuaHangDienThoai
         private void btnTim_Click(object? sender, EventArgs e)
         {
             string tk = txtTim.Text.Trim().Replace("'", "''");
-            if (dvNV?.Table == null) return;
+            if (dvNV == null) return;
             dvNV.RowFilter = tk.Length == 0 ? "" : $"TenNV LIKE '%{tk}%' OR MaNV LIKE '%{tk}%' OR SDT LIKE '%{tk}%'";
             if (dvNV.Count == 0)
                 MessageBox.Show("Không tìm thấy nhân viên nào phù hợp.");

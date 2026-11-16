@@ -233,6 +233,11 @@ class DocBuilder:
                 _dat_font(r, co=co)
 
         if do_rong:
+            # Bề rộng khả dụng của trang A4 với lề 3 cm / 2 cm là 16 cm:
+            # nếu tổng bề rộng vượt quá thì thu nhỏ theo tỉ lệ để bảng không tràn lề.
+            tong_rong = sum(do_rong)
+            if tong_rong > 16.0:
+                do_rong = [rong * 16.0 / tong_rong for rong in do_rong]
             for j, rong in enumerate(do_rong):
                 for hang in table.rows:
                     hang.cells[j].width = Cm(rong)

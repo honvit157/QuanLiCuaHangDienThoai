@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Windows.Forms;
 using System.Linq;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     public partial class Form4 : Form
     {
@@ -22,6 +22,8 @@ namespace QuanLyCuaHangDienThoai
             btnLamLai.Click += btnLamLai_Click;
             btnThoat.Click += (s, e) => Close();
             txtTim.TextChanged += (s, e) => TimKiem();
+            // Nút "TÌM KIẾM" trên giao diện trước đây chưa được nối sự kiện
+            button1.Click += (s, e) => TimKiem();
             dgvKhachHang.CellClick += dgvKhachHang_CellClick;
         }
 
@@ -200,7 +202,7 @@ namespace QuanLyCuaHangDienThoai
         private void btnLamLai_Click(object? sender, EventArgs e)
         {
             txtTim.Clear();
-            if (dvNCC?.Table != null) dvNCC.RowFilter = "";
+            if (dvNCC != null) dvNCC.RowFilter = "";
             LamLai();
         }
 
@@ -220,7 +222,7 @@ namespace QuanLyCuaHangDienThoai
         private void TimKiem()
         {
             string tk = txtTim.Text.Trim().Replace("'", "''");
-            if (dvNCC?.Table == null) return;
+            if (dvNCC == null) return;
             dvNCC.RowFilter = tk.Length == 0 ? "" : $"TenNCC LIKE '%{tk}%' OR MaNCC LIKE '%{tk}%' OR SDT LIKE '%{tk}%'";
         }
     }

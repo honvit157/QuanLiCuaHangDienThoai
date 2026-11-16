@@ -1,23 +1,36 @@
+KẾT QUẢ KIỂM TRA TĨNH — 16/11/2026 09:27 (giờ máy đóng gói)
+Chạy: python tools/kiem_tra_tinh.py
+
 ======================================================================
 KIỂM TRA TĨNH BÀI TẬP LỚN - QUẢN LÝ CỬA HÀNG ĐIỆN THOẠI
 ======================================================================
-[csproj] QuanLyCuaHangDienThoai.csproj: tự động gom 56 tệp .cs (SDK-style).
+[csproj] QuanLyCuaHangDienThoai.csproj: tự động gom 59 tệp .cs (SDK-style).
 [csproj] Nền tảng: net10.0-windows
-[interface] Tìm thấy 5 tệp: IHangHoa, IHoaDon, IKhachHang, INhaCungCap, INhanVien
-[kế thừa] 16 lớp kế thừa lớp khác: Form8 : Form, Form4 : Form, Form2 : Form, Form6 : Form, Form9 : Form, Form1 : Form, Form10 : Form, Form5 : Form, FormBaoCao : Form, Form3 : Form, Form7 : Form, HangHoa : SanPhamBase, KhachHang : Nguoi, HoaDonBan : ChungTuBase, HoaDonNhap : ChungTuBase, NhanVien : Nguoi
-[triển khai] 5 lớp triển khai giao diện: NhaCungCap, HangHoa, KhachHang, HoaDonBan, NhanVien
-[tiện ích] 14 class method: KiemTraSoDienThoai, KiemTraEmail, KiemTraSoNguyenKhongAm, DinhDangTien, DinhDangTienVnd, DinhDangNgay, DocSoTien, ChuanHoaChuoi, TaoTuKhoaTimKiem, GhiLog, HienThongBao, HienCanhBao, XacNhan, SaoChepAnh
+[csproj] RootNamespace khớp tài nguyên nhúng: Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.Properties.Resources
+[csproj] Mọi tệp biểu mẫu đều đủ bộ .cs/.Designer.cs/.resx.
+[Images] Có ảnh Dashboard dùng: Images/iphone18.jpg
+[Images] Có ảnh Dashboard dùng: Images/banner_khuyenmai.jpg
+[cú pháp] tree-sitter C#: 0 lỗi cú pháp trong 59 tệp .cs.
+[trùng tên] 33 kiểu dữ liệu, 919 thành viên trong các lớp: 0 chỗ trùng tên (CS0101/CS0102).
+[lời gọi] Đối chiếu 120 lời gọi BUS/DAL với khai báo lớp: 0 lời gọi không khớp.
+[interface] Tìm thấy 6 tệp: IHangHoa, IHoaDon, IHoaDonNhap, IKhachHang, INhaCungCap, INhanVien
+[trừu tượng] 3 lớp trừu tượng: ChungTuBase, Nguoi, SanPhamBase
+[kế thừa] 5 lớp kế thừa lớp cơ sở trừu tượng: HangHoa : SanPhamBase, KhachHang : Nguoi, HoaDonBan : ChungTuBase, HoaDonNhap : ChungTuBase, NhanVien : Nguoi
+[triển khai] 6 lớp triển khai giao diện: NhaCungCap, HangHoa, KhachHang, HoaDonBan, HoaDonNhap, NhanVien
+[giao diện] Đối chiếu 6 giao diện với lớp triển khai: 0 lớp thiếu thành viên.
+[tiện ích] 14 phương thức static: KiemTraSoDienThoai, KiemTraEmail, KiemTraSoNguyenKhongAm, DinhDangTien, DinhDangTienVnd, DinhDangNgay, DocSoTien, ChuanHoaChuoi, TaoTuKhoaTimKiem, GhiLog, HienThongBao, HienCanhBao, XacNhan, SaoChepAnh
+[tiện ích] 1 thuộc tính (ThuMucAnh), 1 trường static (ViVn) → tổng 16 class method/thành viên dùng chung.
 [SQL] Không có câu lệnh SQL viết trực tiếp trong tầng GUI, BUS, DTO, DAL.
-[SQL] StoredProcedures.sql định nghĩa 70 thủ tục lưu trữ.
+[SQL] StoredProcedures.sql định nghĩa 78 thủ tục lưu trữ.
 [SQL] Đối chiếu tham số: mọi lời gọi khớp tên tham số với thủ tục.
-[SQL] 70/70 thủ tục được sử dụng từ tầng DAL.
+[SQL] 78/78 thủ tục được sử dụng từ tầng DAL.
 [CSDL] InitDb.sql tạo 12 bảng: tblHangSX, tblLoai, tblMau, tblDungLuong, tblNhaCungCap, tblNhanVien, tblKhachHang, tblHang, tblHoaDonBan, tblChiTietHDB, tblHoaDonNhap, tblChiTietHDN
 [CSDL] Mọi bảng mà thủ tục tham chiếu đều có trong InitDb.sql.
-[CSDL] Tệp gộp QLCuaHangBanDienThoai.sql đồng bộ: 70 thủ tục.
-[Word] CHƯƠNG 1: 3369 từ ≈ 7.2 trang
-[Word] CHƯƠNG 2: 4021 từ ≈ 8.6 trang
-[Word] CHƯƠNG 3: 5269 từ ≈ 11.2 trang
-[Word] Số bảng: 31, số hình: 4
-[PowerPoint] 14 slide.
+[CSDL] Tệp gộp QLCuaHangBanDienThoai.sql đồng bộ: 78 thủ tục.
+[Word] CHƯƠNG 1: 1761 từ ≈ 3.7 trang
+[Word] CHƯƠNG 2: 3467 từ ≈ 7.4 trang
+[Word] CHƯƠNG 3: 3458 từ ≈ 7.4 trang
+[Word] Số bảng: 26, số hình: 5
+[PowerPoint] 15 slide.
 ----------------------------------------------------------------------
 KẾT QUẢ: ĐẠT TẤT CẢ ĐIỀU KIỆN KIỂM TRA TĨNH

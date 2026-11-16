@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Windows.Forms;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     public partial class Form3 : Form
     {
@@ -177,7 +177,7 @@ namespace QuanLyCuaHangDienThoai
         private void btnLamLai_Click(object? sender, EventArgs e)
         {
             txtTim.Clear();
-            if (dvKH?.Table != null) dvKH.RowFilter = "";
+            if (dvKH != null) dvKH.RowFilter = "";
             LamLai();
         }
 
@@ -196,7 +196,7 @@ namespace QuanLyCuaHangDienThoai
 
         private void TimKiem()
         {
-            if (dvKH?.Table == null) return;
+            if (dvKH == null) return;
 
             string tk = txtTim.Text.Trim().Replace("'", "''");
 

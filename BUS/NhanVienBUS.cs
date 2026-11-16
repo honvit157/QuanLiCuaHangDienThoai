@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Tầng nghiệp vụ cho nhân viên: đăng nhập, phân quyền, quản lý hồ sơ nhân viên.

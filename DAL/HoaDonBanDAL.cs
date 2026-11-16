@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Tầng truy cập dữ liệu cho hóa đơn bán hàng (tblHoaDonBan, tblChiTietHDB).

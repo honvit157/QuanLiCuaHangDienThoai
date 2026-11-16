@@ -3,7 +3,9 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <RootNamespace>QuanLyCuaHangDienThoai</RootNamespace>
+    <!-- RootNamespace giữ đúng không gian tên đang dùng trong mã nguồn (lấy từ nhánh của nhóm)
+         để tên tài nguyên nhúng Properties/Resources.resources khớp với Properties/Resources.Designer.cs -->
+    <RootNamespace>Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>

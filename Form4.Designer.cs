@@ -1,604 +1,474 @@
-namespace QuanLyCuaHangDienThoai
+﻿
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     partial class Form4
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
-            {
+            if (disposing && components != null)
                 components.Dispose();
-            }
+
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            btnThoat = new Button();
-            groupBox5 = new GroupBox();
-            button1 = new Button();
-            txtTim = new TextBox();
-            label6 = new Label();
-            label8 = new Label();
-            btnXoa = new Button();
-            btnSua = new Button();
-            btnThem = new Button();
+            components = new System.ComponentModel.Container();
+
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            groupBox3 = new GroupBox();
             groupBox4 = new GroupBox();
+            groupBox5 = new GroupBox();
+
+            txtMaNCC = new TextBox();
+            txtTenNCC = new TextBox();
+            txtSDT = new TextBox();
+            txtDiaChi = new TextBox();
+            txtEmail = new TextBox();
+            txtNguoiLH = new TextBox();
+            txtTim = new TextBox();
+
+            btnThem = new Button();
+            btnSua = new Button();
+            btnXoa = new Button();
+            btnLamLai = new Button();
+            btnThoat = new Button();
+            button1 = new Button();
+
             dgvKhachHang = new DataGridView();
             colMaNCC = new DataGridViewTextBoxColumn();
             colTenNCC = new DataGridViewTextBoxColumn();
             colSDT = new DataGridViewTextBoxColumn();
-            colEmail = new DataGridViewTextBoxColumn();
             colDiaChi = new DataGridViewTextBoxColumn();
+            colEmail = new DataGridViewTextBoxColumn();
             colNguoiLH = new DataGridViewTextBoxColumn();
-            btnLamLai = new Button();
-            label7 = new Label();
-            groupBox2 = new GroupBox();
-            txtEmail = new TextBox();
-            txtTenNCC = new TextBox();
-            txtDiaChi = new TextBox();
-            txtSDT = new TextBox();
-            txtMaNCC = new TextBox();
-            label3 = new Label();
-            label5 = new Label();
-            label4 = new Label();
-            label2 = new Label();
+
             label1 = new Label();
-            groupBox3 = new GroupBox();
-            groupBox1 = new GroupBox();
-            txtNguoiLH = new TextBox();
+            label2 = new Label();
+            label3 = new Label();
+            label4 = new Label();
+            label5 = new Label();
+            label6 = new Label();
+            label7 = new Label();
+            label8 = new Label();
             label11 = new Label();
-            groupBox5.SuspendLayout();
-            groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dgvKhachHang).BeginInit();
-            groupBox2.SuspendLayout();
-            groupBox3.SuspendLayout();
-            groupBox1.SuspendLayout();
+
+            Color navy = Color.FromArgb(20, 43, 74);
+            Color blue = Color.FromArgb(36, 120, 212);
+            Color background = Color.FromArgb(244, 247, 251);
+            Color textColor = Color.FromArgb(35, 51, 72);
+            Color muted = Color.FromArgb(112, 128, 150);
+            Color border = Color.FromArgb(220, 228, 238);
+
+            Font normalFont = new Font("Segoe UI", 9.5F);
+            Font boldFont = new Font("Segoe UI", 10F, FontStyle.Bold);
+
             SuspendLayout();
-            // 
-            // btnThoat
-            // 
-            btnThoat.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            btnThoat.Location = new Point(597, 34);
-            btnThoat.Size = new Size(110, 38);
-            btnThoat.BackColor = UiTheme.The;
-            btnThoat.FlatAppearance.BorderColor = UiTheme.Vien;
-            btnThoat.ForeColor = UiTheme.Chinh;
-            btnThoat.Font = UiTheme.Nut;
-            btnThoat.Cursor = Cursors.Hand;
-            btnThoat.FlatStyle = FlatStyle.Flat;
-            btnThoat.UseVisualStyleBackColor = false;
-            btnThoat.FlatAppearance.BorderSize = 1;
-            btnThoat.FlatAppearance.MouseOverBackColor = UiTheme.NutNhat;
-            btnThoat.FlatAppearance.MouseDownBackColor = UiTheme.NutNhatHover;
-            btnThoat.Name = "btnThoat";
-            btnThoat.TabIndex = 0;
-            btnThoat.Text = "Th&oát";
-            // 
-            // groupBox5
-            // 
-            groupBox5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            groupBox5.Font = UiTheme.TieuDeMuc;
-            groupBox5.BackColor = UiTheme.The;
-            groupBox5.ForeColor = UiTheme.Chinh;
-            groupBox5.Controls.Add(button1);
-            groupBox5.Controls.Add(txtTim);
-            groupBox5.Controls.Add(label6);
-            groupBox5.Location = new Point(777, 272);
-            groupBox5.Name = "groupBox5";
-            groupBox5.Size = new Size(339, 101);
-            groupBox5.TabIndex = 9;
-            groupBox5.TabStop = false;
-            groupBox5.Text = "Tìm nhanh";
-            // 
-            // button1
-            // 
-            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button1.Location = new Point(224, 38);
-            button1.Size = new Size(96, 28);
-            button1.BackColor = UiTheme.Chinh;
-            button1.ForeColor = Color.White;
-            button1.Font = UiTheme.Nut;
-            button1.Cursor = Cursors.Hand;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.UseVisualStyleBackColor = false;
-            button1.FlatAppearance.BorderSize = 0;
-            button1.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
-            button1.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
-            button1.Name = "button1";
-            button1.TabIndex = 2;
-            button1.Text = "&Tìm";
-            // 
-            // txtTim
-            // 
-            txtTim.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            txtTim.Font = UiTheme.Than;
-            txtTim.Location = new Point(76, 40);
-            txtTim.BackColor = UiTheme.The;
-            txtTim.ForeColor = UiTheme.Chu;
-            txtTim.BorderStyle = BorderStyle.FixedSingle;
-            txtTim.Name = "txtTim";
-            txtTim.Size = new Size(140, 27);
-            txtTim.TabIndex = 1;
-            // 
-            // label6
-            // 
-            label6.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label6.Font = UiTheme.Than;
-            label6.Location = new Point(6, 43);
-            label6.ForeColor = UiTheme.Chu;
-            label6.AutoSize = true;
-            label6.Name = "label6";
-            label6.Size = new Size(39, 20);
-            label6.TabIndex = 0;
-            label6.Text = "SĐT:";
-            // 
-            // label8
-            // 
-            label8.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label8.Font = UiTheme.Than;
-            label8.ForeColor = UiTheme.ChuPhu;
-            label8.AutoSize = true;
-            label8.Location = new Point(18, 125);
-            label8.Name = "label8";
-            label8.Size = new Size(304, 60);
-            label8.TabIndex = 0;
-            label8.Text = "Không cho xóa nhà cung cấp đã có hóa đơn \r\nnhập, hãy bắt lỗi khóa ngoại và báo bằng \r\nMessageBox.";
-            // 
-            // btnXoa
-            // 
-            btnXoa.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            btnXoa.Location = new Point(327, 34);
-            btnXoa.Size = new Size(110, 38);
-            btnXoa.BackColor = UiTheme.NguyHiem;
-            btnXoa.ForeColor = Color.White;
-            btnXoa.Font = UiTheme.Nut;
-            btnXoa.Cursor = Cursors.Hand;
-            btnXoa.FlatStyle = FlatStyle.Flat;
-            btnXoa.UseVisualStyleBackColor = false;
-            btnXoa.FlatAppearance.BorderSize = 0;
-            btnXoa.FlatAppearance.MouseOverBackColor = UiTheme.NguyHiemHover;
-            btnXoa.FlatAppearance.MouseDownBackColor = UiTheme.NguyHiemDown;
-            btnXoa.Name = "btnXoa";
-            btnXoa.TabIndex = 0;
-            btnXoa.Text = "&Xóa";
-            // 
-            // btnSua
-            // 
-            btnSua.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            btnSua.Location = new Point(192, 34);
-            btnSua.Size = new Size(110, 38);
-            btnSua.BackColor = UiTheme.Chinh;
-            btnSua.ForeColor = Color.White;
-            btnSua.Font = UiTheme.Nut;
-            btnSua.Cursor = Cursors.Hand;
-            btnSua.FlatStyle = FlatStyle.Flat;
-            btnSua.UseVisualStyleBackColor = false;
-            btnSua.FlatAppearance.BorderSize = 0;
-            btnSua.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
-            btnSua.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
-            btnSua.Name = "btnSua";
-            btnSua.TabIndex = 0;
-            btnSua.Text = "&Sửa";
-            // 
-            // btnThem
-            // 
-            btnThem.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            btnThem.Location = new Point(57, 34);
-            btnThem.Size = new Size(110, 38);
-            btnThem.BackColor = UiTheme.Chinh;
-            btnThem.ForeColor = Color.White;
-            btnThem.Font = UiTheme.Nut;
-            btnThem.Cursor = Cursors.Hand;
-            btnThem.FlatStyle = FlatStyle.Flat;
-            btnThem.UseVisualStyleBackColor = false;
-            btnThem.FlatAppearance.BorderSize = 0;
-            btnThem.FlatAppearance.MouseOverBackColor = UiTheme.ChinhHover;
-            btnThem.FlatAppearance.MouseDownBackColor = UiTheme.ChinhDown;
-            btnThem.Name = "btnThem";
-            btnThem.TabIndex = 0;
-            btnThem.Text = "&Thêm";
-            // 
-            // groupBox4
-            // 
-            groupBox4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox4.Font = UiTheme.TieuDeMuc;
-            groupBox4.BackColor = UiTheme.The;
-            groupBox4.ForeColor = UiTheme.Chinh;
-            groupBox4.Controls.Add(dgvKhachHang);
-            groupBox4.Location = new Point(6, 384);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Size = new Size(1112, 240);
-            groupBox4.TabIndex = 8;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Danh sách nhà cung cấp";
-            // 
-            // dgvKhachHang
-            // 
-            dgvKhachHang.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvKhachHang.Font = UiTheme.Luoi;
-            dgvKhachHang.BorderStyle = BorderStyle.None;
-            dgvKhachHang.AlternatingRowsDefaultCellStyle.BackColor = UiTheme.DongXen;
-            dgvKhachHang.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvKhachHang.BackgroundColor = UiTheme.The;
-            dgvKhachHang.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgvKhachHang.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.BackColor = UiTheme.Chinh;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.Font = UiTheme.LuoiTieuDe;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.Padding = new Padding(6, 0, 6, 0);
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.SelectionBackColor = UiTheme.Chinh;
-            dgvKhachHang.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
-            dgvKhachHang.DefaultCellStyle.BackColor = UiTheme.The;
-            dgvKhachHang.DefaultCellStyle.ForeColor = UiTheme.Chu;
-            dgvKhachHang.DefaultCellStyle.Padding = new Padding(4, 0, 4, 0);
-            dgvKhachHang.DefaultCellStyle.SelectionBackColor = UiTheme.ChonDong;
-            dgvKhachHang.DefaultCellStyle.SelectionForeColor = UiTheme.Chinh;
-            dgvKhachHang.GridColor = UiTheme.Vien;
-            dgvKhachHang.RowHeadersVisible = false;
-            dgvKhachHang.RowTemplate.Height = 30;
-            dgvKhachHang.AllowUserToAddRows = false;
-            dgvKhachHang.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvKhachHang.Columns.AddRange(new DataGridViewColumn[] { colMaNCC, colTenNCC, colSDT, colEmail, colDiaChi, colNguoiLH });
-            dgvKhachHang.Location = new Point(6, 26);
-            dgvKhachHang.Name = "dgvKhachHang";
-            dgvKhachHang.ReadOnly = true;
-            dgvKhachHang.RowHeadersWidth = 51;
-            dgvKhachHang.Size = new Size(1100, 208);
-            dgvKhachHang.TabIndex = 0;
-            // 
-            // colMaNCC
-            // 
-            colMaNCC.HeaderText = "Mã NCC";
-            colMaNCC.MinimumWidth = 6;
-            colMaNCC.Name = "colMaNCC";
-            colMaNCC.ReadOnly = true;
-            // 
-            // colTenNCC
-            // 
-            colTenNCC.HeaderText = "Tên NCC";
-            colTenNCC.MinimumWidth = 6;
-            colTenNCC.Name = "colTenNCC";
-            colTenNCC.ReadOnly = true;
-            // 
-            // colSDT
-            // 
-            colSDT.HeaderText = "Số ĐT";
-            colSDT.MinimumWidth = 6;
-            colSDT.Name = "colSDT";
-            colSDT.ReadOnly = true;
-            // 
-            // colEmail
-            // 
-            colEmail.HeaderText = "Email";
-            colEmail.MinimumWidth = 6;
-            colEmail.Name = "colEmail";
-            colEmail.ReadOnly = true;
-            // 
-            // colDiaChi
-            // 
-            colDiaChi.HeaderText = "Địa chỉ";
-            colDiaChi.MinimumWidth = 6;
-            colDiaChi.Name = "colDiaChi";
-            colDiaChi.ReadOnly = true;
-            // 
-            // colNguoiLH
-            // 
-            colNguoiLH.HeaderText = "Người liên hệ";
-            colNguoiLH.MinimumWidth = 6;
-            colNguoiLH.Name = "colNguoiLH";
-            colNguoiLH.ReadOnly = true;
-            // 
-            // btnLamLai
-            // 
-            btnLamLai.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            btnLamLai.Location = new Point(462, 34);
-            btnLamLai.Size = new Size(110, 38);
-            btnLamLai.BackColor = UiTheme.The;
-            btnLamLai.FlatAppearance.BorderColor = UiTheme.Vien;
-            btnLamLai.ForeColor = UiTheme.Chinh;
-            btnLamLai.Font = UiTheme.Nut;
-            btnLamLai.Cursor = Cursors.Hand;
-            btnLamLai.FlatStyle = FlatStyle.Flat;
-            btnLamLai.UseVisualStyleBackColor = false;
-            btnLamLai.FlatAppearance.BorderSize = 1;
-            btnLamLai.FlatAppearance.MouseOverBackColor = UiTheme.NutNhat;
-            btnLamLai.FlatAppearance.MouseDownBackColor = UiTheme.NutNhatHover;
-            btnLamLai.Name = "btnLamLai";
-            btnLamLai.TabIndex = 0;
-            btnLamLai.Text = "&Làm lại";
-            // 
-            // label7
-            // 
-            label7.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label7.Font = UiTheme.Than;
-            label7.ForeColor = UiTheme.ChuPhu;
-            label7.AutoSize = true;
-            label7.Location = new Point(18, 48);
-            label7.Name = "label7";
-            label7.Size = new Size(324, 40);
-            label7.TabIndex = 0;
-            label7.Text = "Nhà cung cấp được chọn bằng ComboBox trên \r\nfrmHoaDonNhap.\r\n";
-            // 
-            // groupBox2
-            // 
-            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            groupBox2.Font = UiTheme.TieuDeMuc;
-            groupBox2.BackColor = UiTheme.The;
-            groupBox2.ForeColor = UiTheme.Chinh;
-            groupBox2.Controls.Add(label8);
-            groupBox2.Controls.Add(label7);
-            groupBox2.Location = new Point(777, 12);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(339, 250);
-            groupBox2.TabIndex = 6;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Lưu ý";
-            // 
-            // txtEmail
-            // 
-            txtEmail.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtEmail.Font = UiTheme.Than;
-            txtEmail.BackColor = UiTheme.The;
-            txtEmail.ForeColor = UiTheme.Chu;
-            txtEmail.BorderStyle = BorderStyle.FixedSingle;
-            txtEmail.Location = new Point(487, 96);
-            txtEmail.Name = "txtEmail";
-            txtEmail.Size = new Size(255, 27);
-            txtEmail.TabIndex = 1;
-            // 
-            // txtTenNCC
-            // 
-            txtTenNCC.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txtTenNCC.Font = UiTheme.Than;
-            txtTenNCC.BackColor = UiTheme.The;
-            txtTenNCC.ForeColor = UiTheme.Chu;
-            txtTenNCC.BorderStyle = BorderStyle.FixedSingle;
-            txtTenNCC.Location = new Point(487, 51);
-            txtTenNCC.Name = "txtTenNCC";
-            txtTenNCC.Size = new Size(255, 27);
-            txtTenNCC.TabIndex = 1;
-            // 
-            // txtDiaChi
-            // 
-            txtDiaChi.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtDiaChi.Font = UiTheme.Than;
-            txtDiaChi.BackColor = UiTheme.The;
-            txtDiaChi.ForeColor = UiTheme.Chu;
-            txtDiaChi.BorderStyle = BorderStyle.FixedSingle;
-            txtDiaChi.Location = new Point(135, 158);
-            txtDiaChi.Name = "txtDiaChi";
-            txtDiaChi.Size = new Size(616, 27);
-            txtDiaChi.TabIndex = 1;
-            // 
-            // txtSDT
-            // 
-            txtSDT.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            txtSDT.Font = UiTheme.Than;
-            txtSDT.BackColor = UiTheme.The;
-            txtSDT.ForeColor = UiTheme.Chu;
-            txtSDT.BorderStyle = BorderStyle.FixedSingle;
-            txtSDT.Location = new Point(135, 100);
-            txtSDT.Name = "txtSDT";
-            txtSDT.Size = new Size(216, 27);
-            txtSDT.TabIndex = 1;
-            // 
-            // txtMaNCC
-            // 
-            txtMaNCC.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            txtMaNCC.Font = UiTheme.Than;
-            txtMaNCC.BackColor = UiTheme.The;
-            txtMaNCC.ForeColor = UiTheme.Chu;
-            txtMaNCC.BorderStyle = BorderStyle.FixedSingle;
-            txtMaNCC.Location = new Point(135, 48);
-            txtMaNCC.Name = "txtMaNCC";
-            txtMaNCC.Size = new Size(216, 27);
-            txtMaNCC.TabIndex = 1;
-            // 
-            // label3
-            // 
-            label3.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label3.Font = UiTheme.Than;
-            label3.ForeColor = UiTheme.Chu;
-            label3.AutoSize = true;
-            label3.Location = new Point(30, 164);
-            label3.Name = "label3";
-            label3.Size = new Size(55, 20);
-            label3.TabIndex = 0;
-            label3.Text = "Địa chỉ";
-            // 
-            // label5
-            // 
-            label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label5.Font = UiTheme.Than;
-            label5.ForeColor = UiTheme.Chu;
-            label5.AutoSize = true;
-            label5.Location = new Point(383, 51);
-            label5.Name = "label5";
-            label5.Size = new Size(65, 20);
-            label5.TabIndex = 0;
-            label5.Text = "Tên NCC";
-            // 
-            // label4
-            // 
-            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label4.Font = UiTheme.Than;
-            label4.ForeColor = UiTheme.Chu;
-            label4.AutoSize = true;
-            label4.Location = new Point(383, 103);
-            label4.Name = "label4";
-            label4.Size = new Size(46, 20);
-            label4.TabIndex = 0;
-            label4.Text = "Email";
-            // 
-            // label2
-            // 
-            label2.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label2.Font = UiTheme.Than;
-            label2.ForeColor = UiTheme.Chu;
-            label2.AutoSize = true;
-            label2.Location = new Point(30, 107);
-            label2.Name = "label2";
-            label2.Size = new Size(49, 20);
-            label2.TabIndex = 0;
-            label2.Text = "Số ĐT";
-            // 
-            // label1
-            // 
-            label1.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label1.Font = UiTheme.Than;
-            label1.ForeColor = UiTheme.Chu;
-            label1.AutoSize = true;
-            label1.Location = new Point(30, 51);
-            label1.Name = "label1";
-            label1.Size = new Size(63, 20);
-            label1.TabIndex = 0;
-            label1.Text = "Mã NCC";
-            // 
-            // groupBox3
-            // 
-            groupBox3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox3.Font = UiTheme.TieuDeMuc;
-            groupBox3.Location = new Point(6, 272);
-            groupBox3.BackColor = UiTheme.The;
-            groupBox3.ForeColor = UiTheme.Chinh;
-            groupBox3.Controls.Add(btnThoat);
-            groupBox3.Controls.Add(btnLamLai);
-            groupBox3.Controls.Add(btnXoa);
-            groupBox3.Controls.Add(btnSua);
-            groupBox3.Controls.Add(btnThem);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(765, 101);
-            groupBox3.TabIndex = 7;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Chức năng ";
-            // 
-            // groupBox1
-            // 
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            groupBox1.Font = UiTheme.TieuDeMuc;
-            groupBox1.BackColor = UiTheme.The;
-            groupBox1.ForeColor = UiTheme.Chinh;
-            groupBox1.Controls.Add(txtNguoiLH);
-            groupBox1.Controls.Add(label11);
-            groupBox1.Controls.Add(txtEmail);
-            groupBox1.Controls.Add(txtTenNCC);
-            groupBox1.Controls.Add(txtDiaChi);
-            groupBox1.Controls.Add(txtSDT);
-            groupBox1.Controls.Add(txtMaNCC);
-            groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(6, 12);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(765, 250);
-            groupBox1.TabIndex = 5;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Thông tin nhà cung cấp";
-            // 
-            // txtNguoiLH
-            // 
-            txtNguoiLH.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            txtNguoiLH.Font = UiTheme.Than;
-            txtNguoiLH.BackColor = UiTheme.The;
-            txtNguoiLH.ForeColor = UiTheme.Chu;
-            txtNguoiLH.BorderStyle = BorderStyle.FixedSingle;
-            txtNguoiLH.Location = new Point(135, 208);
-            txtNguoiLH.Name = "txtNguoiLH";
-            txtNguoiLH.Size = new Size(216, 27);
-            txtNguoiLH.TabIndex = 3;
-            // 
-            // label11
-            // 
-            label11.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            label11.Font = UiTheme.Than;
-            label11.ForeColor = UiTheme.Chu;
-            label11.AutoSize = true;
-            label11.Location = new Point(30, 215);
-            label11.Name = "label11";
-            label11.Size = new Size(103, 20);
-            label11.TabIndex = 2;
-            label11.Text = "Người liên hệ ";
-            // 
-            // Form4
-            // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+
+            // FORM
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1124, 657);
-            Controls.Add(groupBox5);
-            Controls.Add(groupBox4);
-            Controls.Add(groupBox2);
-            Controls.Add(groupBox3);
-            Controls.Add(groupBox1);
-            ForeColor = UiTheme.Chu;
-            Font = UiTheme.Than;
-            BackColor = UiTheme.Nen;
+
+            BackColor = background;
+            ForeColor = textColor;
+            Font = normalFont;
+
+            ClientSize = new Size(1100, 760);
+            MinimumSize = new Size(900, 650);
+
             Name = "Form4";
-            Text = "Quản lí nhà cung cấp";
-            groupBox5.ResumeLayout(false);
-            groupBox5.PerformLayout();
-            groupBox4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dgvKhachHang).EndInit();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
-            groupBox3.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            Text = "PHONE STORE - Quản lý nhà cung cấp";
+            StartPosition = FormStartPosition.CenterScreen;
+
+            // BỐ CỤC TỔNG
+            TableLayoutPanel root = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 4,
+                Padding = new Padding(16),
+                BackColor = background,
+                Margin = Padding.Empty
+            };
+
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 245F));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 105F));
+            root.RowStyles.Add(new RowStyle(SizeType.Absolute, 90F));
+            root.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            // 1. THÔNG TIN NHÀ CUNG CẤP
+            groupBox1.Text = "THÔNG TIN NHÀ CUNG CẤP";
+            StyleGroup(groupBox1, navy, boldFont);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Margin = new Padding(0, 0, 0, 8);
+
+            TableLayoutPanel fields = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 4,
+                RowCount = 3,
+                Padding = new Padding(12, 10, 12, 10),
+                BackColor = Color.White
+            };
+
+            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
+            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
+            fields.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+
+            for (int i = 0; i < 3; i++)
+                fields.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33F));
+
+            SetLabel(label1, "Mã nhà cung cấp");
+            SetLabel(label2, "Tên nhà cung cấp");
+            SetLabel(label3, "Số điện thoại");
+            SetLabel(label4, "Email");
+            SetLabel(label5, "Địa chỉ");
+            SetLabel(label11, "Người liên hệ");
+
+            StyleText(txtMaNCC);
+            StyleText(txtTenNCC);
+            StyleText(txtSDT);
+            StyleText(txtEmail);
+            StyleText(txtDiaChi);
+            StyleText(txtNguoiLH);
+
+            AddField(fields, label1, txtMaNCC, 0, 0);
+            AddField(fields, label2, txtTenNCC, 2, 0);
+
+            AddField(fields, label3, txtSDT, 0, 1);
+            AddField(fields, label4, txtEmail, 2, 1);
+
+            AddField(fields, label5, txtDiaChi, 0, 2);
+            AddField(fields, label11, txtNguoiLH, 2, 2);
+
+            groupBox1.Controls.Add(fields);
+
+            // 2. GHI CHÚ
+            groupBox2.Text = "GHI CHÚ";
+            StyleGroup(groupBox2, navy, boldFont);
+            groupBox2.Dock = DockStyle.Fill;
+            groupBox2.Margin = new Padding(0, 0, 0, 8);
+
+            TableLayoutPanel notes = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2,
+                Padding = new Padding(14, 12, 14, 8),
+                BackColor = Color.White
+            };
+
+            notes.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            notes.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+
+            label7.Text = "• Nhập đầy đủ thông tin nhà cung cấp trước khi lưu.";
+            label8.Text = "• Kiểm tra số điện thoại và email để tránh sai sót.";
+
+            foreach (Label lbl in new[] { label7, label8 })
+            {
+                lbl.Dock = DockStyle.Fill;
+                lbl.TextAlign = ContentAlignment.MiddleLeft;
+                lbl.Font = normalFont;
+                lbl.ForeColor = muted;
+                lbl.AutoSize = false;
+            }
+
+            notes.Controls.Add(label7, 0, 0);
+            notes.Controls.Add(label8, 0, 1);
+
+            groupBox2.Controls.Add(notes);
+
+            // 3. CHỨC NĂNG
+            groupBox3.Text = "CHỨC NĂNG";
+            StyleGroup(groupBox3, navy, boldFont);
+            groupBox3.Dock = DockStyle.Fill;
+            groupBox3.Margin = new Padding(0, 0, 0, 8);
+
+            FlowLayoutPanel actions = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                Padding = new Padding(10, 5, 10, 2),
+                BackColor = Color.White
+            };
+
+            StyleButton(btnThem, blue);
+            StyleButton(btnSua, blue);
+            StyleButton(btnXoa, Color.FromArgb(210, 70, 70));
+            StyleButton(btnLamLai, muted);
+            StyleButton(btnThoat, navy);
+
+            btnThem.Text = "+ THÊM";
+            btnSua.Text = "SỬA";
+            btnXoa.Text = "XÓA";
+            btnLamLai.Text = "LÀM LẠI";
+            btnThoat.Text = "THOÁT";
+
+            foreach (Button b in new[]
+            {
+                btnThem, btnSua, btnXoa, btnLamLai, btnThoat
+            })
+            {
+                b.Size = new Size(130, 45);
+                b.Margin = new Padding(8, 5, 12, 5);
+                actions.Controls.Add(b);
+            }
+
+            groupBox3.Controls.Add(actions);
+
+            // 4. TÌM KIẾM
+            groupBox5.Text = "TÌM KIẾM NHÀ CUNG CẤP";
+            StyleGroup(groupBox5, navy, boldFont);
+            groupBox5.Dock = DockStyle.Fill;
+            groupBox5.Margin = new Padding(0, 0, 0, 8);
+
+            TableLayoutPanel searchLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 1,
+                Padding = new Padding(10, 4, 10, 4),
+                BackColor = Color.White
+            };
+
+            searchLayout.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Absolute, 160F));
+
+            searchLayout.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 100F));
+
+            searchLayout.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Absolute, 120F));
+
+            label6.Text = "Tên hoặc mã NCC";
+            label6.Dock = DockStyle.Fill;
+            label6.TextAlign = ContentAlignment.MiddleLeft;
+            label6.Font = normalFont;
+            label6.ForeColor = textColor;
+
+            StyleText(txtTim);
+            txtTim.Dock = DockStyle.Fill;
+            txtTim.Margin = new Padding(5, 3, 10, 3);
+
+            button1.Text = "TÌM KIẾM";
+            button1.Dock = DockStyle.Fill;
+            StyleButton(button1, blue);
+
+            searchLayout.Controls.Add(label6, 0, 0);
+            searchLayout.Controls.Add(txtTim, 1, 0);
+            searchLayout.Controls.Add(button1, 2, 0);
+
+            groupBox5.Controls.Add(searchLayout);
+
+            // 5. DANH SÁCH NHÀ CUNG CẤP
+            groupBox4.Text = "DANH SÁCH NHÀ CUNG CẤP";
+            StyleGroup(groupBox4, navy, boldFont);
+            groupBox4.Dock = DockStyle.Fill;
+            groupBox4.Margin = new Padding(0);
+
+            dgvKhachHang.Dock = DockStyle.Fill;
+            dgvKhachHang.BackgroundColor = Color.White;
+            dgvKhachHang.BorderStyle = BorderStyle.None;
+
+            dgvKhachHang.EnableHeadersVisualStyles = false;
+
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.BackColor = navy;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgvKhachHang.ColumnHeadersDefaultCellStyle.Font =
+                new Font("Segoe UI", 9.5F, FontStyle.Bold);
+
+            dgvKhachHang.DefaultCellStyle.Font = normalFont;
+            dgvKhachHang.DefaultCellStyle.ForeColor = textColor;
+            dgvKhachHang.DefaultCellStyle.BackColor = Color.White;
+            dgvKhachHang.DefaultCellStyle.SelectionBackColor =
+                Color.FromArgb(220, 235, 252);
+            dgvKhachHang.DefaultCellStyle.SelectionForeColor = navy;
+
+            dgvKhachHang.AlternatingRowsDefaultCellStyle.BackColor =
+                Color.FromArgb(245, 248, 252);
+
+            dgvKhachHang.ColumnHeadersHeight = 42;
+            dgvKhachHang.RowTemplate.Height = 36;
+
+            dgvKhachHang.AutoSizeColumnsMode =
+                DataGridViewAutoSizeColumnsMode.Fill;
+
+            dgvKhachHang.SelectionMode =
+                DataGridViewSelectionMode.FullRowSelect;
+
+            dgvKhachHang.MultiSelect = false;
+            dgvKhachHang.ReadOnly = true;
+            dgvKhachHang.AllowUserToAddRows = false;
+            dgvKhachHang.RowHeadersVisible = false;
+            dgvKhachHang.GridColor = border;
+
+            // CẤU HÌNH CỘT DANH SÁCH NHÀ CUNG CẤP
+
+            colMaNCC.Name = "colMaNCC";
+            colMaNCC.HeaderText = "Mã NCC";
+            colMaNCC.DataPropertyName = "MaNCC";
+
+            colTenNCC.Name = "colTenNCC";
+            colTenNCC.HeaderText = "Tên nhà cung cấp";
+            colTenNCC.DataPropertyName = "TenNCC";
+
+            colSDT.Name = "colSDT";
+            colSDT.HeaderText = "Số điện thoại";
+            colSDT.DataPropertyName = "SDT";
+
+            colDiaChi.Name = "colDiaChi";
+            colDiaChi.HeaderText = "Địa chỉ";
+            colDiaChi.DataPropertyName = "DiaChi";
+
+            colEmail.Name = "colEmail";
+            colEmail.HeaderText = "Email";
+            colEmail.DataPropertyName = "Email";
+
+            colNguoiLH.Name = "colNguoiLH";
+            colNguoiLH.HeaderText = "Người liên hệ";
+            colNguoiLH.DataPropertyName = "NguoiLH";
+
+            dgvKhachHang.Columns.AddRange(new DataGridViewColumn[]
+            {
+    colMaNCC,
+    colTenNCC,
+    colSDT,
+    colDiaChi,
+    colEmail,
+    colNguoiLH
+            });
+
+            groupBox4.Controls.Add(dgvKhachHang);
+
+            // GHÉP GIAO DIỆN
+            TableLayoutPanel top = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 1,
+                BackColor = background,
+                Margin = Padding.Empty
+            };
+
+            top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
+            top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+
+            groupBox1.Margin = new Padding(0, 0, 10, 0);
+            groupBox2.Margin = new Padding(0);
+
+            top.Controls.Add(groupBox1, 0, 0);
+            top.Controls.Add(groupBox2, 1, 0);
+
+            root.Controls.Add(top, 0, 0);
+            root.Controls.Add(groupBox3, 0, 1);
+            root.Controls.Add(groupBox5, 0, 2);
+            root.Controls.Add(groupBox4, 0, 3);
+
+            Controls.Add(root);
+
             ResumeLayout(false);
         }
 
-        #endregion
+        // HÀM HỖ TRỢ GIAO DIỆN
 
-        private Button btnThoat;
-        private GroupBox groupBox5;
-        private TextBox txtTim;
-        private Label label6;
-        private Label label8;
-        private Button btnXoa;
-        private Button btnSua;
-        private Button btnThem;
-        private GroupBox groupBox4;
-        private DataGridView dgvKhachHang;
-        private Button btnLamLai;
-        private Label label7;
-        private GroupBox groupBox2;
-        private TextBox txtEmail;
-        private TextBox txtTenNCC;
-        private TextBox txtDiaChi;
-        private TextBox txtSDT;
-        private TextBox txtMaNCC;
-        private Label label3;
-        private Label label5;
-        private Label label4;
-        private Label label2;
-        private Label label1;
-        private GroupBox groupBox3;
+        private void StyleGroup(GroupBox group, Color titleColor, Font font)
+        {
+            group.BackColor = Color.White;
+            group.ForeColor = titleColor;
+            group.Font = font;
+            group.Padding = new Padding(10);
+        }
+
+        private void SetLabel(Label label, string text)
+        {
+            label.Text = text;
+            label.Dock = DockStyle.Fill;
+            label.TextAlign = ContentAlignment.MiddleLeft;
+            label.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            label.ForeColor = Color.FromArgb(35, 51, 72);
+            label.Margin = new Padding(3);
+        }
+
+        private void StyleText(TextBox txt)
+        {
+            txt.Font = new Font("Segoe UI", 10F);
+            txt.BackColor = Color.FromArgb(248, 250, 253);
+            txt.ForeColor = Color.FromArgb(35, 51, 72);
+            txt.BorderStyle = BorderStyle.FixedSingle;
+            txt.Dock = DockStyle.Fill;
+            txt.Margin = new Padding(5, 5, 8, 5);
+        }
+
+        private void StyleButton(Button btn, Color color)
+        {
+            btn.BackColor = color;
+            btn.ForeColor = Color.White;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = false;
+        }
+
+        private void AddField(
+            TableLayoutPanel table,
+            Control label,
+            Control input,
+            int column,
+            int row)
+        {
+            table.Controls.Add(label, column, row);
+            table.Controls.Add(input, column + 1, row);
+        }
+
+        // KHAI BÁO CONTROLS
+
         private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private GroupBox groupBox3;
+        private GroupBox groupBox4;
+        private GroupBox groupBox5;
+
+        private TextBox txtMaNCC;
+        private TextBox txtTenNCC;
+        private TextBox txtSDT;
+        private TextBox txtDiaChi;
+        private TextBox txtEmail;
         private TextBox txtNguoiLH;
-        private Label label11;
+        private TextBox txtTim;
+
+        private Button btnThem;
+        private Button btnSua;
+        private Button btnXoa;
+        private Button btnLamLai;
+        private Button btnThoat;
         private Button button1;
+
+        private DataGridView dgvKhachHang;
         private DataGridViewTextBoxColumn colMaNCC;
         private DataGridViewTextBoxColumn colTenNCC;
         private DataGridViewTextBoxColumn colSDT;
-        private DataGridViewTextBoxColumn colEmail;
         private DataGridViewTextBoxColumn colDiaChi;
+        private DataGridViewTextBoxColumn colEmail;
         private DataGridViewTextBoxColumn colNguoiLH;
+
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label6;
+        private Label label7;
+        private Label label8;
+        private Label label11;
     }
 }

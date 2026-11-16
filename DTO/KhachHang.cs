@@ -1,6 +1,6 @@
 using System;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Khách hàng của cửa hàng. Kế thừa <see cref="Nguoi"/> và triển khai <see cref="IKhachHang"/>.

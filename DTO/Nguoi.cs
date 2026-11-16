@@ -1,6 +1,6 @@
 using System;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Lớp trừu tượng cơ sở cho mọi đối tượng là "con người" trong hệ thống.

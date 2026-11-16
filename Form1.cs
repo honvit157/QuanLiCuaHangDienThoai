@@ -2,24 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
-    /// <summary>
-    /// Form quản lý mặt hàng (điện thoại): xem danh sách, thêm - sửa - xóa,
-    /// chọn ảnh minh họa và tìm nhanh theo mã hoặc tên.
-    /// Tầng GUI chỉ giao tiếp với tầng nghiệp vụ (HangHoaBUS, DanhMucBUS).
-    /// </summary>
     public partial class Form1 : Form
     {
+        private readonly CultureInfo vn = new("vi-VN");
         private readonly HangHoaBUS hangHoaBus = new HangHoaBUS();
         private readonly DanhMucBUS danhMucBus = new DanhMucBUS();
-
         private DataTable dtHang = new DataTable();
         private DataView dvHang = new DataView();
         private string tenAnh = "";
+        private string ThuMucAnh => Path.Combine(Application.StartupPath, "Images");
 
         public Form1()
         {
@@ -34,7 +31,6 @@ namespace QuanLyCuaHangDienThoai
             btnChonAnh.Click += btnChonAnh_Click;
             btnTim.Click += btnTim_Click;
             dgvHang.CellClick += dgvHang_CellClick;
-            txtTim.TextChanged += (s, e) => TimKiem();
         }
 
         private void Form1_Load(object? sender, EventArgs e)
@@ -56,14 +52,14 @@ namespace QuanLyCuaHangDienThoai
         }
 
         /// <summary>Nạp dữ liệu cho ComboBox danh mục thông qua tầng BUS.</summary>
-        private void NapCombo(ComboBox cbo, LoaiDanhMuc loai, string cotTen, string cotMa)
+        private void NapCombo(ComboBox cbo, LoaiDanhMuc loai, string display, string value)
         {
             try
             {
                 DataTable dt = danhMucBus.LayDanhSach(loai);
                 cbo.DataSource = dt;
-                cbo.DisplayMember = cotTen;
-                cbo.ValueMember = cotMa;
+                cbo.DisplayMember = display;
+                cbo.ValueMember = value;
                 cbo.SelectedIndex = -1;
             }
             catch (Exception ex)
@@ -76,6 +72,7 @@ namespace QuanLyCuaHangDienThoai
         {
             try
             {
+                // Goi qua tang BUS (va thuc thi Stored Procedure sp_LayDanhSachHang)
                 dtHang = hangHoaBus.LayDanhSach();
                 dvHang = new DataView(dtHang);
                 dgvHang.DataSource = dvHang;
@@ -99,7 +96,7 @@ namespace QuanLyCuaHangDienThoai
                         dgvHang.Columns[kv.Key]!.HeaderText = kv.Value;
                 }
 
-                foreach (var col in new[] { "MaHangSX", "MaLoai", "MaMau", "MaDungLuong", "MoTa", "DonGiaNhap", "DonGiaBan", "SoLuongTon" })
+                foreach (var col in new[] { "MaHangSX", "MaLoai", "MaMau", "MaDungLuong", "MoTa" })
                 {
                     if (dgvHang.Columns.Contains(col))
                         dgvHang.Columns[col]!.Visible = false;
@@ -110,13 +107,13 @@ namespace QuanLyCuaHangDienThoai
                     if (dgvHang.Columns.Contains(cot))
                     {
                         dgvHang.Columns[cot]!.DefaultCellStyle.Format = "N0";
-                        dgvHang.Columns[cot]!.DefaultCellStyle.FormatProvider = AppHelpers.ViVn;
+                        dgvHang.Columns[cot]!.DefaultCellStyle.FormatProvider = vn;
                     }
                 }
             }
             catch (Exception ex)
             {
-                AppHelpers.HienCanhBao("Lỗi tải dữ liệu: " + ex.Message);
+                MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message);
             }
         }
 
@@ -142,9 +139,9 @@ namespace QuanLyCuaHangDienThoai
             else cboDungLuong.SelectedIndex = -1;
 
             if (decimal.TryParse(r["GiaNhap"].ToString(), out decimal gn))
-                txtGiaNhap.Text = AppHelpers.DinhDangTien(gn);
+                txtGiaNhap.Text = gn.ToString("N0", vn);
             if (decimal.TryParse(r["GiaBan"].ToString(), out decimal gb))
-                txtGiaBan.Text = AppHelpers.DinhDangTien(gb);
+                txtGiaBan.Text = gb.ToString("N0", vn);
 
             txtSoLuong.Text = r["SoLuong"].ToString();
 
@@ -160,18 +157,21 @@ namespace QuanLyCuaHangDienThoai
                 Title = "Chọn ảnh điện thoại",
                 Filter = "Ảnh|*.jpg;*.jpeg;*.png;*.bmp;*.gif"
             };
-
             if (ofd.ShowDialog() != DialogResult.OK) return;
 
             try
             {
-                tenAnh = AppHelpers.SaoChepAnh(ofd.FileName);
-                lblTenAnh.Text = tenAnh;
-                HienAnh(tenAnh);
+                Directory.CreateDirectory(ThuMucAnh);
+                string ten = Path.GetFileName(ofd.FileName);
+                string dich = Path.Combine(ThuMucAnh, ten);
+                if (!File.Exists(dich)) File.Copy(ofd.FileName, dich, true);
+                tenAnh = ten;
+                lblTenAnh.Text = ten;
+                HienAnh(ten);
             }
             catch (Exception ex)
             {
-                AppHelpers.HienCanhBao("Không thể tải ảnh: " + ex.Message);
+                MessageBox.Show("Không thể tải ảnh: " + ex.Message);
             }
         }
 
@@ -179,15 +179,20 @@ namespace QuanLyCuaHangDienThoai
         {
             picAnh.Image?.Dispose();
             picAnh.Image = null;
-
             if (string.IsNullOrEmpty(ten)) return;
 
-            string duongDan = Path.Combine(AppHelpers.ThuMucAnh, ten);
+            string duongDan = Path.Combine(ThuMucAnh, ten);
             if (!File.Exists(duongDan)) return;
 
             using var bmp = new Bitmap(duongDan);
             picAnh.Image = new Bitmap(bmp);
             picAnh.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        /// <summary>Đọc số tiền người dùng nhập (cho phép có dấu phân cách).</summary>
+        private static bool DocTien(string s, out decimal tien)
+        {
+            return AppHelpers.DocSoTien(s, out tien) && tien >= 0;
         }
 
         private static void Loi(string thongBao, Control ctrl)
@@ -196,26 +201,18 @@ namespace QuanLyCuaHangDienThoai
             ctrl.Focus();
         }
 
-        /// <summary>
-        /// Đọc dữ liệu trên form và tạo đối tượng HangHoa.
-        /// Trả về false nếu dữ liệu chưa hợp lệ (đã hiển thị thông báo lỗi).
-        /// </summary>
         private bool TaoDoiTuongHang(out HangHoa? hang)
         {
             hang = null;
-
             if (string.IsNullOrWhiteSpace(txtMaHang.Text)) { Loi("Chưa nhập mã hàng.", txtMaHang); return false; }
             if (string.IsNullOrWhiteSpace(txtTenHang.Text)) { Loi("Chưa nhập tên hàng.", txtTenHang); return false; }
             if (cboHang.SelectedIndex < 0) { Loi("Chưa chọn hãng sản xuất.", cboHang); return false; }
             if (cboLoai.SelectedIndex < 0) { Loi("Chưa chọn loại hàng.", cboLoai); return false; }
             if (cboMau.SelectedIndex < 0) { Loi("Chưa chọn màu sắc.", cboMau); return false; }
-            if (!AppHelpers.DocSoTien(txtGiaNhap.Text, out decimal gn)) { Loi("Giá nhập phải là số không âm.", txtGiaNhap); return false; }
-            if (!AppHelpers.DocSoTien(txtGiaBan.Text, out decimal gb)) { Loi("Giá bán phải là số không âm.", txtGiaBan); return false; }
-            if (!AppHelpers.KiemTraSoNguyenKhongAm(txtSoLuong.Text, out int sl))
-            {
-                Loi("Số lượng tồn phải là số nguyên không âm.", txtSoLuong);
-                return false;
-            }
+            if (!DocTien(txtGiaNhap.Text, out decimal gn)) { Loi("Giá nhập phải là số không âm.", txtGiaNhap); return false; }
+            if (!DocTien(txtGiaBan.Text, out decimal gb)) { Loi("Giá bán phải là số không âm.", txtGiaBan); return false; }
+            if (!int.TryParse(txtSoLuong.Text.Trim(), out int sl) || sl < 0)
+            { Loi("Số lượng tồn phải là số nguyên không âm.", txtSoLuong); return false; }
 
             hang = new HangHoa(
                 txtMaHang.Text.Trim(),
@@ -224,8 +221,8 @@ namespace QuanLyCuaHangDienThoai
                 cboLoai.SelectedValue?.ToString(),
                 cboMau.SelectedValue?.ToString(),
                 cboDungLuong.SelectedValue?.ToString(),
-                gn, gb, sl);
-
+                gn, gb, sl
+            );
             return true;
         }
 
@@ -233,15 +230,16 @@ namespace QuanLyCuaHangDienThoai
         {
             if (!TaoDoiTuongHang(out HangHoa? hang) || hang == null) return;
 
+            // Thuc hien qua tang BUS
             if (hangHoaBus.Them(hang, out string error))
             {
-                AppHelpers.HienThongBao("Thêm mặt hàng thành công!");
+                MessageBox.Show("Thêm mặt hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 LamLai();
             }
             else
             {
-                AppHelpers.HienCanhBao(error);
+                MessageBox.Show(error, "Lỗi thêm", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -252,18 +250,18 @@ namespace QuanLyCuaHangDienThoai
                 MessageBox.Show("Hãy chọn một dòng trong danh sách để sửa.");
                 return;
             }
-
             if (!TaoDoiTuongHang(out HangHoa? hang) || hang == null) return;
 
+            // Thuc hien qua tang BUS
             if (hangHoaBus.Sua(hang, out string error))
             {
-                AppHelpers.HienThongBao("Cập nhật mặt hàng thành công!");
+                MessageBox.Show("Cập nhật mặt hàng thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 LamLai();
             }
             else
             {
-                AppHelpers.HienCanhBao(error);
+                MessageBox.Show(error, "Lỗi sửa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -276,24 +274,26 @@ namespace QuanLyCuaHangDienThoai
             }
 
             string ma = txtMaHang.Text.Trim();
-            if (!AppHelpers.XacNhan($"Bạn có chắc chắn muốn xóa mặt hàng {ma}?")) return;
+            if (MessageBox.Show($"Bạn có chắc chắn muốn xóa mặt hàng {ma}?", "Xác nhận",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
 
+            // Thuc hien qua tang BUS
             if (hangHoaBus.Xoa(ma, out string error))
             {
-                AppHelpers.HienThongBao("Đã xóa mặt hàng!");
+                MessageBox.Show("Đã xóa mặt hàng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadData();
                 LamLai();
             }
             else
             {
-                AppHelpers.HienCanhBao(error);
+                MessageBox.Show(error, "Lỗi xóa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void btnLamLai_Click(object? sender, EventArgs e)
         {
             txtTim.Clear();
-            if (dvHang?.Table != null) dvHang.RowFilter = "";
+            if (dvHang != null) dvHang.RowFilter = "";
             LamLai();
         }
 
@@ -316,16 +316,13 @@ namespace QuanLyCuaHangDienThoai
             txtMaHang.Focus();
         }
 
-        private void btnTim_Click(object? sender, EventArgs e) => TimKiem();
-
-        private void TimKiem()
+        private void btnTim_Click(object? sender, EventArgs e)
         {
-            if (dvHang?.Table == null) return;
-
             string tk = AppHelpers.TaoTuKhoaTimKiem(txtTim.Text);
-            dvHang.RowFilter = tk.Length == 0
-                ? ""
-                : $"TenHang LIKE '%{tk}%' OR MaHang LIKE '%{tk}%'";
+            if (dvHang == null) return;
+            dvHang.RowFilter = tk.Length == 0 ? "" : $"TenHang LIKE '%{tk}%' OR MaHang LIKE '%{tk}%'";
+            if (dvHang.Count == 0)
+                MessageBox.Show("Không tìm thấy mặt hàng nào phù hợp.");
         }
     }
 }

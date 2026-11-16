@@ -1,4 +1,4 @@
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Bốn danh mục tra cứu của hệ thống. Dùng để tầng DAL/BUS chọn đúng

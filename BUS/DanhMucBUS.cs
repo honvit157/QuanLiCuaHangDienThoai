@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Tầng nghiệp vụ cho bốn danh mục tra cứu (hãng sản xuất, loại hàng, màu sắc, dung lượng).

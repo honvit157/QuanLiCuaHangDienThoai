@@ -1,4 +1,4 @@
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Nhà cung cấp hàng hóa. Triển khai giao diện <see cref="INhaCungCap"/>.

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Lớp trừu tượng cơ sở cho mọi chứng từ phát sinh trong cửa hàng
@@ -88,7 +88,7 @@ namespace QuanLyCuaHangDienThoai
     /// <summary>
     /// Hóa đơn nhập hàng từ nhà cung cấp.
     /// </summary>
-    public class HoaDonNhap : ChungTuBase
+    public class HoaDonNhap : ChungTuBase, IHoaDonNhap
     {
         public string MaHDN
         {
@@ -97,6 +97,16 @@ namespace QuanLyCuaHangDienThoai
         }
 
         public string MaNCC { get; set; } = "";
+
+        /// <summary>
+        /// Ngày nhập hàng: cùng một mốc thời gian với NgayLap của lớp cơ sở,
+        /// đặt tên riêng cho đúng nghiệp vụ nhập kho.
+        /// </summary>
+        public System.DateTime NgayNhap
+        {
+            get => NgayLap;
+            set => NgayLap = value;
+        }
 
         /// <summary>Danh sách chi tiết nhập hàng (quan hệ kết tập - Composition).</summary>
         public List<ChiTietHoaDonNhap> ChiTietList { get; set; } = new List<ChiTietHoaDonNhap>();

@@ -333,3 +333,57 @@ GO
 PRINT N'Đã tạo cơ sở dữ liệu QLCuaHangBanDienThoai và dữ liệu mẫu.';
 PRINT N'Bước tiếp theo: chạy tệp StoredProcedures.sql để tạo các thủ tục lưu trữ.';
 GO
+
+-- ============================================================================
+--  C. DỮ LIỆU THỬ NGHIỆM CHO DASHBOARD (7 NGÀY GẦN NHẤT)
+--  Bảy hóa đơn TEST001..TEST007 được lập lùi dần về quá khứ để biểu đồ
+--  "DOANH THU 7 NGÀY GẦN NHẤT" trên Form10 luôn có cột dữ liệu.
+-- ============================================================================
+
+DECLARE @MaNVTest VARCHAR(20);
+DECLARE @MaKHTest VARCHAR(20);
+DECLARE @i INT = 0;
+
+SELECT TOP 1 @MaNVTest = MaNV FROM dbo.tblNhanVien ORDER BY MaNV;
+SELECT TOP 1 @MaKHTest = MaKH FROM dbo.tblKhachHang ORDER BY MaKH;
+
+IF @MaNVTest IS NULL OR @MaKHTest IS NULL
+BEGIN
+    PRINT N'Không tìm thấy nhân viên hoặc khách hàng để tạo dữ liệu thử nghiệm.';
+    RETURN;
+END
+
+DECLARE @DoanhThu TABLE
+(
+    Ngay     INT,
+    TongTien DECIMAL(18,2)
+);
+
+INSERT INTO @DoanhThu (Ngay, TongTien) VALUES
+(0, 2500000),
+(1, 4200000),
+(2, 1800000),
+(3, 6500000),
+(4, 3200000),
+(5, 7800000),
+(6, 5500000);
+
+WHILE @i <= 6
+BEGIN
+    INSERT INTO dbo.tblHoaDonBan (MaHDB, MaNV, MaKH, NgayLap, TongTien)
+    VALUES
+    (
+        'TEST' + RIGHT('000' + CAST(@i + 1 AS VARCHAR(3)), 3),
+        @MaNVTest,
+        @MaKHTest,
+        DATEADD(DAY, -@i, GETDATE()),
+        (SELECT TongTien FROM @DoanhThu WHERE Ngay = @i)
+    );
+
+    SET @i = @i + 1;
+END;
+GO
+
+PRINT N'Đã tạo cơ sở dữ liệu QLCuaHangBanDienThoai, bảng, dữ liệu mẫu và dữ liệu Dashboard.';
+PRINT N'Bước tiếp theo: chạy tệp StoredProcedures.sql để tạo các thủ tục lưu trữ.';
+GO

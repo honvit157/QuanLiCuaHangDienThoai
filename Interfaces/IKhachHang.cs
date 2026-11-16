@@ -1,4 +1,4 @@
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Giao diện quy định thông tin tối thiểu của một khách hàng.

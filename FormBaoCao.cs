@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using ClosedXML.Excel;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Form báo cáo - thống kê gồm ba tab: doanh thu theo tháng, tồn kho và top bán chạy.
@@ -123,9 +123,9 @@ namespace QuanLyCuaHangDienThoai
             dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgv.RowHeadersVisible = false;
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = UiTheme.DongXen;
-            dgv.ColumnHeadersDefaultCellStyle.Font = UiTheme.LuoiTieuDe;
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = UiTheme.Chinh;
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(242, 246, 252);
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(31, 58, 95);
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dgv.EnableHeadersVisualStyles = false;

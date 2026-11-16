@@ -5,7 +5,7 @@ Chạy:  python make_doc.py
 Kết quả: BaoCao_BTL_QuanLyCuaHangDienThoai.docx
 
 Cấu trúc tệp:
-  - Trang bìa (trường, học phần, đề tài, nhóm, bảng thành viên, giảng viên hướng dẫn)
+  - Trang bìa (trường, học phần, đề tài, ô trống điền nhóm/khóa/lớp, bảng thành viên, giảng viên)
   - Mục lục (trang riêng, tự cập nhật khi mở bằng Word)
   - Danh mục các từ viết tắt (trang riêng)
   - Danh mục bảng biểu và sơ đồ (trang riêng)
@@ -16,7 +16,7 @@ import os
 import sys
 
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.shared import Cm, Pt, RGBColor
+from docx.shared import Pt, RGBColor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -40,14 +40,15 @@ TU_VIET_TAT = [
     ["6", "DAL", "Tầng truy cập dữ liệu (Data Access Layer)"],
     ["7", "DTO", "Đối tượng truyền dữ liệu (Data Transfer Object)"],
     ["8", "FK", "Khóa ngoại (Foreign Key)"],
-    ["9", "GUI", "Tầng giao diện đồ họa (Graphical User Interface)"],
-    ["10", "OOP", "Lập trình hướng đối tượng (Object-Oriented Programming)"],
-    ["11", "PK", "Khóa chính (Primary Key)"],
-    ["12", "SP", "Thủ tục lưu trữ (Stored Procedure)"],
-    ["13", "SQL", "Ngôn ngữ truy vấn có cấu trúc (Structured Query Language)"],
-    ["14", "T-SQL", "Ngôn ngữ Transact-SQL của SQL Server"],
-    ["15", "UI", "Giao diện người dùng (User Interface)"],
-    ["16", "VNĐ", "Đơn vị tiền tệ Việt Nam Đồng"],
+    ["9", "GDI+", "Thư viện đồ họa dùng để vẽ biểu đồ trên Windows Forms"],
+    ["10", "GUI", "Tầng giao diện đồ họa (Graphical User Interface)"],
+    ["11", "OOP", "Lập trình hướng đối tượng (Object-Oriented Programming)"],
+    ["12", "PK", "Khóa chính (Primary Key)"],
+    ["13", "SP", "Thủ tục lưu trữ (Stored Procedure)"],
+    ["14", "SQL", "Ngôn ngữ truy vấn có cấu trúc (Structured Query Language)"],
+    ["15", "T-SQL", "Ngôn ngữ Transact-SQL của SQL Server"],
+    ["16", "UI", "Giao diện người dùng (User Interface)"],
+    ["17", "VNĐ", "Đơn vị tiền tệ Việt Nam Đồng"],
 ]
 
 
@@ -108,7 +109,6 @@ def viet_trang_bia(b):
     r = p.add_run(TEN_DE_TAI_2)
     _dat_font(r, co=15, dam=True, mau=RGBColor(0x9C, 0x1B, 0x1B))
 
-    # Bảng thành viên nhóm
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(4)
     r = p.add_run(
@@ -119,14 +119,14 @@ def viet_trang_bia(b):
 
     tieu_de = ["STT", "Sinh viên thực hiện", "Khóa", "Lớp", "Mã sinh viên", "Công việc đảm nhiệm trong nhóm"]
     du_lieu = [
-        ["1", "[Đặng Việt Hoàn]", "[Khóa]", "[Lớp]", "[Mã SV]",
+        ["1", "[Họ và tên thành viên 1]", "[Khóa]", "[Lớp]", "[Mã sinh viên]",
          "Phân tích nghiệp vụ, thiết kế cơ sở dữ liệu, viết thủ tục lưu trữ, xây dựng tầng DAL."],
-        ["2", "[Họ và tên thành viên 2]", "[Khóa]", "[Lớp]", "[Mã SV]",
-         "Thiết kế mô hình lớp, năm giao diện, các lớp DTO và lớp tiện ích."],
-        ["3", "[Họ và tên thành viên 3]", "[Khóa]", "[Lớp]", "[Mã SV]",
+        ["2", "[Họ và tên thành viên 2]", "[Khóa]", "[Lớp]", "[Mã sinh viên]",
+         "Thiết kế mô hình lớp, các giao diện, lớp thực thể và lớp tiện ích."],
+        ["3", "[Họ và tên thành viên 3]", "[Khóa]", "[Lớp]", "[Mã sinh viên]",
          "Xây dựng tầng BUS và các biểu mẫu quản lý danh mục, nhân viên, khách hàng, nhà cung cấp."],
-        ["4", "[Họ và tên thành viên 4]", "[Khóa]", "[Lớp]", "[Mã SV]",
-         "Xây dựng biểu mẫu bán hàng, nhập hàng, tìm kiếm, báo cáo; soạn báo cáo và slide."],
+        ["4", "[Họ và tên thành viên 4]", "[Khóa]", "[Lớp]", "[Mã sinh viên]",
+         "Xây dựng biểu mẫu hàng hóa, bán hàng, nhập hàng, tìm kiếm, báo cáo và màn hình tổng quan."],
     ]
     b.bang("Thành viên nhóm thực hiện đề tài", tieu_de, du_lieu,
            do_rong=[1.1, 3.4, 1.6, 1.6, 2.4, 6.4], canh_giua=[0, 2, 3, 4], co=10,
@@ -182,15 +182,11 @@ def viet_danh_muc_bang_hinh(b, ds_bang, ds_hinh):
     b.ghi_chu("Tên bảng được đặt phía trên bảng, tên hình vẽ và sơ đồ được đặt phía dưới hình theo "
               "đúng hướng dẫn trình bày báo cáo. Cột Trang được điền theo bản in thực tế.")
 
-    du_lieu = []
-    for so_hieu, ten in ds_bang:
-        du_lieu.append([so_hieu, ten, "…"])
+    du_lieu = [[so_hieu, ten, "…"] for so_hieu, ten in ds_bang]
     b.bang("Danh mục bảng biểu", ["Số hiệu", "Tên bảng", "Trang"], du_lieu,
            do_rong=[2.4, 11.4, 1.8], canh_giua=[0, 2], co=10.5, co_caption=False)
 
-    du_lieu_hinh = []
-    for so_hieu, ten in ds_hinh:
-        du_lieu_hinh.append([so_hieu, ten, "…"])
+    du_lieu_hinh = [[so_hieu, ten, "…"] for so_hieu, ten in ds_hinh]
     b.bang("Danh mục hình vẽ và sơ đồ", ["Số hiệu", "Tên hình vẽ, sơ đồ", "Trang"], du_lieu_hinh,
            do_rong=[2.4, 11.4, 1.8], canh_giua=[0, 2], co=10.5, co_caption=False)
 
@@ -219,16 +215,9 @@ def thong_ke(doc, ds_bang, ds_hinh):
         so_tu = dem.get(k, 0)
         tong += so_tu
         # 470 từ/trang với Times 13, giãn dòng 1.3; bảng và hình chiếm thêm chỗ
-        so_trang = so_tu / 470
-        print(f"{k}: {so_tu} từ ≈ {so_trang:.1f} trang văn bản")
+        print(f"{k}: {so_tu} từ ≈ {so_tu / 470:.1f} trang văn bản")
     print(f"Tổng số từ ba chương: {tong}")
     print(f"Số bảng: {len(ds_bang)}, số hình: {len(ds_hinh)}")
-
-    theo_chuong = {}
-    for so_hieu, _ in ds_bang:
-        c = so_hieu.split(".")[0].replace("Bảng ", "")
-        theo_chuong[c] = theo_chuong.get(c, 0) + 1
-    print("Bảng theo chương:", theo_chuong)
 
 
 def main():
@@ -240,8 +229,6 @@ def main():
     # Lượt 2: dựng tài liệu hoàn chỉnh
     b = DocBuilder()
     viet_trang_bia(b)
-    ds_bang_bia = list(b.ds_bang)   # bảng thành viên ở trang bìa không đưa vào danh mục
-    ds_hinh_bia = list(b.ds_hinh)
     b.ds_bang, b.ds_hinh = [], []
 
     viet_muc_luc(b)
@@ -260,8 +247,6 @@ def main():
 
     thong_ke(b.doc, ds_bang, ds_hinh)
     print("\nĐã lưu:", duong_dan)
-    print("Bảng thành viên ở bìa:", ds_bang_bia)
-    print("Số hình ở bìa:", len(ds_hinh_bia))
 
 
 if __name__ == "__main__":

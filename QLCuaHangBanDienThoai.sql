@@ -344,6 +344,60 @@ PRINT N'Bước tiếp theo: chạy tệp StoredProcedures.sql để tạo các 
 GO
 
 -- ============================================================================
+--  C. DỮ LIỆU THỬ NGHIỆM CHO DASHBOARD (7 NGÀY GẦN NHẤT)
+--  Bảy hóa đơn TEST001..TEST007 được lập lùi dần về quá khứ để biểu đồ
+--  "DOANH THU 7 NGÀY GẦN NHẤT" trên Form10 luôn có cột dữ liệu.
+-- ============================================================================
+
+DECLARE @MaNVTest VARCHAR(20);
+DECLARE @MaKHTest VARCHAR(20);
+DECLARE @i INT = 0;
+
+SELECT TOP 1 @MaNVTest = MaNV FROM dbo.tblNhanVien ORDER BY MaNV;
+SELECT TOP 1 @MaKHTest = MaKH FROM dbo.tblKhachHang ORDER BY MaKH;
+
+IF @MaNVTest IS NULL OR @MaKHTest IS NULL
+BEGIN
+    PRINT N'Không tìm thấy nhân viên hoặc khách hàng để tạo dữ liệu thử nghiệm.';
+    RETURN;
+END
+
+DECLARE @DoanhThu TABLE
+(
+    Ngay     INT,
+    TongTien DECIMAL(18,2)
+);
+
+INSERT INTO @DoanhThu (Ngay, TongTien) VALUES
+(0, 2500000),
+(1, 4200000),
+(2, 1800000),
+(3, 6500000),
+(4, 3200000),
+(5, 7800000),
+(6, 5500000);
+
+WHILE @i <= 6
+BEGIN
+    INSERT INTO dbo.tblHoaDonBan (MaHDB, MaNV, MaKH, NgayLap, TongTien)
+    VALUES
+    (
+        'TEST' + RIGHT('000' + CAST(@i + 1 AS VARCHAR(3)), 3),
+        @MaNVTest,
+        @MaKHTest,
+        DATEADD(DAY, -@i, GETDATE()),
+        (SELECT TongTien FROM @DoanhThu WHERE Ngay = @i)
+    );
+
+    SET @i = @i + 1;
+END;
+GO
+
+PRINT N'Đã tạo cơ sở dữ liệu QLCuaHangBanDienThoai, bảng, dữ liệu mẫu và dữ liệu Dashboard.';
+PRINT N'Bước tiếp theo: chạy tệp StoredProcedures.sql để tạo các thủ tục lưu trữ.';
+GO
+
+-- ============================================================================
 --  PHẦN THỦ TỤC LƯU TRỮ (từ StoredProcedures.sql)
 -- ============================================================================
 
@@ -1333,6 +1387,125 @@ BEGIN
     LEFT  JOIN dbo.tblHangSX hs ON h.MaHangSX = hs.MaHangSX
     GROUP BY h.MaHang, h.TenHang, hs.TenHangSX
     ORDER BY SoLuongBan DESC;
+END;
+GO
+
+-- ============================================================================
+--  PHẦN 12. THỐNG KÊ PHỤC VỤ DASHBOARD (Form10)
+--  Các thủ tục dưới đây cung cấp số liệu cho bốn thẻ thống kê và biểu đồ
+--  doanh thu 7 ngày gần nhất của màn hình Tổng quan.
+-- ============================================================================
+
+-- 12.1 Tổng số mặt hàng đang quản lý
+CREATE OR ALTER PROCEDURE sp_ThongKe_TongSanPham
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT COUNT(*) AS TongSanPham FROM dbo.tblHang;
+END;
+GO
+
+-- 12.2 Tổng số khách hàng
+CREATE OR ALTER PROCEDURE sp_ThongKe_TongKhachHang
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT COUNT(*) AS TongKhachHang FROM dbo.tblKhachHang;
+END;
+GO
+
+-- 12.3 Số hóa đơn bán lập trong ngày hôm nay
+CREATE OR ALTER PROCEDURE sp_ThongKe_HoaDonHomNay
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) AS SoHoaDon
+    FROM dbo.tblHoaDonBan
+    WHERE NgayLap >= CONVERT(date, GETDATE())
+      AND NgayLap <  DATEADD(day, 1, CONVERT(date, GETDATE()));
+END;
+GO
+
+-- 12.4 Doanh thu bán hàng của ngày hôm nay
+CREATE OR ALTER PROCEDURE sp_ThongKe_DoanhThuHomNay
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT ISNULL(SUM(TongTien), 0) AS DoanhThu
+    FROM dbo.tblHoaDonBan
+    WHERE NgayLap >= CONVERT(date, GETDATE())
+      AND NgayLap <  DATEADD(day, 1, CONVERT(date, GETDATE()));
+END;
+GO
+
+-- 12.5 Doanh thu 7 ngày gần nhất (kể cả ngày không phát sinh hóa đơn)
+CREATE OR ALTER PROCEDURE sp_ThongKe_DoanhThu7Ngay
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    ;WITH NgayGanDay AS
+    (
+        SELECT CONVERT(date, DATEADD(day, -6, GETDATE())) AS Ngay
+        UNION ALL
+        SELECT DATEADD(day, 1, Ngay)
+        FROM NgayGanDay
+        WHERE Ngay < CONVERT(date, GETDATE())
+    )
+    SELECT n.Ngay,
+           ISNULL(SUM(h.TongTien), 0) AS DoanhThu
+    FROM NgayGanDay n
+    LEFT JOIN dbo.tblHoaDonBan h
+           ON h.NgayLap >= n.Ngay
+          AND h.NgayLap <  DATEADD(day, 1, n.Ngay)
+    GROUP BY n.Ngay
+    ORDER BY n.Ngay
+    OPTION (MAXRECURSION 7);
+END;
+GO
+
+-- 12.6 Top 5 mặt hàng bán chạy nhất (theo số lượng bán)
+CREATE OR ALTER PROCEDURE sp_ThongKe_Top5SanPhamBanChay
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 5
+           h.MaHang,
+           h.TenHang,
+           SUM(ct.SoLuong)   AS TongSoLuongBan,
+           SUM(ct.ThanhTien) AS TongDoanhThu
+    FROM dbo.tblChiTietHDB ct
+    INNER JOIN dbo.tblHang h ON ct.MaHang = h.MaHang
+    GROUP BY h.MaHang, h.TenHang
+    ORDER BY SUM(ct.SoLuong) DESC, h.MaHang;
+END;
+GO
+
+-- 12.7 Danh sách mặt hàng sắp hết hàng (tồn kho <= ngưỡng cảnh báo)
+CREATE OR ALTER PROCEDURE sp_ThongKe_SanPhamSapHetHang
+    @NguongTon INT = 10
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT MaHang,
+           TenHang,
+           SoLuongTon
+    FROM dbo.tblHang
+    WHERE SoLuongTon <= @NguongTon
+    ORDER BY SoLuongTon ASC, MaHang;
+END;
+GO
+
+-- 12.8 Tổng số lượng hàng đang nằm trong kho
+CREATE OR ALTER PROCEDURE sp_ThongKe_TongHangTonKho
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT ISNULL(SUM(SoLuongTon), 0) AS TongTonKho FROM dbo.tblHang;
 END;
 GO
 

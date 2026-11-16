@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace QuanLyCuaHangDienThoai
+namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     /// <summary>
     /// Form quản lý 4 danh mục tra cứu: hãng sản xuất, loại hàng, màu sắc, dung lượng.

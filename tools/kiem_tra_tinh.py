@@ -16,6 +16,7 @@ import sys
 GOC = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOI = []
 CANH_BAO = []
+_PARSER = None
 
 
 def doc(duong_dan):
@@ -31,6 +32,13 @@ def canh_bao(noi_dung):
     CANH_BAO.append(noi_dung)
 
 
+def danh_sach_tep_cs():
+    return sorted(
+        p for p in glob.glob(os.path.join(GOC, "**", "*.cs"), recursive=True)
+        if os.sep + "obj" + os.sep not in p and os.sep + "bin" + os.sep not in p
+    )
+
+
 def kiem_tra_csproj():
     tep = glob.glob(os.path.join(GOC, "*.csproj"))
     if len(tep) != 1:
@@ -41,26 +49,72 @@ def kiem_tra_csproj():
     if "EnableDefaultCompileItems" in noi_dung and "false" in noi_dung.lower():
         bao_loi("Tệp .csproj tắt chế độ tự động gom tệp .cs nhưng không liệt kê thủ công.")
 
-    so_cs = len([p for p in glob.glob(os.path.join(GOC, "**", "*.cs"), recursive=True)])
+    so_cs = len(danh_sach_tep_cs())
     print(f"[csproj] {os.path.basename(tep[0])}: tự động gom {so_cs} tệp .cs (SDK-style).")
 
     if 'TargetFramework' in noi_dung:
         tf = re.search(r"<TargetFramework>(.*?)</TargetFramework>", noi_dung)
         print(f"[csproj] Nền tảng: {tf.group(1) if tf else '?'}")
 
+    # Mọi đường dẫn tệp được nêu trong .csproj phải tồn tại (không tham chiếu tệp đã xóa).
+    for duong_dan in re.findall(r'(?:Include|Update|Remove)="([^"]+\.(?:cs|resx|xsd|ico|png|jpg))"', noi_dung):
+        that = os.path.join(GOC, duong_dan.replace("\\", os.sep))
+        if not os.path.exists(that):
+            bao_loi(f".csproj tham chiếu tệp không tồn tại: {duong_dan}")
+
+    # RootNamespace phải khớp không gian tên của tài nguyên nhúng Properties/Resources.resx.
+    rn = re.search(r"<RootNamespace>(.*?)</RootNamespace>", noi_dung)
+    designer = os.path.join(GOC, "Properties", "Resources.Designer.cs")
+    if rn and os.path.exists(designer):
+        nguon = doc(designer)
+        m = re.search(r'new global::System.Resources.ResourceManager\("([^"]+)"', nguon)
+        can = rn.group(1).strip() + ".Properties.Resources"
+        if m and m.group(1) != can:
+            bao_loi(f"RootNamespace '{rn.group(1)}' không khớp tài nguyên nhúng '{m.group(1)}' "
+                    f"(cần '{can}').")
+        else:
+            print(f"[csproj] RootNamespace khớp tài nguyên nhúng: {can}")
+
+    # Mỗi biểu mẫu phải đủ bộ .cs + .Designer.cs (+ .resx nếu Designer có dùng resx).
+    for tep_designer in glob.glob(os.path.join(GOC, "*.Designer.cs")):
+        goc_form = tep_designer[: -len(".Designer.cs")]
+        if not os.path.exists(goc_form + ".cs"):
+            bao_loi(f"Thiếu mã lệnh cho biểu mẫu: {os.path.basename(goc_form)}.cs")
+    for tep_resx in glob.glob(os.path.join(GOC, "*.resx")) + glob.glob(os.path.join(GOC, "**", "*.resx"), recursive=True):
+        goc_resx = tep_resx[: -len(".resx")]
+        if not (os.path.exists(goc_resx + ".Designer.cs") or os.path.exists(goc_resx + ".cs")):
+            canh_bao(f"Tệp {os.path.relpath(tep_resx, GOC)} không có mã lệnh đi kèm.")
+    print("[csproj] Mọi tệp biểu mẫu đều đủ bộ .cs/.Designer.cs/.resx.")
+
+    # Ảnh mà Dashboard đọc từ thư mục Images phải có trong kho.
+    form10 = os.path.join(GOC, "Form10.cs")
+    if os.path.exists(form10):
+        for ten in set(re.findall(r'"([\w\-]+\.(?:jpg|jpeg|png|bmp|gif))"', doc(form10))):
+            if not os.path.exists(os.path.join(GOC, "Images", ten)):
+                bao_loi(f"Images/{ten} được Form10.cs dùng nhưng không có trong kho.")
+            else:
+                print(f"[Images] Có ảnh Dashboard dùng: Images/{ten}")
+
 
 def kiem_tra_giao_dien():
     ds = glob.glob(os.path.join(GOC, "Interfaces", "*.cs"))
     ten = [os.path.splitext(os.path.basename(p))[0] for p in ds]
     print(f"[interface] Tìm thấy {len(ten)} tệp: {', '.join(sorted(ten))}")
-    if len(ten) < 5:
-        bao_loi(f"Cần tối thiểu 5 giao diện, hiện có {len(ten)}.")
+    if len(ten) < 6:
+        bao_loi(f"Cần tối thiểu 6 giao diện, hiện có {len(ten)}.")
 
 
 def kiem_tra_ke_thua():
-    cac_interface = {"IHangHoa", "IKhachHang", "INhanVien", "INhaCungCap", "IHoaDon"}
+    cac_interface = {os.path.splitext(os.path.basename(p))[0]
+                     for p in glob.glob(os.path.join(GOC, "Interfaces", "*.cs"))}
     so_lop_ke_thua = []
     so_lop_trien_khai = []
+    lop_truu_tuong = set()
+
+    for tep in glob.glob(os.path.join(GOC, "**", "*.cs"), recursive=True):
+        if tep.endswith(".Designer.cs"):
+            continue
+        lop_truu_tuong.update(re.findall(r"abstract\s+class\s+(\w+)", doc(tep)))
 
     for tep in glob.glob(os.path.join(GOC, "**", "*.cs"), recursive=True):
         if tep.endswith(".Designer.cs"):
@@ -75,17 +129,257 @@ def kiem_tra_ke_thua():
                 so_lop_trien_khai.append(ten_lop)
 
             for g in ds_goc:
-                if g not in cac_interface and g[0].isupper() and g not in ("object",) and "(" not in g:
+                if g in lop_truu_tuong:
                     so_lop_ke_thua.append((ten_lop, g))
 
-    print(f"[kế thừa] {len(so_lop_ke_thua)} lớp kế thừa lớp khác: "
+    print(f"[trừu tượng] {len(lop_truu_tuong)} lớp trừu tượng: {', '.join(sorted(lop_truu_tuong))}")
+    print(f"[kế thừa] {len(so_lop_ke_thua)} lớp kế thừa lớp cơ sở trừu tượng: "
           + ", ".join(f"{a} : {b}" for a, b in so_lop_ke_thua))
     print(f"[triển khai] {len(so_lop_trien_khai)} lớp triển khai giao diện: {', '.join(so_lop_trien_khai)}")
 
-    if len(so_lop_ke_thua) < 3:
-        bao_loi(f"Cần tối thiểu 3 lớp kế thừa, hiện có {len(so_lop_ke_thua)}.")
-    if len(so_lop_trien_khai) < 5:
-        bao_loi(f"Cần tối thiểu 5 lớp triển khai giao diện, hiện có {len(so_lop_trien_khai)}.")
+    if len(lop_truu_tuong) < 3:
+        bao_loi(f"Cần tối thiểu 3 lớp trừu tượng, hiện có {len(lop_truu_tuong)}.")
+    if len(so_lop_ke_thua) < 5:
+        bao_loi(f"Cần tối thiểu 5 lớp kế thừa, hiện có {len(so_lop_ke_thua)}.")
+    if len(so_lop_trien_khai) < 6:
+        bao_loi(f"Cần tối thiểu 6 lớp triển khai giao diện, hiện có {len(so_lop_trien_khai)}.")
+
+
+def _bo_phan_tich():
+    """Trả về bộ phân tích cú pháp C# của tree-sitter (khởi tạo một lần)."""
+    global _PARSER
+    if _PARSER is None:
+        import tree_sitter_c_sharp as tscs
+        from tree_sitter import Language, Parser
+
+        _PARSER = Parser(Language(tscs.language()))
+    return _PARSER
+
+
+def _cay_cu_phap(duong_dan):
+    with open(duong_dan, "rb") as f:
+        return _bo_phan_tich().parse(f.read())
+
+
+def _duyet(node):
+    yield node
+    for con in node.children:
+        yield from _duyet(con)
+
+
+def kiem_tra_cu_phap():
+    ds_tep = danh_sach_tep_cs()
+    so_loi = 0
+
+    for tep in ds_tep:
+        cay = _cay_cu_phap(tep)
+        for nut in _duyet(cay.root_node):
+            if nut.type == "ERROR" or nut.is_missing:
+                dong = nut.start_point[0] + 1
+                trich = nut.text.decode("utf-8", "replace").splitlines()[0][:60]
+                bao_loi(f"{os.path.relpath(tep, GOC)}:{dong} lỗi cú pháp: {trich}")
+                so_loi += 1
+
+    if so_loi:
+        print(f"[cú pháp] tree-sitter C#: {so_loi} lỗi cú pháp trong {len(ds_tep)} tệp .cs.")
+    else:
+        print(f"[cú pháp] tree-sitter C#: 0 lỗi cú pháp trong {len(ds_tep)} tệp .cs.")
+
+
+KIEU_KHAI_BAO = {
+    "class_declaration",
+    "struct_declaration",
+    "interface_declaration",
+    "enum_declaration",
+    "record_declaration",
+    "delegate_declaration",
+}
+
+THANH_VIEN = {
+    "method_declaration": "phương thức",
+    "constructor_declaration": "hàm dựng",
+    "property_declaration": "thuộc tính",
+    "field_declaration": "trường",
+    "event_field_declaration": "sự kiện",
+}
+
+
+def _ten_thanh_vien(nut):
+    """Trả về (khóa định danh thành viên, tên hiển thị) của một khai báo trong thân lớp."""
+    loai = THANH_VIEN.get(nut.type)
+    if loai is None:
+        return None
+
+    if nut.type in ("field_declaration", "event_field_declaration"):
+        khai_bao = next((c for c in nut.children if c.type == "variable_declaration"), None)
+        if khai_bao is None:
+            return None
+        for con in khai_bao.children:
+            if con.type == "variable_declarator":
+                ten = con.child_by_field_name("name")
+                if ten is not None:
+                    return (ten.text.decode() + " [" + loai + "]", ten.text.decode())
+        return None
+
+    ten = nut.child_by_field_name("name")
+    if ten is None:
+        return None
+    ten = ten.text.decode()
+
+    tham_so = nut.child_by_field_name("parameters")
+    if tham_so is not None:
+        so_tham_so = sum(1 for c in tham_so.children if c.type == "parameter")
+        return (f"{ten}({so_tham_so} tham số) [{loai}]", f"{ten}({so_tham_so})")
+    return (f"{ten} [{loai}]", ten)
+
+
+def kiem_tra_trung_ten():
+    """Kiểm tra CS0101 (trùng tên kiểu) và CS0102 (trùng tên thành viên trong cùng lớp)."""
+    kieu = {}
+    thanh_vien_lop = {}
+
+    for tep in danh_sach_tep_cs():
+        tuong_doi = os.path.relpath(tep, GOC)
+        cay = _cay_cu_phap(tep)
+
+        for nut in _duyet(cay.root_node):
+            if nut.type not in KIEU_KHAI_BAO:
+                continue
+
+            nut_ten = nut.child_by_field_name("name")
+            if nut_ten is None:
+                continue
+            ten_kieu = nut_ten.text.decode()
+            dong = nut.start_point[0] + 1
+
+            dau = nut.text.decode("utf-8", "replace").split("{")[0]
+            la_partial = "partial" in dau
+            if not la_partial and nut.type in ("class_declaration", "struct_declaration", "record_declaration"):
+                kieu.setdefault(ten_kieu, []).append(f"{tuong_doi}:{dong}")
+
+            than = nut.child_by_field_name("body")
+            if than is None:
+                continue
+            noi_luu = thanh_vien_lop.setdefault(ten_kieu, {})
+            for con in than.children:
+                khoa = _ten_thanh_vien(con)
+                if khoa is None:
+                    continue
+                noi_luu.setdefault(khoa[0], []).append(f"{tuong_doi}:{con.start_point[0] + 1}")
+
+    so_trung = 0
+    for ten_kieu, vi_tri in sorted(kieu.items()):
+        if len(vi_tri) > 1:
+            bao_loi(f"CS0101 trùng tên kiểu '{ten_kieu}': {', '.join(vi_tri)}")
+            so_trung += 1
+
+    for ten_kieu, ds_thanh_vien in sorted(thanh_vien_lop.items()):
+        for khoa, vi_tri in sorted(ds_thanh_vien.items()):
+            if len(vi_tri) > 1:
+                bao_loi(f"CS0102 lớp '{ten_kieu}' khai báo trùng {khoa}: {', '.join(vi_tri)}")
+                so_trung += 1
+
+    print(f"[trùng tên] {len(kieu)} kiểu dữ liệu, {sum(len(v) for v in thanh_vien_lop.values())} "
+          f"thành viên trong các lớp: {so_trung} chỗ trùng tên (CS0101/CS0102).")
+
+
+def _thanh_vien_va_co_so():
+    """Trả về (thành viên của từng lớp/giao diện, cạnh kế thừa) đọc từ cây cú pháp."""
+    thanh_vien = {}
+    co_so = {}
+
+    for tep in danh_sach_tep_cs():
+        cay = _cay_cu_phap(tep)
+        for nut in _duyet(cay.root_node):
+            if nut.type not in ("class_declaration", "interface_declaration"):
+                continue
+            ten = nut.child_by_field_name("name")
+            if ten is None:
+                continue
+            ten = ten.text.decode()
+
+            ds_co_so = []
+            goc = nut.child_by_field_name("bases")
+            if goc is not None:
+                for con in goc.children:
+                    if con.type in ("identifier", "qualified_name", "generic_name"):
+                        ds_co_so.append(con.text.decode().split(".")[-1].split("<")[0])
+            co_so.setdefault(ten, set()).update(ds_co_so)
+
+            than = nut.child_by_field_name("body")
+            tap = thanh_vien.setdefault(ten, set())
+            if than is None:
+                continue
+            for con in than.children:
+                khoa = _ten_thanh_vien(con)
+                if khoa is not None:
+                    tap.add(khoa[1].split("(")[0])
+
+    return thanh_vien, co_so
+
+
+def kiem_tra_giao_dien_trien_khai():
+    """Lớp khai báo triển khai giao diện phải có đủ thành viên (kể cả thành viên thừa kế từ lớp cơ sở)."""
+    thanh_vien, co_so = _thanh_vien_va_co_so()
+    giao_dien = {t for t, cs in co_so.items() if t.startswith("I") and len(t) > 1 and t[1].isupper()
+                 and t not in {"IImage", "IEnumerable", "IComparable"}}
+    giao_dien = {g for g in giao_dien if g in thanh_vien and g in co_so}
+
+    def tat_ca_thanh_vien(ten, da_xet=None):
+        da_xet = da_xet or set()
+        if ten in da_xet:
+            return set()
+        da_xet.add(ten)
+        tap = set(thanh_vien.get(ten, set()))
+        for c in co_so.get(ten, set()):
+            tap |= tat_ca_thanh_vien(c, da_xet)
+        return tap
+
+    so_loi = 0
+    for ten, ds_co_so in sorted(co_so.items()):
+        if ten in giao_dien:
+            continue
+        ds_giao_dien = [g for g in ds_co_so if g in giao_dien]
+        if not ds_giao_dien:
+            continue
+        co_san = tat_ca_thanh_vien(ten)
+        for g in ds_giao_dien:
+            thieu = thanh_vien[g] - co_san
+            if thieu:
+                bao_loi(f"Lớp {ten} thiếu thành viên của {g}: {', '.join(sorted(thieu))}")
+                so_loi += 1
+    print(f"[giao diện] Đối chiếu {len(giao_dien)} giao diện với lớp triển khai: "
+          f"{so_loi} lớp thiếu thành viên.")
+
+
+def kiem_tra_loi_goi_bus_dal():
+    """Mọi thành viên gọi qua biến BUS/DAL/tiện ích phải được khai báo trong lớp tương ứng."""
+    thanh_vien, _ = _thanh_vien_va_co_so()
+    so_goi = 0
+    so_loi = 0
+
+    for tep in danh_sach_tep_cs():
+        if tep.endswith("Designer.cs"):
+            continue
+        noi_dung = bo_chu_thich(doc(tep))
+        bien = {}
+        for m in re.finditer(r"(?:private|public|internal)\s+(?:static\s+)?(?:readonly\s+)?"
+                             r"([\w\.]+(?:BUS|Bus|DAL|Dal))\s+(\w+)\s*(?:=|;)", noi_dung):
+            bien[m.group(2)] = m.group(1)
+        for m in re.finditer(r"\b(\w+)\s*\.\s*(\w+)\s*\(", noi_dung):
+            doi_tuong, ham = m.group(1), m.group(2)
+            lop = bien.get(doi_tuong)
+            if lop is None:
+                continue
+            so_goi += 1
+            if lop not in thanh_vien:
+                bao_loi(f"{os.path.basename(tep)}: không tìm thấy lớp {lop}")
+                so_loi += 1
+            elif ham not in thanh_vien[lop]:
+                bao_loi(f"{os.path.basename(tep)}: gọi {lop}.{ham}() nhưng {lop} không khai báo thành viên này")
+                so_loi += 1
+
+    print(f"[lời gọi] Đối chiếu {so_goi} lời gọi BUS/DAL với khai báo lớp: {so_loi} lời gọi không khớp.")
 
 
 def kiem_tra_tien_ich():
@@ -96,9 +390,15 @@ def kiem_tra_tien_ich():
 
     noi_dung = doc(tep)
     ds_phuong_thuc = re.findall(r"public\s+static\s+[\w\<\>\?\[\]]+\s+(\w+)\s*\(", noi_dung)
-    print(f"[tiện ích] {len(ds_phuong_thuc)} class method: {', '.join(ds_phuong_thuc)}")
-    if len(ds_phuong_thuc) < 5:
-        bao_loi(f"Cần tối thiểu 5 class method, hiện có {len(ds_phuong_thuc)}.")
+    ds_thuoc_tinh = re.findall(r"public\s+static\s+[\w\<\>\?\[\]]+\s+(\w+)\s*=>", noi_dung)
+    ds_truong = re.findall(r"public\s+static\s+(?:readonly\s+)?[\w\<\>\?\[\]]+\s+(\w+)\s*=(?!>)", noi_dung)
+    tong = len(ds_phuong_thuc) + len(ds_thuoc_tinh) + len(ds_truong)
+    print(f"[tiện ích] {len(ds_phuong_thuc)} phương thức static: {', '.join(ds_phuong_thuc)}")
+    print(f"[tiện ích] {len(ds_thuoc_tinh)} thuộc tính ({', '.join(ds_thuoc_tinh) if ds_thuoc_tinh else '—'}), "
+          f"{len(ds_truong)} trường static ({', '.join(ds_truong) if ds_truong else '—'}) "
+          f"→ tổng {tong} class method/thành viên dùng chung.")
+    if tong < 16:
+        bao_loi(f"Cần tối thiểu 16 class method/thành viên tiện ích, hiện có {tong}.")
 
 
 def bo_chu_thich(noi_dung):
@@ -319,8 +619,12 @@ def main():
     print("=" * 70)
 
     kiem_tra_csproj()
+    kiem_tra_cu_phap()
+    kiem_tra_trung_ten()
+    kiem_tra_loi_goi_bus_dal()
     kiem_tra_giao_dien()
     kiem_tra_ke_thua()
+    kiem_tra_giao_dien_trien_khai()
     kiem_tra_tien_ich()
     kiem_tra_inline_sql()
     ds_sql = danh_sach_thu_tuc_sql()
