@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
@@ -83,6 +84,16 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 txtMatKhau.Focus();
                 txtMatKhau.SelectAll();
             }
+        }
+
+        // Tự động căn giữa khung đăng nhập
+        // (chuyển ra khỏi InitializeComponent để màn [Design] mở được)
+        private void panelContent_Resize(object? sender, EventArgs e)
+        {
+            groupBox1.Location = new Point(
+                (panelContent.ClientSize.Width - groupBox1.Width) / 2,
+                (panelContent.ClientSize.Height - groupBox1.Height) / 2
+            );
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
@@ -15,6 +16,27 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         public Form5()
         {
             InitializeComponent();
+
+            // Bố cục co giãn + sự kiện lưới của 4 tab (trước đây nằm trong InitializeComponent)
+            SetupTabLayout(tpHangSX, lblHeadingHangSX, pnlThongTinHangSX, lblMaTitleHangSX,
+                txtMaHang, lblTenTitleHangSX, txtTenHang, lblChucNangHangSX, pnlButtonsHangSX,
+                new[] { btnThem, btnSua, btnXoa, btnLamLai, btnThoat }, lblDanhSachHangSX, dgvHangSX,
+                "Mã hãng sản xuất", "Tên hãng sản xuất");
+
+            SetupTabLayout(tpLoai, lblHeadingLoai, pnlThongTinLoai, lblMaTitleLoai,
+                textBox3, lblTenTitleLoai, textBox1, lblChucNangLoai, pnlButtonsLoai,
+                new[] { button5, button4, button3, button2, button1 }, lblDanhSachLoai, dataGridView1,
+                "Mã loại hàng", "Tên loại hàng");
+
+            SetupTabLayout(tpMauSac, lblHeadingMauSac, pnlThongTinMauSac, lblMaTitleMauSac,
+                textBox6, lblTenTitleMauSac, textBox4, lblChucNangMauSac, pnlButtonsMauSac,
+                new[] { button10, button9, button8, button7, button6 }, lblDanhSachMauSac, dataGridView2,
+                "Mã màu", "Tên màu");
+
+            SetupTabLayout(tpDungLuong, lblHeadingDungLuong, pnlThongTinDungLuong, lblMaTitleDungLuong,
+                textBox9, lblTenTitleDungLuong, textBox7, lblChucNangDungLuong, pnlButtonsDungLuong,
+                new[] { button15, button14, button13, button12, button11 }, lblDanhSachDungLuong, dataGridView3,
+                "Mã dung lượng", "Tên dung lượng");
 
             Load += Form5_Load;
 
@@ -56,6 +78,108 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             button11.Click += (s, e) => Close();
             dataGridView3.CellClick += (s, e) =>
                 ChonDong(e, dataGridView3, textBox9, textBox7, "MaDungLuong", "TenDungLuong");
+        }
+
+        // ------------------------------------------------------------------
+        // BỐ CỤC CO GIÃN CỦA MỘT TAB DANH MỤC
+        // ------------------------------------------------------------------
+        /// <summary>
+        /// Giữ đúng bố cục và sự kiện của từng tab như trước đây: tiêu đề, khung nhập,
+        /// nhóm nút CRUD và lưới dữ liệu tự co giãn theo kích thước tab.
+        /// </summary>
+        private static void SetupTabLayout(
+            TabPage page, Label lblHeading, Panel pnlThongTin,
+            Label lblMaTitle, TextBox txtMa, Label lblTenTitle, TextBox txtTen,
+            Label lblChucNang, Panel pnlButtons, Button[] buttons,
+            Label lblDanhSach, DataGridView dgv,
+            string tieuDeMa, string tieuDeTen)
+        {
+            dgv.DataBindingComplete += (sender, e) =>
+            {
+                if (dgv.Columns.Count >= 2)
+                {
+                    dgv.Columns[0].HeaderText = tieuDeMa;
+                    dgv.Columns[1].HeaderText = tieuDeTen;
+
+                    dgv.Columns[0].FillWeight = 40;
+                    dgv.Columns[1].FillWeight = 60;
+                }
+
+                dgv.EnableHeadersVisualStyles = false;
+                dgv.ColumnHeadersVisible = true;
+                dgv.Refresh();
+            };
+
+            page.Resize += (sender, e) => LayoutTab(
+                page, lblHeading, pnlThongTin, lblMaTitle, txtMa, lblTenTitle, txtTen,
+                lblChucNang, pnlButtons, buttons, lblDanhSach, dgv);
+
+            LayoutTab(page, lblHeading, pnlThongTin, lblMaTitle, txtMa, lblTenTitle, txtTen,
+                lblChucNang, pnlButtons, buttons, lblDanhSach, dgv);
+        }
+
+        private static void LayoutTab(
+            TabPage page, Label lblHeading, Panel pnlThongTin,
+            Label lblMaTitle, TextBox txtMa, Label lblTenTitle, TextBox txtTen,
+            Label lblChucNang, Panel pnlButtons, Button[] buttons,
+            Label lblDanhSach, DataGridView dgv)
+        {
+            int pageWidth = page.ClientSize.Width;
+            int pageHeight = page.ClientSize.Height;
+
+            int margin = 18;
+            int contentWidth = Math.Max(300, pageWidth - margin * 2);
+
+            lblHeading.Location = new Point(margin, 12);
+
+            // Khung nhập liệu
+            int infoTop = 62;
+            int infoHeight = 140;
+
+            pnlThongTin.SetBounds(margin, infoTop, contentWidth, infoHeight);
+
+            int left = 22;
+            int gap = 30;
+            int availableWidth = Math.Max(300, contentWidth - 44);
+            int fieldWidth = Math.Max(180, (availableWidth - gap) / 2);
+
+            lblMaTitle.Location = new Point(left, 18);
+            txtMa.SetBounds(left, 52, fieldWidth, 34);
+
+            int secondX = left + fieldWidth + gap;
+
+            lblTenTitle.Location = new Point(secondX, 18);
+            txtTen.SetBounds(secondX, 52, Math.Max(180, availableWidth - fieldWidth - gap), 34);
+
+            // Tiêu đề chức năng
+            lblChucNang.Location = new Point(margin + 2, 205);
+
+            // Khung chứa các nút CRUD
+            int buttonTop = 260;
+            int buttonHeight = 78;
+
+            pnlButtons.SetBounds(margin, buttonTop, contentWidth, buttonHeight);
+
+            int[] buttonWidths = { 180, 180, 180, 195, 180 };
+            int buttonGap = 17;
+            int buttonX = 23;
+            int buttonY = 15;
+
+            for (int i = 0; i < buttons.Length && i < buttonWidths.Length; i++)
+            {
+                buttons[i].SetBounds(buttonX, buttonY, buttonWidths[i], 52);
+                buttonX += buttonWidths[i] + buttonGap;
+            }
+
+            // Tiêu đề danh sách
+            int listTop = 335;
+            lblDanhSach.Location = new Point(margin + 2, listTop);
+
+            // Bảng dữ liệu
+            int gridTop = 390;
+            int gridHeight = Math.Max(150, pageHeight - gridTop - 16);
+
+            dgv.SetBounds(margin, gridTop, contentWidth, gridHeight);
         }
 
         // ------------------------------------------------------------------

@@ -1,4 +1,3 @@
-﻿
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -9,44 +8,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
     {
         private System.ComponentModel.IContainer components = null;
 
-        private readonly Color mauNen = Color.FromArgb(244, 247, 252);
-        private readonly Color mauChu = Color.FromArgb(35, 48, 68);
-        private readonly Color mauXanh = Color.FromArgb(41, 98, 170);
-        private readonly Color mauXanhDam = Color.FromArgb(30, 75, 135);
-        private readonly Color mauDo = Color.FromArgb(220, 75, 75);
-        private readonly Color mauXam = Color.FromArgb(105, 119, 139);
-        private readonly Color mauVien = Color.FromArgb(220, 227, 237);
-
-        private GroupBox groupBox1;
-        private ComboBox cboLoai;
-        private ComboBox cboHang;
-        private ComboBox cboMau;
-        private Button button4;
-        private Button button3;
-        private Button button2;
-        private Button button1;
-        private TextBox txtGiaDen;
-        private TextBox txtGiaTu;
-        private TextBox txtTenHang;
-        private Label label2;
-        private Label label5;
-        private Label label4;
-        private Label label7;
-        private Label label3;
-        private Label label1;
-
-        private GroupBox groupBox2;
-        private DataGridView dgvKetQua;
-        private DataGridViewTextBoxColumn ColMaHang;
-        private DataGridViewTextBoxColumn colTenHang;
-        private DataGridViewTextBoxColumn colHang;
-        private DataGridViewTextBoxColumn colLoai;
-        private DataGridViewTextBoxColumn colMau;
-        private DataGridViewTextBoxColumn colDungLuong;
-        private DataGridViewTextBoxColumn colGiaBan;
-        private DataGridViewTextBoxColumn colSL;
-        private Label label6;
-
         protected override void Dispose(bool disposing)
         {
             if (disposing && components != null)
@@ -55,26 +16,26 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             base.Dispose(disposing);
         }
 
+        // ==========================================
+        // MÃ DO DESIGNER SINH - CHỈ SỬA QUA MÀN [Design]
+        // ==========================================
+
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
 
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
-
             cboLoai = new ComboBox();
             cboHang = new ComboBox();
             cboMau = new ComboBox();
-
             button1 = new Button();
             button2 = new Button();
             button3 = new Button();
             button4 = new Button();
-
             txtGiaDen = new TextBox();
             txtGiaTu = new TextBox();
             txtTenHang = new TextBox();
-
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -82,9 +43,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             label5 = new Label();
             label7 = new Label();
             label6 = new Label();
-
             dgvKetQua = new DataGridView();
-
             ColMaHang = new DataGridViewTextBoxColumn();
             colTenHang = new DataGridViewTextBoxColumn();
             colHang = new DataGridViewTextBoxColumn();
@@ -94,14 +53,15 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             colGiaBan = new DataGridViewTextBoxColumn();
             colSL = new DataGridViewTextBoxColumn();
 
-            ((System.ComponentModel.ISupportInitialize)dgvKetQua).BeginInit();
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
-            SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(dgvKetQua)).BeginInit();
 
-            // FORM
+            groupBox1.SuspendLayout();
+
+            groupBox2.SuspendLayout();
+
+            SuspendLayout();
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = mauNen;
+            BackColor = Color.FromArgb(244, 247, 252);
             Font = new Font("Segoe UI", 10F);
             ClientSize = new Size(1400, 850);
             MinimumSize = new Size(1000, 700);
@@ -110,121 +70,172 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             Text = "TÌM KIẾM ĐIỆN THOẠI";
             WindowState = FormWindowState.Maximized;
 
-            // GROUPBOX 1 - TIÊU CHÍ TÌM KIẾM
             groupBox1.Text = "TIÊU CHÍ TÌM KIẾM";
             groupBox1.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            groupBox1.ForeColor = mauChu;
+            groupBox1.ForeColor = Color.FromArgb(35, 48, 68);
             groupBox1.BackColor = Color.White;
             groupBox1.Padding = new Padding(15);
             groupBox1.Location = new Point(18, 15);
-            groupBox1.Size = new Size(1300, 270);
-            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            groupBox1.Size = new Size(1364, 270);
+            groupBox1.Anchor = ((AnchorStyles.Top | AnchorStyles.Left) | AnchorStyles.Right);
 
-            // LABEL
-            SetupLabel(label1, "Tên hàng");
-            SetupLabel(label3, "Hãng sản xuất");
-            SetupLabel(label5, "Loại hàng");
-            SetupLabel(label2, "Màu sắc");
-            SetupLabel(label7, "Giá từ");
-            SetupLabel(label4, "Giá đến");
+            label1.Text = "Tên hàng";
+            label1.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label1.ForeColor = Color.FromArgb(35, 48, 68);
+            label1.AutoSize = true;
 
-            // TEXTBOX
-            SetupTextBox(txtTenHang);
-            SetupTextBox(txtGiaTu);
-            SetupTextBox(txtGiaDen);
+            label3.Text = "Hãng sản xuất";
+            label3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label3.ForeColor = Color.FromArgb(35, 48, 68);
+            label3.AutoSize = true;
 
-            // COMBOBOX
-            SetupComboBox(cboHang);
-            SetupComboBox(cboLoai);
-            SetupComboBox(cboMau);
+            label5.Text = "Loại hàng";
+            label5.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label5.ForeColor = Color.FromArgb(35, 48, 68);
+            label5.AutoSize = true;
 
-            // BUTTON
-            button1.Text = "⌕  Tìm kiếm";
-            button2.Text = "↻  Làm mới";
-            button3.Text = "✕  Xóa lọc";
-            button4.Text = "←  Thoát";
+            label2.Text = "Màu sắc";
+            label2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label2.ForeColor = Color.FromArgb(35, 48, 68);
+            label2.AutoSize = true;
 
-            StyleButton(button1, mauXanh, Color.White);
-            StyleButton(button2, Color.FromArgb(36, 155, 110), Color.White);
-            StyleButton(button3, mauXam, Color.White);
-            StyleButton(button4, Color.FromArgb(70, 82, 100), Color.White);
+            label7.Text = "Giá từ";
+            label7.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label7.ForeColor = Color.FromArgb(35, 48, 68);
+            label7.AutoSize = true;
 
-            // ADD CONTROLS GROUPBOX 1
-            groupBox1.Controls.AddRange(new Control[]
-            {
-                label1, txtTenHang,
-                label3, cboHang,
-                label5, cboLoai,
-                label2, cboMau,
-                label7, txtGiaTu,
-                label4, txtGiaDen,
-                button1, button2, button3, button4
-            });
+            label4.Text = "Giá đến";
+            label4.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            label4.ForeColor = Color.FromArgb(35, 48, 68);
+            label4.AutoSize = true;
 
-            // GROUPBOX 2 - KẾT QUẢ
+            txtTenHang.Font = new Font("Segoe UI", 10F);
+            txtTenHang.ForeColor = Color.FromArgb(35, 48, 68);
+            txtTenHang.BackColor = Color.FromArgb(250, 252, 255);
+            txtTenHang.BorderStyle = BorderStyle.FixedSingle;
+
+            txtGiaTu.Font = new Font("Segoe UI", 10F);
+            txtGiaTu.ForeColor = Color.FromArgb(35, 48, 68);
+            txtGiaTu.BackColor = Color.FromArgb(250, 252, 255);
+            txtGiaTu.BorderStyle = BorderStyle.FixedSingle;
+
+            txtGiaDen.Font = new Font("Segoe UI", 10F);
+            txtGiaDen.ForeColor = Color.FromArgb(35, 48, 68);
+            txtGiaDen.BackColor = Color.FromArgb(250, 252, 255);
+            txtGiaDen.BorderStyle = BorderStyle.FixedSingle;
+
+            cboHang.Font = new Font("Segoe UI", 10F);
+            cboHang.ForeColor = Color.FromArgb(35, 48, 68);
+            cboHang.BackColor = Color.White;
+            cboHang.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            cboLoai.Font = new Font("Segoe UI", 10F);
+            cboLoai.ForeColor = Color.FromArgb(35, 48, 68);
+            cboLoai.BackColor = Color.White;
+            cboLoai.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            cboMau.Font = new Font("Segoe UI", 10F);
+            cboMau.ForeColor = Color.FromArgb(35, 48, 68);
+            cboMau.BackColor = Color.White;
+            cboMau.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            button1.Text = "⌕ Tìm kiếm";
+
+            button2.Text = "↻ Làm mới";
+
+            button3.Text = "✕ Xóa lọc";
+
+            button4.Text = "← Thoát";
+
+            button1.BackColor = Color.FromArgb(41, 98, 170);
+            button1.ForeColor = Color.White;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.FlatAppearance.BorderSize = 0;
+            button1.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            button1.Cursor = Cursors.Hand;
+            button1.UseVisualStyleBackColor = false;
+
+            button2.BackColor = Color.FromArgb(36, 155, 110);
+            button2.ForeColor = Color.White;
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.FlatAppearance.BorderSize = 0;
+            button2.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            button2.Cursor = Cursors.Hand;
+            button2.UseVisualStyleBackColor = false;
+
+            button3.BackColor = Color.FromArgb(105, 119, 139);
+            button3.ForeColor = Color.White;
+            button3.FlatStyle = FlatStyle.Flat;
+            button3.FlatAppearance.BorderSize = 0;
+            button3.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            button3.Cursor = Cursors.Hand;
+            button3.UseVisualStyleBackColor = false;
+
+            button4.BackColor = Color.FromArgb(70, 82, 100);
+            button4.ForeColor = Color.White;
+            button4.FlatStyle = FlatStyle.Flat;
+            button4.FlatAppearance.BorderSize = 0;
+            button4.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            button4.Cursor = Cursors.Hand;
+            button4.UseVisualStyleBackColor = false;
+
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(txtTenHang);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(cboHang);
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(cboLoai);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(cboMau);
+            groupBox1.Controls.Add(label7);
+            groupBox1.Controls.Add(txtGiaTu);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(txtGiaDen);
+            groupBox1.Controls.Add(button1);
+            groupBox1.Controls.Add(button2);
+            groupBox1.Controls.Add(button3);
+            groupBox1.Controls.Add(button4);
+
             groupBox2.Text = "KẾT QUẢ TÌM KIẾM";
             groupBox2.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            groupBox2.ForeColor = mauChu;
+            groupBox2.ForeColor = Color.FromArgb(35, 48, 68);
             groupBox2.BackColor = Color.White;
             groupBox2.Padding = new Padding(12);
             groupBox2.Location = new Point(18, 300);
-            groupBox2.Size = new Size(1300, 500);
-            groupBox2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom |
-                               AnchorStyles.Left | AnchorStyles.Right;
+            groupBox2.Size = new Size(1364, 532);
+            groupBox2.Anchor = (((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right);
 
-            // LABEL SỐ LƯỢNG
             label6.Text = "Tìm thấy:";
             label6.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            label6.ForeColor = mauXanh;
+            label6.ForeColor = Color.FromArgb(41, 98, 170);
             label6.AutoSize = true;
             label6.Location = new Point(18, 35);
 
-            // DATAGRIDVIEW
             dgvKetQua.BackgroundColor = Color.White;
             dgvKetQua.BorderStyle = BorderStyle.None;
-            dgvKetQua.GridColor = mauVien;
-
+            dgvKetQua.GridColor = Color.FromArgb(220, 227, 237);
             dgvKetQua.EnableHeadersVisualStyles = false;
-
-            dgvKetQua.ColumnHeadersDefaultCellStyle.BackColor = mauXanhDam;
+            dgvKetQua.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(30, 75, 135);
             dgvKetQua.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            dgvKetQua.ColumnHeadersDefaultCellStyle.Font =
-                new Font("Segoe UI", 10F, FontStyle.Bold);
-
-            dgvKetQua.ColumnHeadersDefaultCellStyle.Alignment =
-                DataGridViewContentAlignment.MiddleCenter;
-
+            dgvKetQua.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            dgvKetQua.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvKetQua.ColumnHeadersHeight = 45;
-            dgvKetQua.ColumnHeadersHeightSizeMode =
-                DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-
+            dgvKetQua.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvKetQua.DefaultCellStyle.Font = new Font("Segoe UI", 10F);
-            dgvKetQua.DefaultCellStyle.ForeColor = mauChu;
+            dgvKetQua.DefaultCellStyle.ForeColor = Color.FromArgb(35, 48, 68);
             dgvKetQua.DefaultCellStyle.BackColor = Color.White;
-
-            dgvKetQua.DefaultCellStyle.SelectionBackColor =
-                Color.FromArgb(218, 232, 250);
-
-            dgvKetQua.DefaultCellStyle.SelectionForeColor = mauChu;
-
-            dgvKetQua.AlternatingRowsDefaultCellStyle.BackColor =
-                Color.FromArgb(244, 248, 253);
-
+            dgvKetQua.DefaultCellStyle.SelectionBackColor = Color.FromArgb(218, 232, 250);
+            dgvKetQua.DefaultCellStyle.SelectionForeColor = Color.FromArgb(35, 48, 68);
+            dgvKetQua.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(244, 248, 253);
             dgvKetQua.RowTemplate.Height = 38;
-
-            dgvKetQua.AutoSizeColumnsMode =
-                DataGridViewAutoSizeColumnsMode.Fill;
-
-            dgvKetQua.SelectionMode =
-                DataGridViewSelectionMode.FullRowSelect;
-
+            dgvKetQua.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvKetQua.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvKetQua.MultiSelect = false;
             dgvKetQua.ReadOnly = true;
             dgvKetQua.AllowUserToAddRows = false;
             dgvKetQua.AllowUserToDeleteRows = false;
             dgvKetQua.RowHeadersVisible = false;
 
-            // CÁC CỘT DỮ LIỆU
             ColMaHang.HeaderText = "Mã hàng";
             ColMaHang.Name = "ColMaHang";
             ColMaHang.MinimumWidth = 90;
@@ -265,169 +276,91 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             colSL.MinimumWidth = 80;
             colSL.FillWeight = 80;
 
-            dgvKetQua.Columns.AddRange(new DataGridViewColumn[]
-            {
-                ColMaHang,
-                colTenHang,
-                colHang,
-                colLoai,
-                colMau,
-                colDungLuong,
-                colGiaBan,
-                colSL
-            });
-
+            dgvKetQua.Columns.AddRange(new DataGridViewColumn[] { ColMaHang, colTenHang, colHang, colLoai, colMau, colDungLuong, colGiaBan, colSL });
             dgvKetQua.AutoGenerateColumns = false;
 
             groupBox2.Controls.Add(label6);
             groupBox2.Controls.Add(dgvKetQua);
 
-            // ADD TO FORM
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
 
-            // BỐ TRÍ RESPONSIVE
-            Resize += (sender, e) => LayoutForm6();
+            ((System.ComponentModel.ISupportInitialize)(dgvKetQua)).EndInit();
 
-            groupBox1.Resize += (sender, e) => LayoutForm6();
-            groupBox2.Resize += (sender, e) => LayoutForm6();
-
-            LayoutForm6();
-
-            ((System.ComponentModel.ISupportInitialize)dgvKetQua).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+
+
+            // ------------------------------------------
+            // VỊ TRÍ Ở MÀN [Design] - lúc chạy, hàm LayoutForm6()
+            // trong Form6.cs sẽ tính lại theo kích thước thật
+            // ------------------------------------------
+
+            label1.Location = new Point(20, 35);
+            txtTenHang.Location = new Point(20, 61);
+            txtTenHang.Size = new Size(422, 34);
+            label3.Location = new Point(467, 35);
+            cboHang.Location = new Point(467, 61);
+            cboHang.Size = new Size(422, 34);
+            label5.Location = new Point(914, 35);
+            cboLoai.Location = new Point(914, 61);
+            cboLoai.Size = new Size(422, 34);
+            label2.Location = new Point(20, 112);
+            cboMau.Location = new Point(20, 138);
+            cboMau.Size = new Size(422, 34);
+            label7.Location = new Point(467, 112);
+            txtGiaTu.Location = new Point(467, 138);
+            txtGiaTu.Size = new Size(422, 34);
+            label4.Location = new Point(914, 112);
+            txtGiaDen.Location = new Point(914, 138);
+            txtGiaDen.Size = new Size(422, 34);
+            button1.Location = new Point(20, 198);
+            button1.Size = new Size(155, 48);
+            button2.Location = new Point(190, 198);
+            button2.Size = new Size(155, 48);
+            button3.Location = new Point(360, 198);
+            button3.Size = new Size(155, 48);
+            button4.Location = new Point(530, 198);
+            button4.Size = new Size(155, 48);
+            label6.Location = new Point(18, 34);
+            dgvKetQua.Location = new Point(15, 65);
+            dgvKetQua.Size = new Size(1328, 428);
+
             ResumeLayout(false);
         }
 
-        private void LayoutForm6()
-        {
-            if (groupBox1 == null || groupBox2 == null || dgvKetQua == null)
-                return;
+        // KHAI BÁO CONTROL
 
-            int margin = 18;
-            int formWidth = ClientSize.Width;
-            int formHeight = ClientSize.Height;
-
-            int groupWidth = Math.Max(500, formWidth - margin * 2);
-
-            // KHUNG TIÊU CHÍ
-            groupBox1.SetBounds(margin, 15, groupWidth, 270);
-
-            int innerWidth = groupBox1.ClientSize.Width - 40;
-            int gap = 25;
-            int colWidth = Math.Max(130, (innerWidth - gap * 2) / 3);
-
-            int x1 = 20;
-            int x2 = x1 + colWidth + gap;
-            int x3 = x2 + colWidth + gap;
-
-            int labelY1 = 35;
-            int inputY1 = 61;
-            int labelY2 = 112;
-            int inputY2 = 138;
-
-            // HÀNG 1
-            label1.Location = new Point(x1, labelY1);
-            txtTenHang.SetBounds(x1, inputY1, colWidth, 34);
-
-            label3.Location = new Point(x2, labelY1);
-            cboHang.SetBounds(x2, inputY1, colWidth, 34);
-
-            label5.Location = new Point(x3, labelY1);
-            cboLoai.SetBounds(x3, inputY1, colWidth, 34);
-
-            // HÀNG 2
-            label2.Location = new Point(x1, labelY2);
-            cboMau.SetBounds(x1, inputY2, colWidth, 34);
-
-            label7.Location = new Point(x2, labelY2);
-            txtGiaTu.SetBounds(x2, inputY2, colWidth, 34);
-
-            label4.Location = new Point(x3, labelY2);
-            txtGiaDen.SetBounds(x3, inputY2, colWidth, 34);
-
-            // NHÓM NÚT
-            int buttonY = 198;
-            int buttonWidth = 155;
-            int buttonHeight = 48;
-            int buttonGap = 15;
-            int buttonX = 20;
-
-            button1.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
-            buttonX += buttonWidth + buttonGap;
-
-            button2.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
-            buttonX += buttonWidth + buttonGap;
-
-            button3.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
-            buttonX += buttonWidth + buttonGap;
-
-            button4.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
-
-            // KHUNG KẾT QUẢ
-            int resultTop = 300;
-            int resultHeight = Math.Max(200, formHeight - resultTop - margin);
-
-            groupBox2.SetBounds(
-                margin,
-                resultTop,
-                groupWidth,
-                resultHeight
-            );
-
-            // DÒNG THỐNG KÊ
-            label6.Location = new Point(18, 34);
-
-            // BẢNG DỮ LIỆU
-            int gridTop = 65;
-            int gridLeft = 15;
-            int gridWidth = Math.Max(300, groupBox2.ClientSize.Width - 30);
-            int gridHeight = Math.Max(100, groupBox2.ClientSize.Height - gridTop - 15);
-
-            dgvKetQua.SetBounds(
-                gridLeft,
-                gridTop,
-                gridWidth,
-                gridHeight
-            );
-        }
-
-        private void SetupLabel(Label lbl, string text)
-        {
-            lbl.Text = text;
-            lbl.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lbl.ForeColor = mauChu;
-            lbl.AutoSize = true;
-        }
-
-        private void SetupTextBox(TextBox txt)
-        {
-            txt.Font = new Font("Segoe UI", 10F);
-            txt.ForeColor = mauChu;
-            txt.BackColor = Color.FromArgb(250, 252, 255);
-            txt.BorderStyle = BorderStyle.FixedSingle;
-        }
-
-        private void SetupComboBox(ComboBox cbo)
-        {
-            cbo.Font = new Font("Segoe UI", 10F);
-            cbo.ForeColor = mauChu;
-            cbo.BackColor = Color.White;
-            cbo.DropDownStyle = ComboBoxStyle.DropDownList;
-        }
-
-        private void StyleButton(Button btn, Color backColor, Color foreColor)
-        {
-            btn.BackColor = backColor;
-            btn.ForeColor = foreColor;
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btn.Cursor = Cursors.Hand;
-            btn.UseVisualStyleBackColor = false;
-        }
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private ComboBox cboLoai;
+        private ComboBox cboHang;
+        private ComboBox cboMau;
+        private Button button1;
+        private Button button2;
+        private Button button3;
+        private Button button4;
+        private TextBox txtGiaDen;
+        private TextBox txtGiaTu;
+        private TextBox txtTenHang;
+        private Label label1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label label7;
+        private Label label6;
+        private DataGridView dgvKetQua;
+        private DataGridViewTextBoxColumn ColMaHang;
+        private DataGridViewTextBoxColumn colTenHang;
+        private DataGridViewTextBoxColumn colHang;
+        private DataGridViewTextBoxColumn colLoai;
+        private DataGridViewTextBoxColumn colMau;
+        private DataGridViewTextBoxColumn colDungLuong;
+        private DataGridViewTextBoxColumn colGiaBan;
+        private DataGridViewTextBoxColumn colSL;
     }
 }

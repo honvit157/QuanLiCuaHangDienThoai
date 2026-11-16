@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Drawing;
 using System.Windows.Forms;
 using ClosedXML.Excel;
 
@@ -18,6 +19,13 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         public Form6()
         {
             InitializeComponent();
+
+            // Bố cục co giãn (trước đây gọi trong InitializeComponent)
+            Resize += (s, e) => LayoutForm6();
+            groupBox1.Resize += (s, e) => LayoutForm6();
+            groupBox2.Resize += (s, e) => LayoutForm6();
+
+            LayoutForm6();
 
             button1.Text = "Tìm kiếm";
             button2.Text = "Làm lại";
@@ -198,6 +206,93 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             {
                 AppHelpers.HienCanhBao("Lỗi xuất Excel: " + ex.Message);
             }
+        }
+
+        // ------------------------------------------------------------------
+        // BỐ CỤC CO GIÃN THEO KÍCH THƯỚC CỬA SỔ
+        // (chuyển ra khỏi InitializeComponent để màn [Design] mở được)
+        // ------------------------------------------------------------------
+        private void LayoutForm6()
+        {
+            if (groupBox1 == null || groupBox2 == null || dgvKetQua == null)
+                return;
+
+            int margin = 18;
+            int formWidth = ClientSize.Width;
+            int formHeight = ClientSize.Height;
+
+            int groupWidth = Math.Max(500, formWidth - margin * 2);
+
+            // KHUNG TIÊU CHÍ
+            groupBox1.SetBounds(margin, 15, groupWidth, 270);
+
+            int innerWidth = groupBox1.ClientSize.Width - 40;
+            int gap = 25;
+            int colWidth = Math.Max(130, (innerWidth - gap * 2) / 3);
+
+            int x1 = 20;
+            int x2 = x1 + colWidth + gap;
+            int x3 = x2 + colWidth + gap;
+
+            int labelY1 = 35;
+            int inputY1 = 61;
+            int labelY2 = 112;
+            int inputY2 = 138;
+
+            // HÀNG 1
+            label1.Location = new Point(x1, labelY1);
+            txtTenHang.SetBounds(x1, inputY1, colWidth, 34);
+
+            label3.Location = new Point(x2, labelY1);
+            cboHang.SetBounds(x2, inputY1, colWidth, 34);
+
+            label5.Location = new Point(x3, labelY1);
+            cboLoai.SetBounds(x3, inputY1, colWidth, 34);
+
+            // HÀNG 2
+            label2.Location = new Point(x1, labelY2);
+            cboMau.SetBounds(x1, inputY2, colWidth, 34);
+
+            label7.Location = new Point(x2, labelY2);
+            txtGiaTu.SetBounds(x2, inputY2, colWidth, 34);
+
+            label4.Location = new Point(x3, labelY2);
+            txtGiaDen.SetBounds(x3, inputY2, colWidth, 34);
+
+            // NHÓM NÚT
+            int buttonY = 198;
+            int buttonWidth = 155;
+            int buttonHeight = 48;
+            int buttonGap = 15;
+            int buttonX = 20;
+
+            button1.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+            buttonX += buttonWidth + buttonGap;
+
+            button2.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+            buttonX += buttonWidth + buttonGap;
+
+            button3.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+            buttonX += buttonWidth + buttonGap;
+
+            button4.SetBounds(buttonX, buttonY, buttonWidth, buttonHeight);
+
+            // KHUNG KẾT QUẢ
+            int resultTop = 300;
+            int resultHeight = Math.Max(200, formHeight - resultTop - margin);
+
+            groupBox2.SetBounds(margin, resultTop, groupWidth, resultHeight);
+
+            // DÒNG THỐNG KÊ
+            label6.Location = new Point(18, 34);
+
+            // BẢNG DỮ LIỆU
+            int gridTop = 65;
+            int gridLeft = 15;
+            int gridWidth = Math.Max(300, groupBox2.ClientSize.Width - 30);
+            int gridHeight = Math.Max(100, groupBox2.ClientSize.Height - gridTop - 15);
+
+            dgvKetQua.SetBounds(gridLeft, gridTop, gridWidth, gridHeight);
         }
     }
 }
