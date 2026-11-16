@@ -1,213 +1,111 @@
-﻿
 using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
+    /// <summary>
+    /// Tầng truy cập dữ liệu cho bảng khách hàng (tblKhachHang),
+    /// bao gồm đăng ký và đăng nhập tài khoản khách hàng.
+    /// </summary>
     public class KhachHangDAL
     {
-        // Lấy danh sách khách hàng
+        /// <summary>Lấy danh sách khách hàng.</summary>
         public DataTable LayTatCa()
         {
-            string sql = @"
-                SELECT MaKH, TenKH, SDT, DiaChi, Email, TaiKhoan
-                FROM tblKhachHang
-                ORDER BY MaKH";
-
-            return KetNoiCSDL.DocBang(sql);
+            return DatabaseAccess.DocBangProc("sp_LayDanhSachKhachHang");
         }
 
-        // Thêm khách hàng bằng chức năng quản lý
+        /// <summary>Thêm khách hàng bằng chức năng quản lý.</summary>
         public int Them(KhachHang kh)
         {
-            string sql = @"
-                INSERT INTO tblKhachHang
-                (MaKH, TenKH, SDT, DiaChi, Email)
-                VALUES
-                (@MaKH, @TenKH, @SDT, @DiaChi, @Email)";
-
             SqlParameter[] pars =
             {
-                new SqlParameter("@MaKH", kh.MaKH),
-                new SqlParameter("@TenKH", kh.HoTen),
-                new SqlParameter("@SDT", kh.SDT),
-                new SqlParameter("@DiaChi", kh.DiaChi),
-                new SqlParameter("@Email",
-                    string.IsNullOrWhiteSpace(kh.Email)
-                    ? DBNull.Value : kh.Email)
+                DatabaseAccess.ThamSo("@MaKH", kh.MaKH),
+                DatabaseAccess.ThamSo("@TenKH", kh.HoTen),
+                DatabaseAccess.ThamSo("@SDT", kh.SDT),
+                DatabaseAccess.ThamSo("@DiaChi", kh.DiaChi),
+                DatabaseAccess.ThamSo("@Email", string.IsNullOrWhiteSpace(kh.Email) ? null : kh.Email)
             };
 
-            return KetNoiCSDL.ThucThi(sql, pars);
+            return DatabaseAccess.ThucThiProc("sp_ThemKhachHang", pars);
         }
 
-        // Sửa khách hàng
+        /// <summary>Sửa thông tin khách hàng.</summary>
         public int Sua(KhachHang kh)
         {
-            string sql = @"
-                UPDATE tblKhachHang
-                SET TenKH = @TenKH,
-                    SDT = @SDT,
-                    DiaChi = @DiaChi,
-                    Email = @Email
-                WHERE MaKH = @MaKH";
-
             SqlParameter[] pars =
             {
-                new SqlParameter("@MaKH", kh.MaKH),
-                new SqlParameter("@TenKH", kh.HoTen),
-                new SqlParameter("@SDT", kh.SDT),
-                new SqlParameter("@DiaChi", kh.DiaChi),
-                new SqlParameter("@Email",
-                    string.IsNullOrWhiteSpace(kh.Email)
-                    ? DBNull.Value : kh.Email)
+                DatabaseAccess.ThamSo("@MaKH", kh.MaKH),
+                DatabaseAccess.ThamSo("@TenKH", kh.HoTen),
+                DatabaseAccess.ThamSo("@SDT", kh.SDT),
+                DatabaseAccess.ThamSo("@DiaChi", kh.DiaChi),
+                DatabaseAccess.ThamSo("@Email", string.IsNullOrWhiteSpace(kh.Email) ? null : kh.Email)
             };
 
-            return KetNoiCSDL.ThucThi(sql, pars);
+            return DatabaseAccess.ThucThiProc("sp_CapNhatKhachHang", pars);
         }
 
-        // Kiểm tra mã khách hàng
+        /// <summary>Kiểm tra mã khách hàng đã tồn tại.</summary>
         public bool KiemTraTonTai(string maKH)
         {
-            object? res = KetNoiCSDL.ThucThiGiaTri(
-                "SELECT COUNT(*) FROM tblKhachHang WHERE MaKH = @MaKH",
-                new[]
-                {
-                    new SqlParameter("@MaKH", maKH)
-                });
-
-            return Convert.ToInt32(res) > 0;
+            return DatabaseAccess.DemBanGhi("sp_KiemTraKhachHangTonTai",
+                new[] { DatabaseAccess.ThamSo("@Ma", maKH) }) > 0;
         }
 
-        // Kiểm tra tài khoản đã tồn tại
+        /// <summary>Kiểm tra tên tài khoản đã được dùng.</summary>
         public bool KiemTraTaiKhoan(string taiKhoan)
         {
-            object? res = KetNoiCSDL.ThucThiGiaTri(
-                @"SELECT COUNT(*) FROM tblKhachHang
-                  WHERE TaiKhoan = @TaiKhoan",
-                new[]
-                {
-                    new SqlParameter("@TaiKhoan", taiKhoan)
-                });
-
-            return Convert.ToInt32(res) > 0;
+            return DatabaseAccess.DemBanGhi("sp_KiemTraTaiKhoanKhachHang",
+                new[] { DatabaseAccess.ThamSo("@TaiKhoan", taiKhoan) }) > 0;
         }
 
-        // Kiểm tra Email đã tồn tại
+        /// <summary>Kiểm tra email đã được đăng ký.</summary>
         public bool KiemTraEmail(string email)
         {
-            object? res = KetNoiCSDL.ThucThiGiaTri(
-                @"SELECT COUNT(*) FROM tblKhachHang
-                  WHERE Email = @Email",
-                new[]
-                {
-                    new SqlParameter("@Email", email)
-                });
-
-            return Convert.ToInt32(res) > 0;
+            return DatabaseAccess.DemBanGhi("sp_KiemTraEmailKhachHang",
+                new[] { DatabaseAccess.ThamSo("@Email", email) }) > 0;
         }
 
-        // Đăng ký khách hàng và tự sinh mã KH
+        /// <summary>
+        /// Đăng ký khách hàng mới: thủ tục tự sinh mã KH kế tiếp và trả mã đó
+        /// qua tham số đầu ra, sau đó gán lại vào đối tượng <paramref name="kh"/>.
+        /// </summary>
         public int DangKyTaiKhoan(KhachHang kh)
         {
-            using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
+            SqlParameter maKH = new SqlParameter("@MaKH", SqlDbType.NVarChar, 20)
             {
-                conn.Open();
-
-                using (SqlTransaction transaction =
-                       conn.BeginTransaction(IsolationLevel.Serializable))
-                {
-                    try
-                    {
-                        // Tự sinh mã KH tiếp theo
-                        string sqlMa = @"
-                            SELECT ISNULL(
-                                MAX(TRY_CONVERT(INT, SUBSTRING(MaKH, 3, 18))),
-                                0
-                            ) + 1
-                            FROM dbo.tblKhachHang WITH (UPDLOCK, HOLDLOCK)
-                            WHERE MaKH LIKE N'KH[0-9]%';";
-
-                        int soMoi;
-
-                        using (SqlCommand cmdMa =
-                               new SqlCommand(sqlMa, conn, transaction))
-                        {
-                            soMoi = Convert.ToInt32(cmdMa.ExecuteScalar());
-                        }
-
-                        kh.MaKH = "KH" + soMoi.ToString("D3");
-
-                        string sql = @"
-                            INSERT INTO dbo.tblKhachHang
-                            (
-                                MaKH,
-                                TenKH,
-                                SDT,
-                                DiaChi,
-                                Email,
-                                TaiKhoan,
-                                MatKhau
-                            )
-                            VALUES
-                            (
-                                @MaKH,
-                                @TenKH,
-                                @SDT,
-                                @DiaChi,
-                                @Email,
-                                @TaiKhoan,
-                                @MatKhau
-                            );";
-
-                        using (SqlCommand cmd =
-                               new SqlCommand(sql, conn, transaction))
-                        {
-                            cmd.Parameters.AddWithValue("@MaKH", kh.MaKH);
-                            cmd.Parameters.AddWithValue("@TenKH", kh.HoTen);
-                            cmd.Parameters.AddWithValue("@SDT", kh.SDT);
-
-                            cmd.Parameters.AddWithValue(
-                                "@DiaChi",
-                                string.IsNullOrWhiteSpace(kh.DiaChi)
-                                    ? DBNull.Value
-                                    : kh.DiaChi);
-
-                            cmd.Parameters.AddWithValue("@Email", kh.Email);
-                            cmd.Parameters.AddWithValue("@TaiKhoan", kh.TaiKhoan);
-                            cmd.Parameters.AddWithValue("@MatKhau", kh.MatKhau);
-
-                            int result = cmd.ExecuteNonQuery();
-
-                            transaction.Commit();
-                            return result;
-                        }
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
-            }
-        }
-
-        // Đăng nhập khách hàng
-        public KhachHang? DangNhap(string taiKhoan, string matKhau)
-        {
-            string sql = @"
-                SELECT MaKH, TenKH, SDT, DiaChi, Email, TaiKhoan
-                FROM dbo.tblKhachHang
-                WHERE TaiKhoan = @TaiKhoan
-                  AND MatKhau = @MatKhau";
+                Direction = ParameterDirection.Output
+            };
 
             SqlParameter[] pars =
             {
-                new SqlParameter("@TaiKhoan", taiKhoan),
-                new SqlParameter("@MatKhau", matKhau)
+                DatabaseAccess.ThamSo("@TenKH", kh.HoTen),
+                DatabaseAccess.ThamSo("@SDT", kh.SDT),
+                DatabaseAccess.ThamSo("@Email", string.IsNullOrWhiteSpace(kh.Email) ? null : kh.Email),
+                DatabaseAccess.ThamSo("@TaiKhoan", kh.TaiKhoan),
+                DatabaseAccess.ThamSo("@MatKhau", kh.MatKhau),
+                DatabaseAccess.ThamSo("@DiaChi", string.IsNullOrWhiteSpace(kh.DiaChi) ? null : kh.DiaChi),
+                maKH
             };
 
-            DataTable dt = KetNoiCSDL.DocBang(sql, pars);
+            int ketQua = DatabaseAccess.ThucThiProc("sp_DangKyKhachHang", pars);
+
+            if (maKH.Value != null && maKH.Value != DBNull.Value)
+                kh.MaKH = maKH.Value.ToString() ?? "";
+
+            return ketQua;
+        }
+
+        /// <summary>Đăng nhập khách hàng.</summary>
+        public KhachHang? DangNhap(string taiKhoan, string matKhau)
+        {
+            DataTable dt = DatabaseAccess.DocBangProc("sp_DangNhapKhachHang",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@TaiKhoan", taiKhoan),
+                    DatabaseAccess.ThamSo("@MatKhau", matKhau)
+                });
 
             if (dt.Rows.Count == 0)
                 return null;
@@ -218,47 +116,38 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 row["MaKH"].ToString() ?? "",
                 row["TenKH"].ToString() ?? "",
                 row["SDT"].ToString() ?? "",
-                row["DiaChi"] == DBNull.Value
-                    ? ""
-                    : row["DiaChi"].ToString() ?? "",
-                row["Email"] == DBNull.Value
-                    ? ""
-                    : row["Email"].ToString() ?? "")
+                row["DiaChi"] == DBNull.Value ? "" : row["DiaChi"].ToString() ?? "",
+                row["Email"] == DBNull.Value ? "" : row["Email"].ToString() ?? "")
             {
                 TaiKhoan = row["TaiKhoan"].ToString() ?? ""
             };
         }
 
-        // Lấy danh sách hóa đơn của khách hàng
+        /// <summary>Danh sách hóa đơn của khách hàng (dùng trước khi xóa).</summary>
         public DataTable LayHoaDonCuaKhachHang(string maKH)
         {
-            string sql = @"
-                SELECT MaHDB
-                FROM tblHoaDonBan
-                WHERE MaKH = @MaKH
-                ORDER BY MaHDB";
-
-            SqlParameter[] pars =
-            {
-                new SqlParameter("@MaKH", maKH)
-            };
-
-            return KetNoiCSDL.DocBang(sql, pars);
+            return DatabaseAccess.DocBangProc("sp_LayHoaDonCuaKhachHang",
+                new[] { DatabaseAccess.ThamSo("@MaKH", maKH) });
         }
 
-        // Xóa khách hàng
+        /// <summary>Xóa khách hàng.</summary>
         public int Xoa(string maKH)
         {
-            string sql = @"
-                DELETE FROM tblKhachHang
-                WHERE MaKH = @MaKH";
+            return DatabaseAccess.ThucThiProc("sp_XoaKhachHang",
+                new[] { DatabaseAccess.ThamSo("@MaKH", maKH) });
+        }
 
-            SqlParameter[] pars =
-            {
-                new SqlParameter("@MaKH", maKH)
-            };
+        /// <summary>Danh sách mã khách hàng cho AutoComplete khi lập hóa đơn.</summary>
+        public DataTable LayDanhSachMa()
+        {
+            return DatabaseAccess.DocBangProc("sp_LayDanhSachMaKH");
+        }
 
-            return KetNoiCSDL.ThucThi(sql, pars);
+        /// <summary>Thông tin khách hàng theo mã.</summary>
+        public DataTable LayThongTin(string maKH)
+        {
+            return DatabaseAccess.DocBangProc("sp_LayThongTinKhachHang",
+                new[] { DatabaseAccess.ThamSo("@MaKH", maKH) });
         }
     }
 }

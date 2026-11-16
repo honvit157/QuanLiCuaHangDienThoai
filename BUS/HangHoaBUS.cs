@@ -117,5 +117,17 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         {
             return dal.TimKiem(ten, hang, loai, mau, giaTu, giaDen);
         }
+
+        /// <summary>Danh sách mã hàng để nạp ComboBox / AutoComplete.</summary>
+        public DataTable LayDanhSachMa()
+        {
+            return dal.LayDanhSachMa();
+        }
+
+        /// <summary>Thông tin một mặt hàng: tên, giá nhập, giá bán, tồn kho.</summary>
+        public DataTable LayThongTin(string maHang)
+        {
+            return dal.LayThongTin(maHang);
+        }
     }
 }

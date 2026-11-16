@@ -68,6 +68,18 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             return dal.LayTatCa();
         }
 
+        /// <summary>Danh sách mã nhân viên cho AutoComplete khi lập hóa đơn.</summary>
+        public DataTable LayDanhSachMa()
+        {
+            return dal.LayDanhSachMa();
+        }
+
+        /// <summary>Tên nhân viên theo mã.</summary>
+        public DataTable LayTen(string maNV)
+        {
+            return dal.LayTen(maNV);
+        }
+
         public bool Them(NhanVien nv, out string error)
         {
             error = "";

@@ -1,99 +1,72 @@
-﻿
-using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
+    /// <summary>
+    /// Tầng truy cập dữ liệu cho bảng nhà cung cấp (tblNhaCungCap).
+    /// </summary>
     public class NhaCungCapDAL
     {
-        // Lấy toàn bộ danh sách nhà cung cấp
+        /// <summary>Lấy toàn bộ danh sách nhà cung cấp.</summary>
         public DataTable LayTatCa()
         {
-            string sql = @"
-                SELECT
-                    MaNCC,
-                    TenNCC,
-                    SDT,
-                    DiaChi,
-                    Email,
-                    NguoiLH
-                FROM dbo.tblNhaCungCap
-                ORDER BY MaNCC";
-
-            return DatabaseAccess.DocBang(sql);
+            return DatabaseAccess.DocBangProc("sp_LayDanhSachNhaCungCap");
         }
 
-        // Thêm nhà cung cấp
         public int Them(NhaCungCap ncc)
         {
-            string sql = @"
-                INSERT INTO dbo.tblNhaCungCap
-                (MaNCC, TenNCC, SDT, DiaChi, Email, NguoiLH)
-                VALUES
-                (@MaNCC, @TenNCC, @SDT, @DiaChi, @Email, @NguoiLH)";
-
             SqlParameter[] pars =
             {
-                new SqlParameter("@MaNCC", ncc.MaNCC),
-                new SqlParameter("@TenNCC", ncc.TenNCC),
-                new SqlParameter("@SDT", ncc.SDT),
-                new SqlParameter("@DiaChi", ncc.DiaChi),
-                new SqlParameter("@Email", ncc.Email),
-                new SqlParameter("@NguoiLH", ncc.NguoiLH)
+                DatabaseAccess.ThamSo("@MaNCC", ncc.MaNCC),
+                DatabaseAccess.ThamSo("@TenNCC", ncc.TenNCC),
+                DatabaseAccess.ThamSo("@SDT", ncc.SDT),
+                DatabaseAccess.ThamSo("@DiaChi", ncc.DiaChi),
+                DatabaseAccess.ThamSo("@Email", string.IsNullOrWhiteSpace(ncc.Email) ? null : ncc.Email),
+                DatabaseAccess.ThamSo("@NguoiLH", string.IsNullOrWhiteSpace(ncc.NguoiLH) ? null : ncc.NguoiLH)
             };
 
-            return DatabaseAccess.ThucThi(sql, pars);
+            return DatabaseAccess.ThucThiProc("sp_ThemNhaCungCap", pars);
         }
 
-        // Cập nhật nhà cung cấp
         public int Sua(NhaCungCap ncc)
         {
-            string sql = @"
-                UPDATE dbo.tblNhaCungCap
-                SET
-                    TenNCC = @TenNCC,
-                    SDT = @SDT,
-                    DiaChi = @DiaChi,
-                    Email = @Email,
-                    NguoiLH = @NguoiLH
-                WHERE MaNCC = @MaNCC";
-
             SqlParameter[] pars =
             {
-                new SqlParameter("@MaNCC", ncc.MaNCC),
-                new SqlParameter("@TenNCC", ncc.TenNCC),
-                new SqlParameter("@SDT", ncc.SDT),
-                new SqlParameter("@DiaChi", ncc.DiaChi),
-                new SqlParameter("@Email", ncc.Email),
-                new SqlParameter("@NguoiLH", ncc.NguoiLH)
+                DatabaseAccess.ThamSo("@MaNCC", ncc.MaNCC),
+                DatabaseAccess.ThamSo("@TenNCC", ncc.TenNCC),
+                DatabaseAccess.ThamSo("@SDT", ncc.SDT),
+                DatabaseAccess.ThamSo("@DiaChi", ncc.DiaChi),
+                DatabaseAccess.ThamSo("@Email", string.IsNullOrWhiteSpace(ncc.Email) ? null : ncc.Email),
+                DatabaseAccess.ThamSo("@NguoiLH", string.IsNullOrWhiteSpace(ncc.NguoiLH) ? null : ncc.NguoiLH)
             };
 
-            return DatabaseAccess.ThucThi(sql, pars);
+            return DatabaseAccess.ThucThiProc("sp_CapNhatNhaCungCap", pars);
         }
 
-        // Xóa nhà cung cấp
         public int Xoa(string maNCC)
         {
-            return DatabaseAccess.ThucThi(
-                "DELETE FROM dbo.tblNhaCungCap WHERE MaNCC=@MaNCC",
-                new[]
-                {
-                    new SqlParameter("@MaNCC", maNCC)
-                });
+            return DatabaseAccess.ThucThiProc("sp_XoaNhaCungCap",
+                new[] { DatabaseAccess.ThamSo("@MaNCC", maNCC) });
         }
 
-        // Kiểm tra mã nhà cung cấp tồn tại
         public bool KiemTraTonTai(string maNCC)
         {
-            object? res = DatabaseAccess.ThucThiGiaTri(
-                "SELECT COUNT(*) FROM dbo.tblNhaCungCap WHERE MaNCC=@Ma",
-                new[]
-                {
-                    new SqlParameter("@Ma", maNCC)
-                });
+            return DatabaseAccess.DemBanGhi("sp_KiemTraNhaCungCapTonTai",
+                new[] { DatabaseAccess.ThamSo("@Ma", maNCC) }) > 0;
+        }
 
-            return Convert.ToInt32(res) > 0;
+        /// <summary>Danh sách mã nhà cung cấp để nạp ComboBox.</summary>
+        public DataTable LayDanhSachMa()
+        {
+            return DatabaseAccess.DocBangProc("sp_LayDanhSachMaNCC");
+        }
+
+        /// <summary>Thông tin nhà cung cấp theo mã.</summary>
+        public DataTable LayThongTin(string maNCC)
+        {
+            return DatabaseAccess.DocBangProc("sp_LayThongTinNhaCungCap",
+                new[] { DatabaseAccess.ThamSo("@MaNCC", maNCC) });
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private TableLayoutPanel tblBoCuc;
         private ToolTip toolTip;
 
-        private ThongKeDAL thongKeDAL = new ThongKeDAL();
+        private readonly ThongKeBUS thongKeBus = new ThongKeBUS();
 
         private string tenNguoiDung = "";
         private string vaiTro = "";
@@ -70,8 +70,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
         private void TaoGiaoDien()
         {
-
-            // Sidebar
+// Sidebar
             pnlSidebar = new Panel
             {
                 Dock = DockStyle.Left,
@@ -247,7 +246,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             };
 
             PictureBox picBanner = TaoPictureBoxChuan(
-                "banner_khuyenmai.jpg", 340, 200);
+                "SP030.jpg", 340, 200);
 
             picBanner.Dock = DockStyle.Fill;
             picBanner.Margin = Padding.Empty;
@@ -285,7 +284,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             };
 
             PictureBox picDienThoai = TaoPictureBoxChuan(
-                "iphone18.jpg", 340, 200);
+                "SP001.jpg", 340, 200);
 
             picDienThoai.Dock = DockStyle.Fill;
             picDienThoai.Margin = Padding.Empty;
@@ -724,10 +723,10 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             try
             {
-                tongSanPham = thongKeDAL.DemTongSanPham();
-                tongKhachHang = thongKeDAL.DemTongKhachHang();
-                hoaDonHomNay = thongKeDAL.DemHoaDonHomNay();
-                doanhThuHomNay = thongKeDAL.TinhDoanhThuHomNay();
+                tongSanPham = thongKeBus.TongSanPham();
+                tongKhachHang = thongKeBus.TongKhachHang();
+                hoaDonHomNay = thongKeBus.HoaDonHomNay();
+                doanhThuHomNay = thongKeBus.DoanhThuHomNay();
             }
             catch (Exception ex)
             {
@@ -811,7 +810,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             try
             {
-                dtDoanhThu = thongKeDAL.LayDoanhThu7Ngay();
+                dtDoanhThu = thongKeBus.DoanhThu7Ngay();
             }
             catch (Exception ex)
             {

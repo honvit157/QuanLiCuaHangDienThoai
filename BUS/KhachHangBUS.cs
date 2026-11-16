@@ -224,6 +224,18 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             }
         }
 
+        /// <summary>Danh sách mã khách hàng cho AutoComplete khi lập hóa đơn.</summary>
+        public DataTable LayDanhSachMa()
+        {
+            return dal.LayDanhSachMa();
+        }
+
+        /// <summary>Thông tin khách hàng theo mã (tên, SĐT, địa chỉ).</summary>
+        public DataTable LayThongTin(string maKH)
+        {
+            return dal.LayThongTin(maKH);
+        }
+
         // ĐĂNG NHẬP TÀI KHOẢN KHÁCH HÀNG
         public bool DangNhap(
             string taiKhoan,

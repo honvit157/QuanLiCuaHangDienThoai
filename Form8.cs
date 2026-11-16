@@ -3,13 +3,17 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 using ClosedXML.Excel;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
     public partial class Form8 : Form
     {
+        private readonly NhanVienBUS nhanVienBus = new NhanVienBUS();
+        private readonly HangHoaBUS hangHoaBus = new HangHoaBUS();
+        private readonly NhaCungCapBUS nhaCungCapBus = new NhaCungCapBUS();
+        private readonly HoaDonNhapBUS hoaDonNhapBus = new HoaDonNhapBUS();
+
         private readonly DataTable bangChiTiet = new DataTable();
         private bool hoaDonDaLuu = false;
         private bool dangNapDuLieu = false;
@@ -17,6 +21,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         public Form8()
         {
             InitializeComponent();
+
+            TaoGiaoDien();
             KhoiTaoBangChiTiet();
             CauHinhGiaoDien();
             GanSuKien();
@@ -99,27 +105,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
             try
             {
-                using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
-                {
-                    conn.Open();
-
-                    using (SqlCommand cmd = new SqlCommand(
-                        "SELECT TenNV FROM tblNhanVien WHERE MaNV = @MaNV", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaNV", maNV);
-
-                        object ketQua = cmd.ExecuteScalar();
-
-                        if (ketQua != null && ketQua != DBNull.Value)
-                        {
-                            txtTenNV.Text = ketQua.ToString();
-                        }
-                        else
-                        {
-                            txtTenNV.Clear();
-                        }
-                    }
-                }
+                txtTenNV.Text = LayTenNhanVien(maNV);
             }
             catch (Exception ex)
             {
@@ -133,102 +119,98 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             }
         }
 
+        /// <summary>Lấy tên nhân viên theo mã qua tầng nghiệp vụ.</summary>
+        private string LayTenNhanVien(string maNV)
+        {
+            DataTable dt = nhanVienBus.LayTen(maNV);
+
+            return dt.Rows.Count == 0 || dt.Rows[0]["TenNV"] == DBNull.Value
+                ? ""
+                : dt.Rows[0]["TenNV"].ToString() ?? "";
+        }
+
         private void NapDuLieuBanDau()
         {
             try
             {
                 dangNapDuLieu = true;
-                using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
-                {
-                    conn.Open();
 
-                    cboMaHang.Items.Clear();
-                    using (SqlCommand cmd = new SqlCommand("SELECT MaHang FROM tblHang ORDER BY MaHang", conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                        while (reader.Read()) cboMaHang.Items.Add(reader["MaHang"].ToString());
+                cboMaHang.Items.Clear();
+                foreach (DataRow row in hangHoaBus.LayDanhSachMa().Rows)
+                    cboMaHang.Items.Add(row["MaHang"].ToString());
 
-                    cboNCC.Items.Clear();
-                    using (SqlCommand cmd = new SqlCommand("SELECT MaNCC FROM tblNhaCungCap ORDER BY MaNCC", conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                        while (reader.Read()) cboNCC.Items.Add(reader["MaNCC"].ToString());
+                cboNCC.Items.Clear();
+                foreach (DataRow row in nhaCungCapBus.LayDanhSachMa().Rows)
+                    cboNCC.Items.Add(row["MaNCC"].ToString());
 
-                    cboMaHDN.Items.Clear();
-                    using (SqlCommand cmd = new SqlCommand("SELECT MaHDN FROM tblHoaDonNhap ORDER BY MaHDN", conn))
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                        while (reader.Read()) cboMaHDN.Items.Add(reader["MaHDN"].ToString());
+                cboMaHDN.Items.Clear();
+                foreach (DataRow row in hoaDonNhapBus.LayDanhSachMa().Rows)
+                    cboMaHDN.Items.Add(row["MaHDN"].ToString());
 
-                    if (!string.IsNullOrWhiteSpace(txtMaNV.Text)) NapTenNhanVien(conn, txtMaNV.Text.Trim());
-                }
+                if (!string.IsNullOrWhiteSpace(txtMaNV.Text))
+                    txtTenNV.Text = LayTenNhanVien(txtMaNV.Text.Trim());
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Không tải được dữ liệu từ SQL Server. Hãy kiểm tra kết nối CSDL.\n" + ex.Message,
                     "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally { dangNapDuLieu = false; }
-        }
-
-        private void NapTenNhanVien(SqlConnection conn, string maNV)
-        {
-            using (SqlCommand cmd = new SqlCommand("SELECT TenNV FROM tblNhanVien WHERE MaNV=@MaNV", conn))
+            finally
             {
-                cmd.Parameters.AddWithValue("@MaNV", maNV);
-                object kq = cmd.ExecuteScalar();
-                txtTenNV.Text = kq == null || kq == DBNull.Value ? "" : kq.ToString();
+                dangNapDuLieu = false;
             }
         }
 
         private void cboMaHang_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dangNapDuLieu || string.IsNullOrWhiteSpace(cboMaHang.Text)) return;
+
             try
             {
-                using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
+                DataTable dt = hangHoaBus.LayThongTin(cboMaHang.Text.Trim());
+
+                if (dt.Rows.Count > 0)
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT TenHang, DonGiaNhap FROM tblHang WHERE MaHang=@MaHang", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaHang", cboMaHang.Text.Trim());
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                txtTenHang.Text = reader["TenHang"].ToString();
-                                txtDonGiaNhap.Text = Convert.ToDecimal(reader["DonGiaNhap"]).ToString("N0");
-                            }
-                            else { txtTenHang.Clear(); txtDonGiaNhap.Clear(); }
-                        }
-                    }
+                    DataRow row = dt.Rows[0];
+
+                    txtTenHang.Text = row["TenHang"].ToString() ?? "";
+                    txtDonGiaNhap.Text = Convert.ToDecimal(row["DonGiaNhap"]).ToString("N0");
                 }
+                else
+                {
+                    txtTenHang.Clear();
+                    txtDonGiaNhap.Clear();
+                }
+
                 TinhThanhTien();
             }
-            catch (Exception ex) { MessageBox.Show("Không lấy được thông tin hàng: " + ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không lấy được thông tin hàng: " + ex.Message);
+            }
         }
 
         private void cboNCC_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (dangNapDuLieu || string.IsNullOrWhiteSpace(cboNCC.Text)) return;
+
             try
             {
-                using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
+                DataTable dt = nhaCungCapBus.LayThongTin(cboNCC.Text.Trim());
+
+                if (dt.Rows.Count > 0)
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT MaNCC, SDT, DiaChi FROM tblNhaCungCap WHERE MaNCC=@MaNCC", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaNCC", cboNCC.Text.Trim());
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                txtMaNCC.Text = reader["MaNCC"].ToString();
-                                txtSDT.Text = reader["SDT"] == DBNull.Value ? "" : reader["SDT"].ToString();
-                                txtDiaChi.Text = reader["DiaChi"] == DBNull.Value ? "" : reader["DiaChi"].ToString();
-                            }
-                        }
-                    }
+                    DataRow r = dt.Rows[0];
+
+                    txtMaNCC.Text = r["MaNCC"].ToString() ?? "";
+                    txtSDT.Text = r["SDT"] == DBNull.Value ? "" : r["SDT"].ToString() ?? "";
+                    txtDiaChi.Text = r["DiaChi"] == DBNull.Value ? "" : r["DiaChi"].ToString() ?? "";
                 }
             }
-            catch (Exception ex) { MessageBox.Show("Không lấy được thông tin nhà cung cấp: " + ex.Message); }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Không lấy được thông tin nhà cung cấp: " + ex.Message);
+            }
         }
 
         private void txtSoLuong_TextChanged(object sender, EventArgs e) { TinhThanhTien(); }
@@ -280,112 +262,20 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
         private void CapNhatTongTien()
         {
-            decimal tong = 0;
-            foreach (DataRow row in bangChiTiet.Rows) tong += Convert.ToDecimal(row["ThanhTien"]);
-            lblTongTien.Text = "Tổng tiền: " + tong.ToString("N0") + " VNĐ";
-        }
+            HoaDonNhap hoaDon = new HoaDonNhap(maHDN, maNV, maNCC, dtpNgayNhap.Value);
 
-        private void LamMoiNhapHang()
-        {
-            cboMaHang.SelectedIndex = -1;
-            txtTenHang.Clear(); txtSoLuong.Clear(); txtDonGiaNhap.Clear(); txtThanhTien.Clear();
-        }
-
-        private void TaoMaHoaDonMoi()
-        {
-            cboMaHDN.Text = "HDN_" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            hoaDonDaLuu = false;
-        }
-
-        private void btnThemHD_Click(object sender, EventArgs e)
-        {
-            if (!hoaDonDaLuu && bangChiTiet.Rows.Count > 0)
+            if (!hoaDonNhapBus.LuuHoaDon(hoaDon, bangChiTiet, out string error))
             {
-                DialogResult xacNhan = MessageBox.Show("Hóa đơn hiện tại chưa lưu. Bạn muốn bỏ các dòng đang nhập và tạo hóa đơn mới?",
-                    "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (xacNhan != DialogResult.Yes) return;
+                MessageBox.Show("Không lưu được hóa đơn. Dữ liệu đã được hoàn tác.\n" + error,
+                    "Lỗi lưu hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            bangChiTiet.Clear();
-            cboNCC.SelectedIndex = -1; txtMaNCC.Clear(); txtSDT.Clear(); txtDiaChi.Clear();
-            dtpNgayNhap.Value = DateTime.Today;
-            LamMoiNhapHang(); CapNhatTongTien(); TaoMaHoaDonMoi();
-        }
 
-        private void btnLuu_Click(object sender, EventArgs e)
-        {
-            if (hoaDonDaLuu) { MessageBox.Show("Hóa đơn này đã được lưu."); return; }
-            string maHDN = cboMaHDN.Text.Trim();
-            string maNV = txtMaNV.Text.Trim();
-            string maNCC = cboNCC.Text.Trim();
-            if (maHDN == "") { MessageBox.Show("Bạn hãy nhập mã hóa đơn."); return; }
-            if (maNV == "" || txtTenNV.Text.Trim() == "") { MessageBox.Show("Mã nhân viên không tồn tại trong CSDL."); return; }
-            if (maNCC == "") { MessageBox.Show("Bạn hãy chọn nhà cung cấp."); return; }
-            if (bangChiTiet.Rows.Count == 0) { MessageBox.Show("Hóa đơn chưa có mặt hàng."); return; }
+            hoaDonDaLuu = true;
+            if (!cboMaHDN.Items.Contains(maHDN)) cboMaHDN.Items.Add(maHDN);
 
-            decimal tong = 0;
-            foreach (DataRow row in bangChiTiet.Rows) tong += Convert.ToDecimal(row["ThanhTien"]);
-
-            using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
-            {
-                conn.Open();
-                using (SqlTransaction tran = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        using (SqlCommand kiemTra = new SqlCommand("SELECT COUNT(*) FROM tblHoaDonNhap WHERE MaHDN=@MaHDN", conn, tran))
-                        {
-                            kiemTra.Parameters.AddWithValue("@MaHDN", maHDN);
-                            if (Convert.ToInt32(kiemTra.ExecuteScalar()) > 0)
-                                throw new Exception("Mã hóa đơn đã tồn tại. Hãy tạo mã hóa đơn mới.");
-                        }
-
-                        using (SqlCommand cmd = new SqlCommand("INSERT INTO tblHoaDonNhap(MaHDN,MaNV,MaNCC,NgayNhap,TongTien) VALUES(@MaHDN,@MaNV,@MaNCC,@NgayNhap,@TongTien)", conn, tran))
-                        {
-                            cmd.Parameters.AddWithValue("@MaHDN", maHDN);
-                            cmd.Parameters.AddWithValue("@MaNV", maNV);
-                            cmd.Parameters.AddWithValue("@MaNCC", maNCC);
-                            cmd.Parameters.AddWithValue("@NgayNhap", dtpNgayNhap.Value);
-                            cmd.Parameters.AddWithValue("@TongTien", tong);
-                            cmd.ExecuteNonQuery();
-                        }
-
-                        foreach (DataRow row in bangChiTiet.Rows)
-                        {
-                            string maHang = row["MaHang"].ToString();
-                            int sl = Convert.ToInt32(row["SoLuong"]);
-                            decimal gia = Convert.ToDecimal(row["DonGiaNhap"]);
-                            decimal thanhTien = Convert.ToDecimal(row["ThanhTien"]);
-                            using (SqlCommand capNhatKho = new SqlCommand("UPDATE tblHang SET SoLuongTon=SoLuongTon+@SoLuong, DonGiaNhap=@DonGia WHERE MaHang=@MaHang", conn, tran))
-                            {
-                                capNhatKho.Parameters.AddWithValue("@SoLuong", sl);
-                                capNhatKho.Parameters.AddWithValue("@DonGia", gia);
-                                capNhatKho.Parameters.AddWithValue("@MaHang", maHang);
-                                if (capNhatKho.ExecuteNonQuery() != 1) throw new Exception("Không tìm thấy mã hàng " + maHang + " trong kho.");
-                            }
-                            using (SqlCommand chiTiet = new SqlCommand("INSERT INTO tblChiTietHDN(MaHDN,MaHang,SoLuong,DonGiaNhap,ThanhTien) VALUES(@MaHDN,@MaHang,@SoLuong,@DonGiaNhap,@ThanhTien)", conn, tran))
-                            {
-                                chiTiet.Parameters.AddWithValue("@MaHDN", maHDN);
-                                chiTiet.Parameters.AddWithValue("@MaHang", maHang);
-                                chiTiet.Parameters.AddWithValue("@SoLuong", sl);
-                                chiTiet.Parameters.AddWithValue("@DonGiaNhap", gia);
-                                chiTiet.Parameters.AddWithValue("@ThanhTien", thanhTien);
-                                chiTiet.ExecuteNonQuery();
-                            }
-                        }
-                        tran.Commit();
-                        hoaDonDaLuu = true;
-                        if (!cboMaHDN.Items.Contains(maHDN)) cboMaHDN.Items.Add(maHDN);
-                        MessageBox.Show("Lưu hóa đơn nhập thành công!\nMã hóa đơn: " + maHDN + "\n" + lblTongTien.Text,
-                            "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        try { tran.Rollback(); } catch { }
-                        MessageBox.Show("Không lưu được hóa đơn. Dữ liệu đã được hoàn tác.\n" + ex.Message,
-                            "Lỗi lưu hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
+            MessageBox.Show("Lưu hóa đơn nhập thành công!\nMã hóa đơn: " + maHDN + "\n" + lblTongTien.Text,
+                "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnHuy_Click(object sender, EventArgs e)
@@ -409,45 +299,46 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         {
             string maHDN = cboMaHDN.Text.Trim();
             if (maHDN == "") { MessageBox.Show("Hãy nhập hoặc chọn mã hóa đơn cần tìm."); return; }
+
             try
             {
-                using (SqlConnection conn = KetNoiCSDL.TaoKetNoi())
-                {
-                    conn.Open();
-                    DataTable hd = new DataTable();
-                    using (SqlDataAdapter da = new SqlDataAdapter(
-                        "SELECT h.MaHDN,h.MaNV,n.TenNV,h.MaNCC,ncc.SDT,ncc.DiaChi,h.NgayNhap,h.TongTien FROM tblHoaDonNhap h " +
-                        "INNER JOIN tblNhanVien n ON h.MaNV=n.MaNV INNER JOIN tblNhaCungCap ncc ON h.MaNCC=ncc.MaNCC WHERE h.MaHDN=@MaHDN", conn))
-                    {
-                        da.SelectCommand.Parameters.AddWithValue("@MaHDN", maHDN);
-                        da.Fill(hd);
-                    }
-                    if (hd.Rows.Count == 0) { MessageBox.Show("Không tìm thấy hóa đơn có mã " + maHDN + "."); return; }
-                    DataRow r = hd.Rows[0];
-                    txtMaNV.Text = r["MaNV"].ToString(); txtTenNV.Text = r["TenNV"].ToString();
-                    cboNCC.SelectedItem = r["MaNCC"].ToString();
-                    if (cboNCC.SelectedIndex < 0) cboNCC.Text = r["MaNCC"].ToString();
-                    txtMaNCC.Text = r["MaNCC"].ToString();
-                    txtSDT.Text = r["SDT"] == DBNull.Value ? "" : r["SDT"].ToString();
-                    txtDiaChi.Text = r["DiaChi"] == DBNull.Value ? "" : r["DiaChi"].ToString();
-                    dtpNgayNhap.Value = Convert.ToDateTime(r["NgayNhap"]);
+                DataTable hd = hoaDonNhapBus.LayHoaDon(maHDN);
 
-                    bangChiTiet.Clear();
-                    using (SqlCommand cmd = new SqlCommand(
-                        "SELECT c.MaHang,h.TenHang,c.DonGiaNhap,c.SoLuong,c.ThanhTien FROM tblChiTietHDN c " +
-                        "INNER JOIN tblHang h ON c.MaHang=h.MaHang WHERE c.MaHDN=@MaHDN ORDER BY c.MaHang", conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaHDN", maHDN);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                                bangChiTiet.Rows.Add(reader["MaHang"].ToString(), reader["TenHang"].ToString(),
-                                    Convert.ToDecimal(reader["DonGiaNhap"]), Convert.ToInt32(reader["SoLuong"]), Convert.ToDecimal(reader["ThanhTien"]));
-                        }
-                    }
-                    CapNhatTongTien(); hoaDonDaLuu = true;
-                    MessageBox.Show("Đã tải hóa đơn " + maHDN + ".");
+                if (hd.Rows.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy hóa đơn có mã " + maHDN + ".");
+                    return;
                 }
+
+                DataRow r = hd.Rows[0];
+
+                txtMaNV.Text = r["MaNV"].ToString() ?? "";
+                txtTenNV.Text = r["TenNV"].ToString() ?? "";
+
+                cboNCC.SelectedItem = r["MaNCC"].ToString();
+                if (cboNCC.SelectedIndex < 0) cboNCC.Text = r["MaNCC"].ToString();
+
+                txtMaNCC.Text = r["MaNCC"].ToString() ?? "";
+                txtSDT.Text = r["SDT"] == DBNull.Value ? "" : r["SDT"].ToString() ?? "";
+                txtDiaChi.Text = r["DiaChi"] == DBNull.Value ? "" : r["DiaChi"].ToString() ?? "";
+                dtpNgayNhap.Value = Convert.ToDateTime(r["NgayNhap"]);
+
+                bangChiTiet.Clear();
+
+                foreach (DataRow row in hoaDonNhapBus.LayChiTiet(maHDN).Rows)
+                {
+                    bangChiTiet.Rows.Add(
+                        row["MaHang"].ToString(),
+                        row["TenHang"].ToString(),
+                        Convert.ToDecimal(row["DonGiaNhap"]),
+                        Convert.ToInt32(row["SoLuong"]),
+                        Convert.ToDecimal(row["ThanhTien"]));
+                }
+
+                CapNhatTongTien();
+                hoaDonDaLuu = true;
+
+                MessageBox.Show("Đã tải hóa đơn " + maHDN + ".");
             }
             catch (Exception ex) { MessageBox.Show("Lỗi tìm hóa đơn: " + ex.Message); }
         }
@@ -543,6 +434,518 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        // =====================================================
+        // DỰNG GIAO DIỆN
+        // Tách khỏi InitializeComponent() để màn [Design] của Visual Studio
+        // luôn mở được: trình thiết kế không đọc được vòng lặp và biến cục bộ.
+        // =====================================================
+        private void TaoGiaoDien()
+        {
+            // ==========================================
+            // KHỞI TẠO CONTROL
+            // ==========================================
+            label1 = new Label();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            groupBox3 = new GroupBox();
+            groupBox4 = new GroupBox();
+            label2 = new Label();
+            label3 = new Label();
+            label4 = new Label();
+            label5 = new Label();
+            label6 = new Label();
+            label7 = new Label();
+            label8 = new Label();
+            label9 = new Label();
+            label10 = new Label();
+            label11 = new Label();
+            label12 = new Label();
+            label13 = new Label();
+            label14 = new Label();
+            cboMaHDN = new ComboBox();
+            txtMaNV = new TextBox();
+            cboNCC = new ComboBox();
+            txtSDT = new TextBox();
+            dtpNgayNhap = new DateTimePicker();
+            txtTenNV = new TextBox();
+            txtMaNCC = new TextBox();
+            txtDiaChi = new TextBox();
+            cboMaHang = new ComboBox();
+            txtTenHang = new TextBox();
+            txtDonGiaNhap = new TextBox();
+            txtSoLuong = new TextBox();
+            txtThanhTien = new TextBox();
+            btnTim = new Button();
+            button1 = new Button();
+            dgvChiTiet = new DataGridView();
+            lblTongTien = new Label();
+            btnThemHD = new Button();
+            btnLuu = new Button();
+            btnHuy = new Button();
+            btnIn = new Button();
+            btnThoat = new Button();
+            ((System.ComponentModel.ISupportInitialize)dgvChiTiet).BeginInit();
+            // ==========================================
+            // FORM
+            // ==========================================
+            BackColor = mauNen;
+            Font = new Font("Segoe UI", 10F);
+            StartPosition = FormStartPosition.CenterScreen;
+            Dock = DockStyle.Fill;
+            AutoScroll = false;
+            // ==========================================
+            // BỐ CỤC TỔNG
+            // ==========================================
+            TableLayoutPanel tblMain = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 5,
+                BackColor = mauNen,
+                Padding = new Padding(8),
+                Margin = Padding.Empty
+            };
+            tblMain.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 100F));
+            tblMain.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 80F));
+            tblMain.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 320F));
+            tblMain.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 280F));
+            tblMain.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F));
+            tblMain.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 110F));
+            // ==========================================
+            // TIÊU ĐỀ
+            // ==========================================
+            label1.Text = "HÓA ĐƠN NHẬP HÀNG";
+            label1.Font = new Font("Segoe UI", 17F, FontStyle.Bold);
+            label1.ForeColor = mauXanhDam;
+            label1.Dock = DockStyle.Fill;
+            label1.TextAlign = ContentAlignment.MiddleLeft;
+            label1.Margin = new Padding(5, 0, 0, 4);
+            label1.Click += label1_Click;
+            tblMain.Controls.Add(label1, 0, 0);
+            // ==========================================
+            // GROUPBOX 1 - THÔNG TIN CHUNG
+            // ==========================================
+            SetupGroupBox(groupBox1, "THÔNG TIN CHUNG");
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Margin = new Padding(0, 0, 0, 7);
+            groupBox1.Padding = new Padding(8, 12, 8, 5);
+            TableLayoutPanel tblThongTin = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 3,
+                BackColor = Color.White,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            for (int i = 0; i < 3; i++)
+            {
+                tblThongTin.ColumnStyles.Add(
+                    new ColumnStyle(SizeType.Percent, 33.33F));
+                tblThongTin.RowStyles.Add(
+                    new RowStyle(SizeType.Percent, 33.33F));
+            }
+            // Hàng 1
+            tblThongTin.Controls.Add(
+                CreateFieldWithSearch(
+                    label2, "Mã hóa đơn nhập", cboMaHDN, btnTim),
+                0, 0);
+            tblThongTin.Controls.Add(
+                CreateField(label6, "Ngày nhập", dtpNgayNhap),
+                1, 0);
+            tblThongTin.Controls.Add(
+                CreateField(label3, "Mã nhân viên", txtMaNV),
+                2, 0);
+            // Hàng 2
+            tblThongTin.Controls.Add(
+                CreateField(label7, "Tên nhân viên", txtTenNV),
+                0, 1);
+            tblThongTin.Controls.Add(
+                CreateField(label4, "Nhà cung cấp", cboNCC),
+                1, 1);
+            tblThongTin.Controls.Add(
+                CreateField(label5, "SĐT nhà cung cấp", txtSDT),
+                2, 1);
+            // Hàng 3
+            tblThongTin.Controls.Add(
+                CreateField(label8, "Mã nhà cung cấp", txtMaNCC),
+                0, 2);
+            Panel pnlDiaChi = CreateField(
+                label9, "Địa chỉ", txtDiaChi);
+            tblThongTin.Controls.Add(pnlDiaChi, 1, 2);
+            tblThongTin.SetColumnSpan(pnlDiaChi, 2);
+            groupBox1.Controls.Add(tblThongTin);
+            tblMain.Controls.Add(groupBox1, 0, 1);
+            // ==========================================
+            // GROUPBOX 2 - CHỌN MẶT HÀNG
+            // ==========================================
+            SetupGroupBox(groupBox2, "CHỌN MẶT HÀNG");
+            groupBox2.Dock = DockStyle.Fill;
+            groupBox2.Margin = new Padding(0, 0, 0, 7);
+            groupBox2.Padding = new Padding(8, 12, 8, 5);
+            TableLayoutPanel tblMatHang = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 4,
+                RowCount = 2,
+                BackColor = Color.White,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            tblMatHang.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 24F));
+            tblMatHang.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 24F));
+            tblMatHang.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 24F));
+            tblMatHang.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 28F));
+            tblMatHang.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 50F));
+            tblMatHang.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 50F));
+            // Hàng 1
+            tblMatHang.Controls.Add(
+                CreateField(label10, "Mã hàng", cboMaHang),
+                0, 0);
+            tblMatHang.Controls.Add(
+                CreateField(label12, "Tên hàng", txtTenHang),
+                1, 0);
+            tblMatHang.Controls.Add(
+                CreateField(label14, "Đơn giá nhập", txtDonGiaNhap),
+                2, 0);
+            // Hàng 2
+            tblMatHang.Controls.Add(
+                CreateField(label11, "Số lượng", txtSoLuong),
+                0, 1);
+            Panel pnlThanhTien = CreateField(
+                label13, "Thành tiền", txtThanhTien);
+            tblMatHang.Controls.Add(pnlThanhTien, 1, 1);
+            tblMatHang.SetColumnSpan(pnlThanhTien, 2);
+            // Nút thêm mặt hàng
+            button1.Text = "＋  Thêm hàng";
+            StyleButton(button1, mauXanhLa, Color.White);
+            button1.Dock = DockStyle.None;
+            button1.Anchor = AnchorStyles.None;
+            button1.Size = new Size(160, 42);
+            button1.Margin = new Padding(5);
+            tblMatHang.Controls.Add(button1, 3, 0);
+            tblMatHang.SetRowSpan(button1, 2);
+            groupBox2.Controls.Add(tblMatHang);
+            tblMain.Controls.Add(groupBox2, 0, 2);
+            // ==========================================
+            // GROUPBOX 3 - CHI TIẾT HÓA ĐƠN
+            // ==========================================
+            SetupGroupBox(groupBox3, "CHI TIẾT HÓA ĐƠN NHẬP");
+            groupBox3.Dock = DockStyle.Fill;
+            groupBox3.Margin = new Padding(0, 0, 0, 7);
+            groupBox3.Padding = new Padding(8, 12, 8, 5);
+            TableLayoutPanel tblChiTiet = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2,
+                BackColor = Color.White,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+            tblChiTiet.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 100F));
+            tblChiTiet.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F));
+            tblChiTiet.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 38F));
+            // DataGridView
+            dgvChiTiet.Dock = DockStyle.Fill;
+            dgvChiTiet.BackgroundColor = Color.White;
+            dgvChiTiet.BorderStyle = BorderStyle.None;
+            dgvChiTiet.GridColor = mauVien;
+            dgvChiTiet.EnableHeadersVisualStyles = false;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.BackColor =
+                mauXanhDam;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.ForeColor =
+                Color.White;
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.Font =
+                new Font("Segoe UI", 10F, FontStyle.Bold);
+            dgvChiTiet.ColumnHeadersDefaultCellStyle.Alignment =
+                DataGridViewContentAlignment.MiddleCenter;
+            dgvChiTiet.DefaultCellStyle.Font =
+                new Font("Segoe UI", 9.5F);
+            dgvChiTiet.DefaultCellStyle.ForeColor = mauChu;
+            dgvChiTiet.DefaultCellStyle.BackColor = Color.White;
+            dgvChiTiet.DefaultCellStyle.SelectionBackColor =
+                Color.FromArgb(218, 232, 250);
+            dgvChiTiet.DefaultCellStyle.SelectionForeColor = mauChu;
+            dgvChiTiet.AlternatingRowsDefaultCellStyle.BackColor =
+                Color.FromArgb(244, 248, 253);
+            dgvChiTiet.AutoSizeColumnsMode =
+                DataGridViewAutoSizeColumnsMode.Fill;
+            dgvChiTiet.SelectionMode =
+                DataGridViewSelectionMode.FullRowSelect;
+            dgvChiTiet.MultiSelect = false;
+            dgvChiTiet.ReadOnly = true;
+            dgvChiTiet.AllowUserToAddRows = false;
+            dgvChiTiet.AllowUserToDeleteRows = false;
+            dgvChiTiet.RowHeadersVisible = false;
+            dgvChiTiet.RowTemplate.Height = 32;
+            dgvChiTiet.ColumnHeadersHeight = 38;
+            dgvChiTiet.ColumnHeadersHeightSizeMode =
+                DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            // Tổng tiền
+            lblTongTien.Text = "Tổng tiền: 0 VNĐ";
+            lblTongTien.Font =
+                new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblTongTien.ForeColor = mauDo;
+            lblTongTien.Dock = DockStyle.Fill;
+            lblTongTien.TextAlign = ContentAlignment.MiddleRight;
+            lblTongTien.Margin = new Padding(0, 0, 8, 0);
+            tblChiTiet.Controls.Add(dgvChiTiet, 0, 0);
+            tblChiTiet.Controls.Add(lblTongTien, 0, 1);
+            groupBox3.Controls.Add(tblChiTiet);
+            tblMain.Controls.Add(groupBox3, 0, 3);
+            // ==========================================
+            // GROUPBOX 4 - CHỨC NĂNG
+            // ==========================================
+            SetupGroupBox(groupBox4, "CHỨC NĂNG");
+            groupBox4.Dock = DockStyle.Fill;
+            groupBox4.Margin = Padding.Empty;
+            groupBox4.Padding = new Padding(8, 10, 8, 5);
+            FlowLayoutPanel flpChucNang = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = false,
+                AutoScroll = true,
+                BackColor = Color.White,
+                Padding = new Padding(2, 5, 2, 2),
+                Margin = Padding.Empty
+            };
+            // Thêm hóa đơn
+            btnThemHD.Text = "＋  Thêm mới";
+            StyleButton(btnThemHD, mauXanh, Color.White);
+            btnThemHD.Size = new Size(125, 38);
+            // Lưu
+            btnLuu.Text = "✓  Lưu hóa đơn";
+            StyleButton(btnLuu, mauXanhLa, Color.White);
+            btnLuu.Size = new Size(135, 38);
+            // Hủy
+            btnHuy.Text = "✕  Hủy bỏ";
+            StyleButton(btnHuy, mauDo, Color.White);
+            btnHuy.Size = new Size(125, 38);
+            // In hóa đơn
+            btnIn.Text = "▤  In hóa đơn";
+            StyleButton(btnIn, mauXam, Color.White);
+            btnIn.Size = new Size(140, 38);
+            // Thoát
+            btnThoat.Text = "←  Thoát";
+            StyleButton(
+                btnThoat,
+                Color.FromArgb(70, 82, 100),
+                Color.White);
+            btnThoat.Size = new Size(115, 38);
+            flpChucNang.Controls.AddRange(new Control[]
+            {
+                btnThemHD,
+                btnLuu,
+                btnHuy,
+                btnIn,
+                btnThoat
+            });
+            groupBox4.Controls.Add(flpChucNang);
+            tblMain.Controls.Add(groupBox4, 0, 4);
+            // ==========================================
+            // HOÀN TẤT
+            // ==========================================
+            Controls.Add(tblMain);
+            ((System.ComponentModel.ISupportInitialize)dgvChiTiet).EndInit();
+        }
+
+        // =====================================================
+        // CÁC HÀM HỖ TRỢ THIẾT KẾ
+        // =====================================================
+        private Panel CreateField(
+            Label lbl,
+            string title,
+            Control input)
+        {
+            Panel pnl = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Padding = new Padding(4, 2, 8, 2),
+                Margin = new Padding(2)
+            };
+
+            TableLayoutPanel tbl = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2,
+                BackColor = Color.White,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+
+            tbl.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 100F));
+
+            tbl.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 30F));
+
+            tbl.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F));
+
+            lbl.Text = title;
+            lbl.Dock = DockStyle.Fill;
+            lbl.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl.ForeColor = mauChu;
+            lbl.TextAlign = ContentAlignment.MiddleLeft;
+            lbl.Margin = Padding.Empty;
+
+            StyleInput(input);
+
+            input.Dock = DockStyle.Fill;
+            input.Margin = new Padding(0, 8, 0, 1);
+
+            tbl.Controls.Add(lbl, 0, 0);
+            tbl.Controls.Add(input, 0, 1);
+
+            pnl.Controls.Add(tbl);
+
+            return pnl;
+        }
+
+        private Panel CreateFieldWithSearch(
+            Label lbl,
+            string title,
+            ComboBox cbo,
+            Button btn)
+        {
+            Panel pnl = new Panel
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White,
+                Padding = new Padding(4, 2, 8, 2),
+                Margin = new Padding(2)
+            };
+
+            TableLayoutPanel tbl = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2,
+                BackColor = Color.White,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty
+            };
+
+            tbl.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 100F));
+
+            tbl.RowStyles.Add(
+                new RowStyle(SizeType.Absolute, 30F));
+
+            tbl.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F));
+
+            lbl.Text = title;
+            lbl.Dock = DockStyle.Fill;
+            lbl.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl.ForeColor = mauChu;
+            lbl.TextAlign = ContentAlignment.MiddleLeft;
+            lbl.Margin = Padding.Empty;
+
+            TableLayoutPanel tblInput = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 1,
+                Margin = new Padding(0, 8, 0, 1),
+                Padding = Padding.Empty
+            };
+
+            tblInput.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Percent, 100F));
+
+            tblInput.ColumnStyles.Add(
+                new ColumnStyle(SizeType.Absolute, 65F));
+
+            tblInput.RowStyles.Add(
+                new RowStyle(SizeType.Percent, 100F));
+
+            StyleInput(cbo);
+
+            cbo.Dock = DockStyle.Fill;
+            cbo.Margin = new Padding(0, 0, 4, 0);
+
+            btn.Text = "⌕ Tìm";
+            StyleButton(btn, mauXanh, Color.White);
+            btn.Dock = DockStyle.Fill;
+            btn.Margin = Padding.Empty;
+            btn.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+
+            tblInput.Controls.Add(cbo, 0, 0);
+            tblInput.Controls.Add(btn, 1, 0);
+
+            tbl.Controls.Add(lbl, 0, 0);
+            tbl.Controls.Add(tblInput, 0, 1);
+
+            pnl.Controls.Add(tbl);
+
+            return pnl;
+        }
+
+        private void StyleInput(Control input)
+        {
+            input.Font = new Font("Segoe UI", 9.5F);
+            input.ForeColor = mauChu;
+
+            if (input is TextBox txt)
+            {
+                txt.BorderStyle = BorderStyle.FixedSingle;
+                txt.BackColor = Color.FromArgb(250, 252, 255);
+            }
+            else if (input is ComboBox cbo)
+            {
+                cbo.DropDownStyle = ComboBoxStyle.DropDownList;
+                cbo.FlatStyle = FlatStyle.Flat;
+                cbo.BackColor = Color.White;
+            }
+            else if (input is DateTimePicker dtp)
+            {
+                dtp.Format = DateTimePickerFormat.Custom;
+                dtp.CustomFormat = "dd/MM/yyyy";
+            }
+        }
+
+        private void SetupGroupBox(GroupBox gb, string title)
+        {
+            gb.Text = title;
+            gb.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            gb.ForeColor = mauXanhDam;
+            gb.BackColor = Color.White;
+        }
+
+        private void StyleButton(
+            Button btn,
+            Color backColor,
+            Color foreColor)
+        {
+            btn.BackColor = backColor;
+            btn.ForeColor = foreColor;
+            btn.FlatStyle = FlatStyle.Flat;
+            btn.FlatAppearance.BorderSize = 0;
+            btn.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btn.Cursor = Cursors.Hand;
+            btn.UseVisualStyleBackColor = false;
         }
     }
 }

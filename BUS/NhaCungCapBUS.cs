@@ -15,6 +15,18 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             return dal.LayTatCa();
         }
 
+        /// <summary>Danh sách mã nhà cung cấp để nạp ComboBox.</summary>
+        public DataTable LayDanhSachMa()
+        {
+            return dal.LayDanhSachMa();
+        }
+
+        /// <summary>Thông tin nhà cung cấp theo mã (SĐT, địa chỉ).</summary>
+        public DataTable LayThongTin(string maNCC)
+        {
+            return dal.LayThongTin(maNCC);
+        }
+
         private bool KiemTraThongTin(NhaCungCap ncc, out string error)
         {
             error = "";

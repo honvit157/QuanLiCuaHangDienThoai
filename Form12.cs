@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
@@ -6,7 +6,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.Data.SqlClient;
 
 namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 {
@@ -36,6 +35,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private Form formDangHienThi;
 
         private readonly HangHoaBUS hangHoaBus = new HangHoaBUS();
+        private readonly HoaDonBanBUS hoaDonBanBus = new HoaDonBanBUS();
         private DataTable dtDienThoai = new DataTable();
 
 
@@ -84,26 +84,6 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         {
             InitializeComponent();
 
-            string fileKiemTra = Path.Combine(
-    Application.StartupPath, "Images", "DT001.jpg");
-
-            string ketQuaAnh;
-
-            try
-            {
-                using var anh = Image.FromFile(fileKiemTra);
-                ketQuaAnh = $"Đọc ảnh OK: {anh.Width} × {anh.Height}";
-            }
-            catch (Exception ex)
-            {
-                ketQuaAnh = "Lỗi đọc ảnh: " + ex.Message;
-            }
-
-            MessageBox.Show(
-                "Đường dẫn ảnh:\n" + fileKiemTra +
-                "\n\nFile tồn tại: " + File.Exists(fileKiemTra) +
-                "\n" + ketQuaAnh,
-                "Kiểm tra ảnh");
             Text = "PHONE STORE - KHÁCH HÀNG";
             StartPosition = FormStartPosition.CenterScreen;
             WindowState = FormWindowState.Maximized;
@@ -130,7 +110,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
 
         private void TaoGiaoDien()
         {
-            pnlSidebar = new Panel
+pnlSidebar = new Panel
             {
                 Dock = DockStyle.Left,
                 Width = 500,
@@ -1182,219 +1162,66 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 Guid.NewGuid().ToString("N").Substring(0, 8)
                     .ToUpperInvariant();
 
-            try
-            {
-                using (SqlConnection conn = DatabaseAccess.TaoKetNoi())
-                {
-                    conn.Open();
+            HoaDonBan hoaDon = new HoaDonBan(
+                maHoaDon, MA_NHAN_VIEN_HE_THONG, maKhachHang, DateTime.Now);
 
-                    using (SqlTransaction tran = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            // Kiểm tra nhân viên lập hóa đơn
-                            using (SqlCommand cmdNV = new SqlCommand(
-                                @"SELECT COUNT(*) FROM tblNhanVien
-                          WHERE MaNV = @MaNV",
-                                conn, tran))
-                            {
-                                cmdNV.Parameters.AddWithValue(
-                                    "@MaNV", MA_NHAN_VIEN_HE_THONG);
-
-                                if (Convert.ToInt32(cmdNV.ExecuteScalar()) == 0)
-                                {
-                                    throw new Exception(
-                                        "Không tìm thấy nhân viên " +
-                                        MA_NHAN_VIEN_HE_THONG +
-                                        " trong bảng tblNhanVien.");
-                                }
-                            }
-
-                            decimal tongTienThucTe = 0;
-
-                            // Kiểm tra giá và tồn kho mới nhất
-                            foreach (GioHangItem item in gioHang.Values)
-                            {
-                                using (SqlCommand cmdKiemTra = new SqlCommand(
-                                    @"SELECT DonGiaBan, SoLuongTon
-                              FROM tblHang WITH (UPDLOCK, HOLDLOCK)
-                              WHERE MaHang = @MaHang",
-                                    conn, tran))
-                                {
-                                    cmdKiemTra.Parameters.AddWithValue(
-                                        "@MaHang", item.MaHang);
-
-                                    using (SqlDataReader reader =
-                                        cmdKiemTra.ExecuteReader())
-                                    {
-                                        if (!reader.Read())
-                                        {
-                                            throw new Exception(
-                                                "Sản phẩm " + item.TenHang +
-                                                " không còn tồn tại.");
-                                        }
-
-                                        decimal giaHienTai =
-                                            Convert.ToDecimal(reader["DonGiaBan"]);
-
-                                        int tonKho =
-                                            Convert.ToInt32(reader["SoLuongTon"]);
-
-                                        if (tonKho < item.SoLuong)
-                                        {
-                                            throw new Exception(
-                                                "Sản phẩm " + item.TenHang +
-                                                " không đủ hàng.\n" +
-                                                "Tồn kho hiện tại: " + tonKho +
-                                                "\nSố lượng cần mua: " + item.SoLuong);
-                                        }
-
-                                        tongTienThucTe +=
-                                            giaHienTai * item.SoLuong;
-                                    }
-                                }
-                            }
-
-                            // Tạo hóa đơn với trạng thái chưa thanh toán
-                            using (SqlCommand cmdHD = new SqlCommand(
-                                @"INSERT INTO tblHoaDonBan
-                          (MaHDB, MaNV, MaKH, NgayLap, TongTien,
-                           TrangThaiThanhToan, PhuongThucThanhToan)
-                          VALUES
-                          (@MaHDB, @MaNV, @MaKH, GETDATE(), @TongTien,
-                           N'Chưa thanh toán', NULL)",
-                                conn, tran))
-                            {
-                                cmdHD.Parameters.AddWithValue(
-                                    "@MaHDB", maHoaDon);
-
-                                cmdHD.Parameters.AddWithValue(
-                                    "@MaNV", MA_NHAN_VIEN_HE_THONG);
-
-                                cmdHD.Parameters.AddWithValue(
-                                    "@MaKH", maKhachHang);
-
-                                cmdHD.Parameters.AddWithValue(
-                                    "@TongTien", tongTienThucTe);
-
-                                cmdHD.ExecuteNonQuery();
-                            }
-
-                            // Thêm chi tiết hóa đơn và trừ kho
-                            foreach (GioHangItem item in gioHang.Values)
-                            {
-                                decimal giaHienTai;
-
-                                using (SqlCommand cmdGia = new SqlCommand(
-                                    @"SELECT DonGiaBan
-                              FROM tblHang
-                              WHERE MaHang = @MaHang",
-                                    conn, tran))
-                                {
-                                    cmdGia.Parameters.AddWithValue(
-                                        "@MaHang", item.MaHang);
-
-                                    object ketQua = cmdGia.ExecuteScalar();
-
-                                    if (ketQua == null || ketQua == DBNull.Value)
-                                        throw new Exception(
-                                            "Không tìm thấy giá sản phẩm " +
-                                            item.TenHang);
-
-                                    giaHienTai = Convert.ToDecimal(ketQua);
-                                }
-
-                                decimal thanhTien =
-                                    giaHienTai * item.SoLuong;
-
-                                using (SqlCommand cmdCT = new SqlCommand(
-                                    @"INSERT INTO tblChiTietHDB
-                              (MaHDB, MaHang, SoLuong,
-                               DonGia, GiamGia, ThanhTien)
-                              VALUES
-                              (@MaHDB, @MaHang, @SoLuong,
-                               @DonGia, 0, @ThanhTien)",
-                                    conn, tran))
-                                {
-                                    cmdCT.Parameters.AddWithValue(
-                                        "@MaHDB", maHoaDon);
-
-                                    cmdCT.Parameters.AddWithValue(
-                                        "@MaHang", item.MaHang);
-
-                                    cmdCT.Parameters.AddWithValue(
-                                        "@SoLuong", item.SoLuong);
-
-                                    cmdCT.Parameters.AddWithValue(
-                                        "@DonGia", giaHienTai);
-
-                                    cmdCT.Parameters.AddWithValue(
-                                        "@ThanhTien", thanhTien);
-
-                                    cmdCT.ExecuteNonQuery();
-                                }
-
-                                using (SqlCommand cmdTruKho = new SqlCommand(
-                                    @"UPDATE tblHang
-                              SET SoLuongTon = SoLuongTon - @SoLuong
-                              WHERE MaHang = @MaHang
-                                AND SoLuongTon >= @SoLuong",
-                                    conn, tran))
-                                {
-                                    cmdTruKho.Parameters.AddWithValue(
-                                        "@MaHang", item.MaHang);
-
-                                    cmdTruKho.Parameters.AddWithValue(
-                                        "@SoLuong", item.SoLuong);
-
-                                    if (cmdTruKho.ExecuteNonQuery() == 0)
-                                    {
-                                        throw new Exception(
-                                            "Không thể cập nhật tồn kho sản phẩm " +
-                                            item.TenHang);
-                                    }
-                                }
-                            }
-
-                            // 1. Xác nhận lưu hóa đơn và chi tiết hóa đơn vào SQL
-                            tran.Commit();
-
-                            // 2. Xóa giỏ hàng sau khi đặt mua thành công
-                            gioHang.Clear();
-
-                            // 3. Lưu mã hóa đơn vừa tạo để mục Thanh toán nhận được
-                            maHoaDonVuaTao = maHoaDon;
-
-                            // 4. Thông báo đặt hàng thành công
-                            MessageBox.Show(
-                                "ĐẶT HÀNG THÀNH CÔNG!\n\n" +
-                                "Mã hóa đơn: " + maHoaDon + "\n" +
-                                "Tổng tiền: " +
-                                tongTienThucTe.ToString("N0") + " đ\n\n" +
-                                "Hệ thống sẽ chuyển bạn đến mục Thanh toán.",
-                                "Đặt hàng thành công",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
-
-                            // 5. Chuyển thẳng sang giao diện Thanh toán
-                            HienThiThanhToan();
-                        }
-                        catch
-                        {
-                            tran.Rollback();
-                            throw;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
+            if (!hoaDonBanBus.DatHang(hoaDon, TaoBangChiTietGioHang(), out string error))
             {
                 MessageBox.Show(
-                    "Không thể đặt mua:\n" + ex.Message,
+                    "Không thể đặt mua:\n" + error,
                     "Lỗi đặt hàng",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
+
+                return;
             }
+
+            // Xóa giỏ hàng sau khi đặt mua thành công
+            gioHang.Clear();
+
+            // Lưu mã hóa đơn vừa tạo để mục Thanh toán nhận được
+            maHoaDonVuaTao = maHoaDon;
+
+            MessageBox.Show(
+                "ĐẶT HÀNG THÀNH CÔNG!\n\n" +
+                "Mã hóa đơn: " + maHoaDon + "\n" +
+                "Tổng tiền: " +
+                hoaDon.TongTien.ToString("N0") + " đ\n\n" +
+                "Hệ thống sẽ chuyển bạn đến mục Thanh toán.",
+                "Đặt hàng thành công",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+
+            // Chuyển thẳng sang giao diện Thanh toán
+            HienThiThanhToan();
+        }
+
+        /// <summary>
+        /// Chuyển giỏ hàng hiện tại thành bảng chi tiết để tầng nghiệp vụ lưu hóa đơn.
+        /// Giá bán và tồn kho được thủ tục lưu trữ kiểm tra lại theo dữ liệu thật.
+        /// </summary>
+        private DataTable TaoBangChiTietGioHang()
+        {
+            DataTable bang = new DataTable();
+            bang.Columns.Add("MaHang", typeof(string));
+            bang.Columns.Add("TenHang", typeof(string));
+            bang.Columns.Add("SoLuong", typeof(int));
+            bang.Columns.Add("DonGia", typeof(decimal));
+            bang.Columns.Add("GiamGia", typeof(decimal));
+            bang.Columns.Add("ThanhTien", typeof(decimal));
+
+            foreach (GioHangItem item in gioHang.Values)
+            {
+                bang.Rows.Add(
+                    item.MaHang,
+                    item.TenHang,
+                    item.SoLuong,
+                    item.DonGia,
+                    0m,
+                    item.SoLuong * item.DonGia);
+            }
+
+            return bang;
         }
 
 
@@ -1443,8 +1270,8 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 GroupBox grpPhuongThuc = new GroupBox
                 {
                     Text = "3. PHƯƠNG THỨC THANH TOÁN",
-                    Location = new Point(20, 985),
-                    Size = new Size(1140, 115),
+                    Location = new Point(20, 140),
+                    Size = new Size(465, 90),
                     Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                     ForeColor = mauNavy
                 };
@@ -1452,18 +1279,18 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 RadioButton radTienMat = new RadioButton
                 {
                     Text = "TIỀN MẶT KHI NHẬN HÀNG",
-                    Location = new Point(30, 42),
+                    Location = new Point(15, 25),
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 11F),
+                    Font = new Font("Segoe UI", 10F),
                     ForeColor = mauChu
                 };
 
                 RadioButton radChuyenKhoan = new RadioButton
                 {
                     Text = "CHUYỂN KHOẢN NGÂN HÀNG",
-                    Location = new Point(550, 42),
+                    Location = new Point(15, 52),
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 11F),
+                    Font = new Font("Segoe UI", 10F),
                     ForeColor = mauChu
                 };
 
@@ -1557,52 +1384,19 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         private bool LuuPhuongThucThanhToan(
             string maHD, string phuongThuc)
         {
-            try
-            {
-                string trangThai = phuongThuc == "Chuyển khoản"
-                    ? "Chờ xác nhận chuyển khoản"
-                    : "Chưa thanh toán";
-
-                string sql = @"
-            UPDATE tblHoaDonBan
-            SET PhuongThucThanhToan = @PhuongThuc,
-                TrangThaiThanhToan = @TrangThai
-            WHERE MaHDB = @MaHD
-              AND MaKH = @MaKH";
-
-                int ketQua = DatabaseAccess.ThucThi(
-                    sql,
-                    new[]
-                    {
-                new SqlParameter("@PhuongThuc", phuongThuc),
-                new SqlParameter("@TrangThai", trangThai),
-                new SqlParameter("@MaHD", maHD),
-                new SqlParameter("@MaKH", maKhachHang)
-                    });
-
-                if (ketQua <= 0)
-                {
-                    MessageBox.Show(
-                        "Không thể lưu phương thức thanh toán.",
-                        "Lỗi",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
-
-                    return false;
-                }
-
-                return true;
-            }
-            catch (Exception ex)
+            if (!hoaDonBanBus.LuuPhuongThucThanhToan(
+                    maHD, maKhachHang, phuongThuc, out string error))
             {
                 MessageBox.Show(
-                    "Lỗi lưu phương thức thanh toán:\n" + ex.Message,
+                    error,
                     "Lỗi",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    MessageBoxIcon.Warning);
 
                 return false;
             }
+
+            return true;
         }
 
 
@@ -1688,23 +1482,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             {
                 try
                 {
-                    string sql = @"
-    SELECT
-        MaHDB AS MaHD,
-        NgayLap,
-        TongTien,
-        PhuongThucThanhToan,
-        TrangThaiThanhToan
-    FROM tblHoaDonBan
-    WHERE MaKH = @MaKH
-    ORDER BY NgayLap DESC";
-
-                    DataTable dt = DatabaseAccess.DocBang(
-                        sql,
-                        new[]
-                        {
-                    new SqlParameter("@MaKH", maKhachHang)
-                        });
+                    DataTable dt = hoaDonBanBus.LayHoaDonTheoKhachHang(maKhachHang);
 
                     dgvHoaDon.DataSource = dt;
 
@@ -1789,19 +1567,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
         {
             try
             {
-                string sql = @"
-            SELECT TongTien, PhuongThucThanhToan
-            FROM tblHoaDonBan
-            WHERE MaHDB = @MaHD
-              AND MaKH = @MaKH";
-
-                DataTable dt = DatabaseAccess.DocBang(
-                    sql,
-                    new[]
-                    {
-                new SqlParameter("@MaHD", maHD),
-                new SqlParameter("@MaKH", maKhachHang)
-                    });
+                DataTable dt = hoaDonBanBus.LayThongTinThanhToan(maHD, maKhachHang);
 
                 if (dt.Rows.Count == 0)
                 {
@@ -2103,26 +1869,7 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             {
                 try
                 {
-                    string sql = @"
-                SELECT
-                    MaHDB AS MaHD,
-                    NgayLap,
-                    TongTien,
-                    PhuongThucThanhToan,
-                    TrangThaiThanhToan
-                FROM tblHoaDonBan
-                WHERE MaKH = @MaKH
-                  AND TrangThaiThanhToan IN
-                    (N'Chưa thanh toán',
-                     N'Chờ xác nhận chuyển khoản')
-                ORDER BY NgayLap DESC";
-
-                    DataTable dt = DatabaseAccess.DocBang(
-                        sql,
-                        new[]
-                        {
-                    new SqlParameter("@MaKH", maKhachHang)
-                        });
+                    DataTable dt = hoaDonBanBus.LayHoaDonChuaThanhToan(maKhachHang);
 
                     dgvHoaDon.DataSource = dt;
 

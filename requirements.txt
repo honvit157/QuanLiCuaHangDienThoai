@@ -1,0 +1,12 @@
+# Thư viện Python cần cho việc sinh tài liệu (báo cáo Word, slide, sơ đồ)
+# và cho công cụ kiểm tra tĩnh mã nguồn C# (tools/kiem_tra_tinh.py).
+python-docx>=1.1.0
+python-pptx>=0.6.23
+Pillow>=10.0.0
+
+# Bộ phân tích cú pháp C# dùng trong bước kiểm tra tĩnh
+tree-sitter>=0.21.0
+tree-sitter-c-sharp>=0.21.0
+
+# Xuất slide ra PDF
+pymupdf>=1.23.0
