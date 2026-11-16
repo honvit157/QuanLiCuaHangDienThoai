@@ -526,15 +526,27 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4.GUI
                 Label lblNhomHoaDon = TaoNhomMenu("GIAO DỊCH");
                 flpMenu.Controls.Add(lblNhomHoaDon);
 
-                flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán", () =>
+                if (LaQuanLy())
                 {
-                    MoForm(new Form7(), "Hóa đơn bán hàng");
-                }));
+                    // Quản lý chỉ tra cứu hóa đơn bán: xem chi tiết và in Excel, không lập đơn
+                    flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán (chỉ xem)", () =>
+                    {
+                        MoForm(new Form7(chiXem: true), "Hóa đơn bán hàng (chỉ xem)");
+                    }));
 
-                flpMenu.Controls.Add(TaoNutMenu("▧", "Hóa đơn nhập", () =>
+                    // Hóa đơn nhập là mục riêng của Quản lý, Nhân viên không thấy mục này
+                    flpMenu.Controls.Add(TaoNutMenu("▧", "Hóa đơn nhập", () =>
+                    {
+                        MoForm(new Form8(), "Hóa đơn nhập hàng");
+                    }));
+                }
+                else
                 {
-                    MoForm(new Form8(), "Hóa đơn nhập hàng");
-                }));
+                    flpMenu.Controls.Add(TaoNutMenu("▤", "Hóa đơn bán", () =>
+                    {
+                        MoForm(new Form7(), "Hóa đơn bán hàng");
+                    }));
+                }
 
                 Label lblNhomBaoCao = TaoNhomMenu("THỐNG KÊ");
                 flpMenu.Controls.Add(lblNhomBaoCao);

@@ -487,6 +487,58 @@ BEGIN
 END;
 GO
 
+-- 6.8 Thêm khách hàng mới ngay trên hóa đơn bán:
+--     - Nếu số điện thoại đã có trong tblKhachHang thì dùng lại mã khách hàng cũ.
+--     - Nếu chưa có thì tự sinh mã kế tiếp (KH011, KH012, ...) rồi thêm mới.
+--     Trả về MaKH và cờ LaKhachMoi (1 = vừa thêm mới, 0 = dùng lại khách cũ).
+CREATE OR ALTER PROCEDURE sp_ThemKhachHangTuDong
+    @TenKH  NVARCHAR(100),
+    @SDT    NVARCHAR(20)  = NULL,
+    @DiaChi NVARCHAR(200) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @MaKH NVARCHAR(20);
+    DECLARE @SoTiepTheo INT;
+    DECLARE @LaKhachMoi INT = 0;
+    DECLARE @SdtChuan NVARCHAR(20);
+
+    SET @SdtChuan = NULLIF(LTRIM(RTRIM(@SDT)), N'');
+
+    -- Số điện thoại đã có trong danh bạ khách hàng: dùng luôn khách hàng đó
+    IF @SdtChuan IS NOT NULL
+    BEGIN
+        SELECT TOP (1) @MaKH = MaKH
+        FROM dbo.tblKhachHang
+        WHERE SDT = @SdtChuan
+        ORDER BY MaKH;
+    END
+
+    IF @MaKH IS NULL
+    BEGIN
+        -- Lấy số lớn nhất trong các mã dạng KHxxx rồi cộng thêm 1
+        SELECT @SoTiepTheo = ISNULL(MAX(TRY_CAST(SUBSTRING(MaKH, 3, 18) AS INT)), 0) + 1
+        FROM dbo.tblKhachHang
+        WHERE MaKH LIKE N'KH%'
+          AND TRY_CAST(SUBSTRING(MaKH, 3, 18) AS INT) IS NOT NULL;
+
+        IF @SoTiepTheo > 999
+            SET @MaKH = N'KH' + CAST(@SoTiepTheo AS NVARCHAR(10));
+        ELSE
+            SET @MaKH = N'KH' + RIGHT(N'000' + CAST(@SoTiepTheo AS NVARCHAR(10)), 3);
+
+        INSERT INTO dbo.tblKhachHang (MaKH, TenKH, SDT, DiaChi, Email)
+        VALUES (@MaKH, LTRIM(RTRIM(@TenKH)), @SdtChuan,
+                NULLIF(LTRIM(RTRIM(@DiaChi)), N''), NULL);
+
+        SET @LaKhachMoi = 1;
+    END
+
+    SELECT @MaKH AS MaKH, @LaKhachMoi AS LaKhachMoi;
+END;
+GO
+
 -- ============================================================================
 --  PHẦN 7. NHÀ CUNG CẤP (tblNhaCungCap)
 -- ============================================================================

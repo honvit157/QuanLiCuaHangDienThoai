@@ -122,7 +122,8 @@ mã tài khoản do SQL tự sinh tiếp theo (`NV009`, `NV010`, ...), tên đă
 | Nhân viên | ✓ | — | — |
 | Khách hàng | ✓ | ✓ | — |
 | Nhà cung cấp | ✓ | ✓ | — |
-| Hóa đơn bán / Hóa đơn nhập | ✓ | ✓ | — |
+| Hóa đơn bán | ✓ **chỉ xem**: xem chi tiết hóa đơn đã bán + **In hóa đơn** (Excel), khóa/ẩn nút Thêm mới, Lưu, Hủy, Thêm hàng và ô nhập mặt hàng | ✓ **lập đơn đầy đủ** (tự điền nhân viên, thêm khách mới tại chỗ) | — |
+| Hóa đơn nhập | ✓ | — | — |
 | Báo cáo | ✓ | ✓ | — |
 
 Menu của tài khoản **Khách hàng** chỉ còn nhóm *TỔNG QUAN* và *CỬA HÀNG* (Điện thoại, Tìm kiếm) cùng
@@ -132,6 +133,31 @@ thu, và `Form1` bị khóa toàn bộ nút Thêm/Sửa/Xóa cùng các ô nhậ
 
 Dữ liệu mẫu chưa có tài khoản Khách hàng nào: mở `FormDangKy` từ `Form9`, chọn vai trò **Khách hàng**
 rồi đăng ký là có ngay một tài khoản để thử mức phân quyền thứ ba này.
+
+### Luồng hóa đơn bán (`Form7`)
+
+**Nhân viên — lập đơn:** khi mở form, `Form7` tự sinh mã `HDB_...` mới, điền ngày hôm nay và tự điền
+**Mã nhân viên** + **Tên nhân viên** của người đang đăng nhập (`Form9.MaNVDangNhap` / `TenNVDangNhap`),
+nên nhân viên chỉ cần chọn khách hàng và thêm mặt hàng. Vẫn tra cứu lại hóa đơn cũ bằng cách chọn mã
+ở `cboMaHD` rồi bấm **⌕ Tìm**.
+
+- **Khách hàng có sẵn:** `ComboBox` “Khách hàng” hiển thị dạng `MaKH - TenKH - SDT`; chọn một dòng thì
+  tên, số điện thoại và địa chỉ tự điền và được khóa lại (sửa khách hàng thì dùng `Form3`).
+- **Khách hàng mới ngay tại chỗ:** chọn dòng `-- Khách hàng mới (nhập trực tiếp) --` rồi gõ thẳng
+  Tên khách, SĐT, Địa chỉ. Khi bấm **✓ Lưu hóa đơn**, tầng BUS kiểm tra tên không rỗng và SĐT đúng
+  10 chữ số (`AppHelpers.KiemTraSoDienThoai`), rồi gọi thủ tục `sp_ThemKhachHangTuDong`: thủ tục tự
+  sinh mã kế tiếp (`KH011`, `KH012`, ...), và **nếu số điện thoại đã có thì dùng lại mã khách cũ** thay
+  vì tạo bản ghi trùng. Sau khi có `MaKH`, hóa đơn mới được lưu như bình thường.
+- **Khách lẻ:** để trống cả tên và SĐT thì hóa đơn lưu với `MaKH = NULL` (không tạo hồ sơ khách hàng).
+
+**Quản lý — chỉ xem:** `Form10` mở `Form7` bằng `new Form7(chiXem: true)`. Form nạp sẵn danh sách hóa
+đơn đã bán và mở hóa đơn mới nhất; đổi lựa chọn ở `cboMaHD` là xem ngay chi tiết hóa đơn đó. Cụm lập
+đơn bị ẩn/khóa (ô `CHỌN MẶT HÀNG` được ẩn hẳn và nhường chỗ cho bảng chi tiết), chỉ còn **Tìm** và
+**▤ In hóa đơn** (xuất Excel).
+
+Bố cục `Form7` đặt bảng **CHI TIẾT HÓA ĐƠN** ở hàng co giãn (`SizeType.Percent`) với chiều cao tối
+thiểu 120px cho `dgvChiTiet`, dòng **Tổng tiền** có hàng riêng 40px nên không bị cắt, và các
+`ComboBox` `cboMaHD`, `cboKhachHang`, `cboMaHang` được nới rộng trong lưới 4 cột của form.
 
 Mật khẩu dùng chung ở mức đủ cho bài tập lớn (lưu thẳng trong `tblNhanVien` như dữ liệu mẫu),
 chưa băm mật khẩu.
@@ -146,7 +172,7 @@ chưa băm mật khẩu.
 - **DAL** chỉ gọi Stored Procedure qua `DatabaseAccess` với `CommandType.StoredProcedure`.
   Việc lưu hóa đơn (nhiều bước) được thực hiện trong một transaction tại `HoaDonBanDAL` /
   `HoaDonNhapDAL`.
-- **SQL** chứa toàn bộ truy vấn: **80 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
+- **SQL** chứa toàn bộ truy vấn: **81 thủ tục lưu trữ**, chia theo nhóm hàng hóa, danh mục,
   khách hàng, nhà cung cấp, nhân viên, hóa đơn bán, hóa đơn nhập, báo cáo và thống kê Dashboard.
 
 ## 6. Yêu cầu hướng đối tượng của học phần
@@ -165,7 +191,7 @@ chưa băm mật khẩu.
 | Đăng nhập | Đăng nhập bằng tài khoản (`Form9`), đăng ký tài khoản mới với vai trò **Khách hàng** hoặc **Nhân viên** (`FormDangKy`) |
 | Tổng quan | Dashboard 3 cột: menu phân quyền theo 3 vai trò, thẻ thống kê, biểu đồ doanh thu 7 ngày, sidebar ảnh |
 | Quản lý cửa hàng | Điện thoại (CRUD + ảnh + tìm nhanh), Danh mục (hãng/loại/màu/dung lượng), Nhân viên, Khách hàng, Nhà cung cấp |
-| Giao dịch | Hóa đơn bán (trừ tồn kho, giảm giá, xuất Excel), Hóa đơn nhập (cộng tồn kho, cập nhật giá nhập, xuất Excel) |
+| Giao dịch | Hóa đơn bán (tự điền nhân viên, chọn khách có sẵn hoặc thêm khách mới tại chỗ, trừ tồn kho, giảm giá, xuất Excel; Quản lý chỉ xem + in), Hóa đơn nhập (cộng tồn kho, cập nhật giá nhập, xuất Excel) |
 | Thống kê | Báo cáo doanh thu theo tháng, tồn kho, top bán chạy; xuất Excel 3 sheet |
 
 ## 8. Báo cáo và điểm cần lưu ý về Crystal Report

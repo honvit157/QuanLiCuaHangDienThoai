@@ -43,6 +43,79 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
                 r["Email"] == DBNull.Value ? "" : r["Email"].ToString() ?? "");
         }
 
+        /// <summary>
+        /// Thêm khách hàng mới ngay trên hóa đơn bán (Form7): chỉ bắt buộc tên và số điện thoại
+        /// đúng 10 chữ số, địa chỉ không bắt buộc. Nếu số điện thoại đã có trong cơ sở dữ liệu
+        /// thì thủ tục lưu trữ trả về mã khách hàng cũ thay vì tạo bản ghi trùng.
+        /// </summary>
+        public string? ThemKhachHangTuDong(string tenKH, string sdt, string diaChi,
+            out bool laKhachMoi, out string error)
+        {
+            laKhachMoi = false;
+            error = "";
+
+            string tenChuan = AppHelpers.ChuanHoaChuoi(tenKH);
+            string sdtChuan = (sdt ?? "").Trim();
+            string diaChiChuan = AppHelpers.ChuanHoaChuoi(diaChi);
+
+            if (tenChuan == "")
+            {
+                error = "Tên khách hàng không được để trống!";
+                return null;
+            }
+
+            if (!AppHelpers.KiemTraSoDienThoai(sdtChuan))
+            {
+                error = "Số điện thoại phải gồm 10 chữ số và bắt đầu bằng 0!";
+                return null;
+            }
+
+            if (tenChuan.Length > 100)
+            {
+                error = "Tên khách hàng tối đa 100 ký tự!";
+                return null;
+            }
+
+            if (diaChiChuan.Length > 200)
+            {
+                error = "Địa chỉ khách hàng tối đa 200 ký tự!";
+                return null;
+            }
+
+            try
+            {
+                DataTable dt = dal.ThemKhachHangTuDong(tenChuan, sdtChuan, diaChiChuan);
+
+                if (dt.Rows.Count == 0)
+                {
+                    error = "Không thêm được khách hàng mới!";
+                    return null;
+                }
+
+                DataRow r = dt.Rows[0];
+                string maKH = r["MaKH"].ToString() ?? "";
+                laKhachMoi = r["LaKhachMoi"] != DBNull.Value
+                    && Convert.ToInt32(r["LaKhachMoi"]) == 1;
+
+                if (maKH == "")
+                {
+                    error = "Không xác định được mã khách hàng vừa thêm!";
+                    return null;
+                }
+
+                AppHelpers.GhiLog(laKhachMoi
+                    ? $"Thêm khách hàng mới {maKH} - {tenChuan} từ hóa đơn bán"
+                    : $"Dùng lại khách hàng {maKH} theo số điện thoại {sdtChuan}");
+
+                return maKH;
+            }
+            catch (Exception ex)
+            {
+                error = "Lỗi thêm khách hàng: " + ex.Message;
+                return null;
+            }
+        }
+
         private static bool KiemTra(KhachHang kh, out string error)
         {
             error = "";

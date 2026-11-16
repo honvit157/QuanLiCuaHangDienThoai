@@ -39,6 +39,22 @@ namespace Cửa_Hàng_Bán_Điện_Thoại___Nhóm_4
             return DatabaseAccess.ThucThiProc("sp_ThemKhachHang", pars);
         }
 
+        /// <summary>
+        /// Thêm khách hàng mới ngay trên hóa đơn bán. Thủ tục tự sinh mã KH kế tiếp,
+        /// và nếu số điện thoại đã có thì dùng lại khách hàng cũ.
+        /// Trả về bảng một dòng gồm MaKH và LaKhachMoi (1 = vừa thêm mới).
+        /// </summary>
+        public DataTable ThemKhachHangTuDong(string tenKH, string sdt, string diaChi)
+        {
+            return DatabaseAccess.DocBangProc("sp_ThemKhachHangTuDong",
+                new[]
+                {
+                    DatabaseAccess.ThamSo("@TenKH", tenKH),
+                    DatabaseAccess.ThamSo("@SDT", sdt),
+                    DatabaseAccess.ThamSo("@DiaChi", diaChi)
+                });
+        }
+
         public int Sua(KhachHang kh)
         {
             SqlParameter[] pars =
